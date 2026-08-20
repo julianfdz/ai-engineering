@@ -56,7 +56,7 @@ jobs:
       business-backend: ${{ steps.filter.outputs.business-backend }}
       deployment: ${{ steps.filter.outputs.deployment }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: dorny/paths-filter@v3
         id: filter
@@ -124,7 +124,7 @@ jobs:
       APP_ENV: development
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -174,7 +174,7 @@ jobs:
           --health-retries 5
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
@@ -229,7 +229,7 @@ jobs:
       OPENAI_API_KEY: sk-test-not-a-real-key
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Install uv
         uses: astral-sh/setup-uv@v5
@@ -289,7 +289,7 @@ jobs:
             build-args: RAILS_ENV=production
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Declarar EN VOZ ALTA a qué registro se va a escribir, y hacerlo ANTES de
       # construir nada. Sin esto el fallo de namespace o de credenciales aparece
@@ -394,7 +394,7 @@ jobs:
       # Without this the smoke test below cannot run: scripts/smoke_test.py is
       # not on the runner's disk. (This step was missing while the deploy job
       # was disabled, so the bug never surfaced.)
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Deploy over SSH
         uses: appleboy/ssh-action@v1
