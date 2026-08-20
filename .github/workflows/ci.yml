@@ -305,7 +305,7 @@ jobs:
           echo "GHCR_PAT secret set     : ${{ secrets.GHCR_PAT != '' }}"
           echo "resolved namespace      : ghcr.io/${OWNER,,}"
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
 
       # Only needed when we are actually going to push.
       #
