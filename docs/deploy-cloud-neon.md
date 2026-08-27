@@ -73,6 +73,23 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml \
                -f docker-compose.cloud.yml -f docker-compose.external-proxy.yml up -d
 ```
 
+**¿Sin imágenes de CI, desplegando con Portainer?** El prod hace
+`build: !reset null` y espera las imágenes de GHCR; sin ellas compose falla con
+*"has neither an image nor a build context"*. Para construir en la propia
+máquina usa `docker-compose.vps.yml` en lugar de prod + external-proxy:
+
+```
+docker-compose.yml + docker-compose.cloud.yml + docker-compose.vps.yml
+```
+
+En Portainer: stack tipo *Repository* apuntando al fork, compose path
+`docker-compose.yml`, los otros dos en *Additional paths* (en ese orden), y las
+variables del `.env` de despliegue en *Environment variables* — este override
+elimina el `env_file: .env` del base (el `.env` está gitignorado y no existe en
+el clon) y pasa cada variable explícitamente. Publica Rails en
+`127.0.0.1:3001`; si el reverse proxy del host es un contenedor, descomenta los
+bloques `networks:` del override y proxea a `business-backend:3000` por nombre.
+
 Las BBDD locales no arrancan pero sus volúmenes no se tocan; se recuperan con
 `docker compose --profile local-db up postgres vector-db`.
 
