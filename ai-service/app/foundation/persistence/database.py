@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from collections.abc import Iterator
 from functools import lru_cache
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.ext.asyncio import AsyncEngine, async_sessionmaker, create_async_engine
@@ -54,6 +55,28 @@ def get_session() -> Iterator[Session]:
         session.close()
 
 
+def _translate_libpq_ssl_params(url: str) -> str:
+    """Rewrite libpq-only SSL query params into what asyncpg understands.
+
+    Managed Postgres (Neon, RDS, …) hands out URLs carrying ``sslmode`` and
+    ``channel_binding``. psycopg (sync engine, Alembic, the LangGraph saver)
+    reads them natively, but asyncpg's ``connect()`` has no such kwargs and
+    SQLAlchemy passes query params through verbatim — the engine would die with
+    ``TypeError: unexpected keyword argument 'sslmode'``. asyncpg's equivalent
+    of ``sslmode`` is ``ssl`` (same value vocabulary); ``channel_binding`` has
+    no equivalent and is dropped.
+    """
+    parts = urlsplit(url)
+    if not parts.query:
+        return url
+    params = [
+        ("ssl", value) if key == "sslmode" else (key, value)
+        for key, value in parse_qsl(parts.query, keep_blank_values=True)
+        if key != "channel_binding"
+    ]
+    return urlunsplit(parts._replace(query=urlencode(params)))
+
+
 def _async_database_url() -> str:
     """Derive the asyncpg URL from ``Settings.DATABASE_URL``.
 
@@ -63,9 +86,9 @@ def _async_database_url() -> str:
     """
     url = get_settings().DATABASE_URL
     if "+psycopg" in url:
-        return url.replace("+psycopg", "+asyncpg")
+        return _translate_libpq_ssl_params(url.replace("+psycopg", "+asyncpg"))
     if url.startswith("postgresql://"):
-        return url.replace("postgresql://", "postgresql+asyncpg://", 1)
+        return _translate_libpq_ssl_params(url.replace("postgresql://", "postgresql+asyncpg://", 1))
     return url
 
 

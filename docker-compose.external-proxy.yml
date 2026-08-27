@@ -1,0 +1,38 @@
+# =============================================================================
+# Override PROXY EXTERNO — el host ya tiene su propio Caddy/Nginx en 80/443
+# =============================================================================
+# El docker-compose.prod.yml levanta SU PROPIO contenedor Caddy publicando
+# 80/443. Si el VPS ya corre un reverse proxy en el host, ese contenedor no
+# puede arrancar (puertos ocupados) y además sobra. Este override:
+#
+#   · Aparca el Caddy del compose bajo el profile `bundled-proxy`.
+#   · Publica business-backend SOLO en loopback (127.0.0.1:3000): el proxy del
+#     host lo alcanza, pero desde fuera de la máquina nadie — la frontera de la
+#     S15 se mantiene, solo que la termina el proxy del host en vez del Caddy
+#     del compose.
+#
+# Uso — SIEMPRE detrás del prod (aquí es donde existe el servicio caddy):
+#
+#     docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+#                    -f docker-compose.cloud.yml -f docker-compose.external-proxy.yml up -d
+#
+# En el Caddyfile del HOST basta con:
+#
+#     estimator.tu-dominio.com {
+#         reverse_proxy 127.0.0.1:3000
+#     }
+#
+# APP_DOMAIN sigue siendo obligatoria (compose interpola sus variables aunque el
+# servicio esté aparcado, y Rails la necesita para RAILS_ALLOWED_HOSTS). Los
+# `assume_ssl`/`force_ssl` de Rails siguen siendo correctos: cualquier proxy
+# serio (Caddy incluido) envía X-Forwarded-Proto.
+
+services:
+  business-backend:
+    # `!override` porque el prod dejó la lista en `!reset []`; sin el tag,
+    # compose fusionaría listas en vez de sustituirlas.
+    ports: !override
+      - "127.0.0.1:3000:3000"
+
+  caddy:
+    profiles: ["bundled-proxy"]

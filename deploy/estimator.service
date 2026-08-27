@@ -39,6 +39,12 @@ Environment=COMPOSE_PROJECT_NAME=estimator
 ExecStart=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d --remove-orphans
 ExecStop=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.prod.yml down
 
+# Variant: managed Postgres (Neon) instead of the two local database containers
+# (see docs/deploy-cloud-neon.md). Comment the two lines above and use these —
+# the cloud override goes LAST so its DATABASE_URLs win over the prod ones.
+# ExecStart=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.cloud.yml up -d --remove-orphans
+# ExecStop=/usr/bin/docker compose -f docker-compose.yml -f docker-compose.prod.yml -f docker-compose.cloud.yml down
+
 # Pulling ~7.4 GB of images on a cold box takes minutes; the default 90 s would
 # mark the unit failed halfway through the first start.
 TimeoutStartSec=900
