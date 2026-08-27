@@ -176,6 +176,7 @@ Session 15 vars (containerization + service boundary):
 - `POSTGRES_USER` / `POSTGRES_PASSWORD` / `POSTGRES_DB` — the Rails relational database (`postgres`/`postgres`/`estimator_web_development`).
 - `RUN_MIGRATIONS` — honoured by both entrypoints; set `false` to boot a container without applying migrations (useful when several replicas start at once and only one should migrate).
 - Root `.env` feeds compose two different ways, which is worth not confusing: compose reads it automatically to **interpolate** `${VAR}` inside the YAML, and `env_file: [.env]` **injects** the variables into the containers. Both are used — the FastAPI `Settings` and Rails read process env, and the container's CWD has no `.env` of its own.
+- `AI_SERVICE_DATABASE_URL` / `BUSINESS_DATABASE_URL` — read only by `docker-compose.cloud.yml` (the managed-Postgres/Neon variant, `docs/deploy-cloud-neon.md`): stacked LAST it replaces both local Postgres containers with managed URLs and profiles the `postgres`/`vector-db` services out (`local-db`). Redis stays a container (RediSearch). Use Neon's DIRECT endpoint (no `-pooler`); the libpq-only `sslmode`/`channel_binding` params are translated for asyncpg in `_async_database_url` (`sslmode`→`ssl`, `channel_binding` dropped — pinned by `tests/test_database_url.py`).
 
 ## Docker
 
