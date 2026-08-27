@@ -61,6 +61,18 @@ docker compose -f docker-compose.yml -f docker-compose.prod.yml \
 Para systemd, `deploy/estimator.service` trae las líneas `ExecStart`/`ExecStop`
 de esta variante comentadas.
 
+**¿El VPS ya corre su propio Caddy/Nginx en 80/443?** El Caddy del
+`docker-compose.prod.yml` no podría arrancar (puertos ocupados). Apila además
+`docker-compose.external-proxy.yml` (siempre el último): aparca el Caddy del
+compose y publica `business-backend` solo en `127.0.0.1:3000`, de modo que el
+proxy del host lo sirve con un `reverse_proxy 127.0.0.1:3000` y la frontera se
+mantiene — desde fuera de la máquina el 3000 no existe.
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.prod.yml \
+               -f docker-compose.cloud.yml -f docker-compose.external-proxy.yml up -d
+```
+
 Las BBDD locales no arrancan pero sus volúmenes no se tocan; se recuperan con
 `docker compose --profile local-db up postgres vector-db`.
 
