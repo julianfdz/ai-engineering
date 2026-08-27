@@ -1,0 +1,152 @@
+# =============================================================================
+# Compose ÚNICO del despliegue en el VPS — build en la máquina + BBDD en Neon
+# =============================================================================
+# Autocontenido: NO se apila sobre docker-compose.yml ni ningún otro fichero.
+# Pensado para Portainer (stack tipo Repository, compose path = este fichero) o
+# para `docker compose -f docker-compose.vps-cloud.yml up -d` a mano.
+#
+# Qué asume:
+#   · Las dos bases de datos viven en Neon (AI_SERVICE_DATABASE_URL /
+#     BUSINESS_DATABASE_URL). Aquí no arranca ningún Postgres.
+#   · El TLS lo termina el Caddy que YA corre en el host como contenedor, en la
+#     red externa `intrabuhonet`. Solo business-backend se une a esa red; el
+#     servicio IA y Redis quedan en la red interna del stack — la frontera de
+#     siempre. En el Caddyfile:
+#
+#         estimator.mras.es {
+#             encode gzip zstd
+#             reverse_proxy business-backend:3000
+#         }
+#
+#   · Las imágenes se CONSTRUYEN aquí (no hay CI publicando en un registry).
+#     La primera build del servicio IA es pesada (~4,9 GB, torch).
+#   · Las variables llegan del entorno del stack (en Portainer, la sección
+#     Environment variables): no hay env_file — el .env no está en git.
+#
+# Al primer arranque cada entrypoint migra su base contra Neon
+# (RUN_MIGRATIONS=true): alembic (servicio IA) y db:prepare (Rails).
+
+services:
+  # ---------------------------------------------------------------------------
+  # Backend de negocio (Rails) — lo sirve el Caddy del host vía intrabuhonet
+  # ---------------------------------------------------------------------------
+  business-backend:
+    build:
+      context: ./business-backend
+      # Sin este build-arg el Dockerfile produce una imagen de DESARROLLO
+      # (es el mismo trap que en CI cubre `build-args: RAILS_ENV=production`).
+      args:
+        RAILS_ENV: production
+    container_name: business-backend
+
+    environment:
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: "1"
+      RAILS_SERVE_STATIC_FILES: "true"
+      # Sin esto Rails responde 403 a todo (y /up sigue verde).
+      RAILS_ALLOWED_HOSTS: "${APP_DOMAIN:?falta APP_DOMAIN -- el dominio que sirve tu Caddy}"
+      SECRET_KEY_BASE: "${SECRET_KEY_BASE:?falta SECRET_KEY_BASE -- generalo con openssl rand -hex 64}"
+      DATABASE_URL: "${BUSINESS_DATABASE_URL:?falta BUSINESS_DATABASE_URL -- la BBDD de Rails en Neon}"
+      # El servicio IA se resuelve por nombre dentro de la red interna del stack.
+      ESTIMATOR_API_BASE_URL: http://ai-service:8000
+      ESTIMATOR_AI_TIMEOUT: "${ESTIMATOR_AI_TIMEOUT:-180}"
+      # Rails ENVÍA este token al servicio IA en cada llamada.
+      AI_SERVICE_TOKEN: "${AI_SERVICE_TOKEN:-}"
+
+    volumes:
+      # Active Storage: sin volumen, los adjuntos mueren en cada redeploy.
+      - active_storage:/rails/storage
+
+    depends_on:
+      ai-service:
+        condition: service_healthy
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+      interval: 30s
+      timeout: 5s
+      start_period: 90s
+      retries: 5
+
+    networks:
+      - default
+      - intrabuhonet
+
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # ---------------------------------------------------------------------------
+  # Servicio IA (FastAPI) — SOLO en la red interna, sin puertos
+  # ---------------------------------------------------------------------------
+  ai-service:
+    build: ./ai-service
+    container_name: ai-service
+
+    environment:
+      APP_ENV: production
+      LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+      RUN_MIGRATIONS: "${RUN_MIGRATIONS:-true}"
+      DATABASE_URL: "${AI_SERVICE_DATABASE_URL:?falta AI_SERVICE_DATABASE_URL -- la BBDD pgvector en Neon}"
+      REDIS_URL: redis://redis:6379
+      OPENAI_API_KEY: "${OPENAI_API_KEY:?falta OPENAI_API_KEY}"
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      # FastAPI VALIDA este token; vacío = middleware desactivado.
+      AI_SERVICE_TOKEN: "${AI_SERVICE_TOKEN:-}"
+      RETRIEVAL_API_KEY: "${RETRIEVAL_API_KEY:-}"
+      ESTIMATE_API_KEY: "${ESTIMATE_API_KEY:-}"
+      PRIMARY_MODEL: "${PRIMARY_MODEL:-gpt-4o-mini}"
+      FALLBACK_MODEL: "${FALLBACK_MODEL:-claude-haiku-4-5-20251001}"
+      EMBEDDING_MODEL: "${EMBEDDING_MODEL:-text-embedding-3-small}"
+      LOGFIRE_SERVICE_NAME: "${LOGFIRE_SERVICE_NAME:-estimator}"
+
+    depends_on:
+      redis:
+        condition: service_healthy
+
+    # curl no viene en la imagen slim; se usa la stdlib de Python.
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 5s
+      start_period: 40s
+      retries: 3
+
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+  # ---------------------------------------------------------------------------
+  # Redis Stack — cachés CAG e idempotencia (RediSearch obligatorio)
+  # ---------------------------------------------------------------------------
+  redis:
+    # `redis-stack-server`: misma RediSearch que redis-stack, sin la UI del 8001.
+    image: redis/redis-stack-server:7.4.0-v0
+    container_name: estimator-redis
+
+    volumes:
+      - redis_data:/data
+
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+    restart: unless-stopped
+    logging:
+      driver: json-file
+      options: { max-size: "10m", max-file: "3" }
+
+volumes:
+  active_storage:
+  redis_data:
+
+networks:
+  # Red interna del stack (servicio IA + Redis solo son alcanzables aquí).
+  default:
+  # La red del Caddy del host — ya existe, no la crea este stack.
+  intrabuhonet:
+    external: true
