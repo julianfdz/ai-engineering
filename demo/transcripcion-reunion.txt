@@ -1,0 +1,77 @@
+Reunión de descubrimiento — Proyecto "Plataforma VETNOVA 360"
+Cliente: Marta Iglesias (Directora General) y Sergio Camacho (Responsable IT), VetNova Clínicas Veterinarias
+Consultor: equipo de estimación
+Fecha: reunión inicial
+
+[00:00:07] Consultor: Gracias por hacer hueco. Contadnos la foto completa del proyecto y después
+bajamos componente a componente.
+
+[00:00:19] Marta: VetNova son 14 clínicas veterinarias repartidas por España y un plan de abrir
+seis más en dos años. Nuestro problema es que todo lo digital se reduce a un WordPress con el
+teléfono de cada clínica. Queremos una plataforma completa, y os aviso de que tiene piezas muy
+distintas entre sí.
+
+[00:00:51] Consultor: Perfecto. Empecemos por el núcleo.
+
+[00:01:02] Sergio: La primera pieza es el portal de clientes, web. Registro y login de dueños de
+mascotas, ficha de cada mascota con historial clínico y calendario de vacunas, reserva de cita
+online contra la agenda real de cada clínica, y pago online de consultas y de nuestros planes de
+salud mensuales. Manejamos unos 40.000 clientes activos y unas 900 citas al día entre todas las
+clínicas. El pico es los lunes a primera hora.
+
+[00:02:30] Consultor: ¿La agenda de las clínicas dónde vive hoy?
+
+[00:02:36] Sergio: Ahí viene la segunda pieza, y es la que más miedo me da. Todo lo operativo —
+agendas, historiales clínicos, facturación, stock de medicamentos — vive en Vetesoft, un software
+de gestión veterinaria que usamos desde hace doce años. Expone una API REST, pero a medias:
+autenticación por token fijo, endpoints que devuelven XML en algunos módulos y JSON en otros, y
+un límite de 60 peticiones por minuto por licencia. Necesitamos una capa de integración seria:
+sincronización bidireccional de citas, lectura de historiales, y volcado de facturación. Con
+reintentos y colas, porque Vetesoft se cae más de lo que nos gustaría.
+
+[00:04:12] Consultor: Anotado: integración con Vetesoft como componente propio, con middleware,
+colas y reintentos. ¿Tercera pieza?
+
+[00:04:25] Marta: Una app móvil para los dueños, Android e iOS. Que vean el carnet de vacunación
+digital de su mascota, reciban recordatorios push de vacunas y desparasitaciones, puedan pedir
+cita desde el móvil y recibir las fotos que el veterinario les manda cuando dejan al animal
+ingresado. Para nosotros la app es marketing puro: tiene que ser bonita y muy simple. Nada de
+veinte pantallas.
+
+[00:05:40] Sergio: Y cuarta pieza: un panel interno de análisis para dirección. Ocupación de cada
+clínica, facturación por servicio, campañas de vacunación — cuántos clientes tienen la vacuna
+caducada y cuántos responden a los recordatorios —, y comparativas entre clínicas. Hoy Marta se
+hace esto en Excel cada mes y tarda dos días.
+
+[00:06:35] Marta: Con que se actualice cada noche me vale. No necesito tiempo real, necesito no
+volver a abrir ese Excel.
+
+[00:07:02] Consultor: ¿Restricciones de calendario o presupuesto que debamos conocer?
+
+[00:07:11] Marta: La campaña de vacunación de primavera es nuestro momento fuerte del año. El
+portal y los recordatorios tienen que estar en producción antes. La app puede llegar algo
+después, y el panel de dirección es lo último en prioridad. De presupuesto: la junta ha aprobado
+una horquilla, prefiero que me deis vuestra estimación honesta antes de compartirla.
+
+[00:08:05] Sergio: Un detalle técnico: los datos de salud de las mascotas no son datos de salud
+humanos, pero los datos de los dueños sí son datos personales — nombre, teléfono, dirección,
+tarjeta. Queremos RGPD bien hecho desde el diseño, no como parche final. Y el pago tiene que
+pasar por pasarela — Stripe o Redsys, nos da igual mientras cumpla PCI.
+
+[00:08:58] Consultor: ¿Equipo técnico interno con el que coordinar el día a día?
+
+[00:09:06] Sergio: Yo y una persona más. Mantenemos Vetesoft, la red de las clínicas y el
+WordPress. No vamos a poder desarrollar nada nosotros; sí podemos dar acceso, documentación de
+Vetesoft y hacer las pruebas de aceptación. Todo el desarrollo sería vuestro, con un handover
+documentado al final porque a medio plazo queremos internalizar el mantenimiento.
+
+[00:09:55] Consultor: Última: ¿algo que explícitamente quede FUERA del alcance?
+
+[00:10:03] Marta: Fuera queda todo lo que es la operativa interna de las clínicas — eso sigue en
+Vetesoft, no queremos sustituirlo. Y fuera también una tienda online de pienso y accesorios, que
+nos la han propuesto mil veces; quizá en una fase dos, pero no ahora. Que no se os cuele en la
+estimación.
+
+[00:10:40] Consultor: Clarísimo. Resumen: portal web de clientes con reservas y pagos, capa de
+integración con Vetesoft, app móvil para dueños, y panel analítico de dirección. Prioridad al
+portal y a la integración por la campaña de primavera. Preparamos la estimación desglosada.
