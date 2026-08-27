@@ -20,6 +20,27 @@ COPY pyproject.toml uv.lock* ./
 # uv will generate the lockfile if it doesn't exist yet.
 RUN uv sync --no-install-project --no-dev
 
+# -----------------------------------------------------------------------------
+# TORCH_CPU_ONLY (fork; off by default — CI and the S15/EC2 flow are untouched)
+# -----------------------------------------------------------------------------
+# The lockfile pins the default Linux torch wheel, which drags the CUDA runtime
+# (nvidia-* + triton, several GB) even though nothing in this project runs on a
+# GPU — torch exists only for the S10 cross-encoder reranker, which runs on
+# CPU. With this arg the builder swaps in the CPU wheel of the SAME torch
+# version from the official index and drops the CUDA libraries: identical
+# behaviour, image roughly half the size. Enabled by docker-compose.vps-cloud.yml
+# (the fork's VPS+Neon deployment); pyproject.toml and uv.lock stay untouched
+# on purpose, so syncing with upstream never conflicts.
+ARG TORCH_CPU_ONLY=false
+RUN if [ "$TORCH_CPU_ONLY" = "true" ]; then \
+        TORCH_VERSION="$(uv pip freeze --python /app/.venv | sed -n 's/^torch==\([0-9][0-9.]*\).*/\1/p')" && \
+        test -n "$TORCH_VERSION" && \
+        CUDA_PKGS="$(uv pip freeze --python /app/.venv | cut -d= -f1 | grep -E '^(nvidia-|triton$)' || true)" && \
+        uv pip uninstall --python /app/.venv torch $CUDA_PKGS && \
+        uv pip install --python /app/.venv --no-deps \
+            --index-url https://download.pytorch.org/whl/cpu "torch==${TORCH_VERSION}"; \
+    fi
+
 
 # =============================================================================
 # Stage 2 — Runtime

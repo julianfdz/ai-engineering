@@ -66,9 +66,20 @@ A mano, lo mismo es:
 docker compose -f docker-compose.vps-cloud.yml up -d --build
 ```
 
-La primera build del servicio IA es pesada (~4,9 GB, torch): disco y, si la RAM
-anda justa, swap. Al primer arranque los entrypoints migran contra Neon
+La primera build del servicio IA es pesada (torch): disco y, si la RAM anda
+justa, swap. Al primer arranque los entrypoints migran contra Neon
 (`RUN_MIGRATIONS=true`).
+
+**Torch CPU-only (solo esta variante).** Este compose pasa el build-arg
+`TORCH_CPU_ONLY=true` al Dockerfile del servicio IA: tras el `uv sync`, el
+builder sustituye el wheel de torch que fija el lockfile (que arrastra el
+runtime CUDA de NVIDIA, varios GB) por el wheel CPU de la MISMA versión desde
+`download.pytorch.org/whl/cpu`, y desinstala `nvidia-*`/`triton`. El
+comportamiento es idéntico — torch solo existe para el reranker de la S10, que
+corre en CPU, y en el VPS no hay GPU — y la imagen queda aproximadamente a la
+mitad. El arg por defecto es `false`, así que CI, el flujo EC2 de la S15 y
+cualquier otra build siguen bit a bit como antes; `pyproject.toml` y `uv.lock`
+no se tocan, de modo que sincronizar con el upstream nunca conflictúa por esto.
 
 ## Llevar el corpus a Neon
 

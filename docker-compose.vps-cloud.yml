@@ -81,7 +81,14 @@ services:
   # Servicio IA (FastAPI) — SOLO en la red interna, sin puertos
   # ---------------------------------------------------------------------------
   ai-service:
-    build: ./ai-service
+    build:
+      context: ./ai-service
+      # Torch CPU-only (sin las librerías CUDA que arrastra el wheel por
+      # defecto): mismo comportamiento — el reranker corre en CPU igualmente,
+      # aquí no hay GPU — e imagen aproximadamente a la mitad. Solo esta
+      # versión cloud lo activa; el Dockerfile por defecto no cambia nada.
+      args:
+        TORCH_CPU_ONLY: "true"
     container_name: ai-service
 
     environment:
