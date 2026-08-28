@@ -1,0 +1,18 @@
+Somos VetNova, una red de 14 clínicas veterinarias en España. Queremos construir
+un portal web para nuestros clientes (dueños de mascotas) que hoy no tienen
+ninguna forma digital de relacionarse con nosotros.
+
+El portal debe permitir: registro y login de clientes, ficha de cada mascota con
+su historial de visitas y vacunas, reserva de cita online contra la agenda real
+de cada clínica (hoy la agenda vive en nuestro software de gestión Vetesoft, que
+expone una API REST), recordatorios automáticos de vacunación por email y SMS, y
+pago online de consultas y planes de salud con tarjeta (pasarela Stripe o
+Redsys, a decidir).
+
+Manejamos unos 40.000 clientes activos y unas 900 citas diarias entre todas las
+clínicas. El pico de uso esperado es lunes por la mañana. Necesitamos que el
+sistema esté en producción antes de la campaña de vacunación de primavera.
+
+El equipo interno son 2 personas de IT que hoy mantienen Vetesoft y la web
+corporativa (WordPress); no tienen experiencia en desarrollo de producto. Todo
+el desarrollo sería externo, con handover documentado al final.

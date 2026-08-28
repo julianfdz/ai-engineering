@@ -49,7 +49,7 @@ graph TB
     bb --> pg
     ai --> vdb
     ai --> redis
-    ai -->|HTTPS · saliente| llm
+    ai -->|"HTTPS · saliente"| llm
 
     classDef publicBox fill:#1f6feb22,stroke:#1f6feb,stroke-width:2px
     classDef privateBox fill:#da363322,stroke:#da3633,stroke-width:2px
