@@ -104,10 +104,107 @@ la S14 (¿cuánto control le cedes al modelo? — supervisor).
 
 ---
 
-## 2. [PENDIENTE] La Responses API y el bucle a mano
+## 2. ¿Qué son las tools?
 
-## 3. [PENDIENTE] Las herramientas: esquemas estrictos y dispatch
+### La idea en una frase
 
-## 4. [PENDIENTE] Demo en vivo con la transcripción compleja
+Una tool es una **función tuya que le prestas al modelo**: tú la declaras
+(nombre, para qué sirve, qué argumentos acepta), el modelo decide cuándo
+llamarla y con qué argumentos — pero **quien la ejecuta siempre es tu código**.
 
-## 5. [PENDIENTE] Ejercicio de los alumnos
+![El ciclo de una tool call](../../assets/s12-tool-call-flow.svg)
+
+### El malentendido a matar primero
+
+"El modelo ejecuta funciones" — NO. El modelo es un generador de texto: lo
+único que hace es emitir un JSON con la *intención* (`search_budgets` con
+`{"query": "integración ERP"}`). Tu código lee esa intención, decide si la
+honra, ejecuta la función de verdad y le devuelve el resultado como texto.
+El LLM nunca toca el mundo; **tus manos son las únicas manos**. Esta
+distinción es la base de toda la seguridad de agentes.
+
+### El contrato: JSON Schema
+
+Cada tool se declara con un esquema — qué campos, de qué tipo, cuáles
+obligatorios. En nuestro código (`agent_tools.py`) los tres esquemas van con
+`strict: true`: el proveedor **garantiza** que los argumentos que emite el
+modelo cumplen el esquema (generación restringida, la misma maquinaria que
+Instructor usa para los outputs estructurados de la S4 — mismo truco, otra
+puerta). Y son deliberadamente **planos**: cuanto más simple el esquema, menos
+se equivoca el modelo al rellenarlo.
+
+### Qué mirar en nuestro código
+
+- `agent_tools.py` — los tres esquemas + sus implementaciones + `dispatch_tool`
+  (el "router" que mapea nombre → función).
+- El detalle de oficio: si la tool falla, el error **se devuelve al modelo
+  como texto** en vez de romper el bucle — y el modelo se autocorrige en el
+  siguiente turno (reintenta con otros argumentos). Un error también es una
+  observación.
+- La cara de seguridad: la lista de tools ES la superficie de acción del
+  agente — lo que no está declarado, no puede hacerlo. De ahí sale el "mínimo
+  privilegio" de la S14 (`supervisor/privilege.py`): a cada agente, solo sus
+  tools.
+
+### Diseño de tools de calidad (adelanto del bloque de patrones)
+
+Pocas y ortogonales (3 bien definidas > 10 solapadas), nombres que digan lo
+que hacen, descripciones escritas PARA el modelo (son prompt), argumentos
+tipados y estrechos, y errores descriptivos (el modelo corrige mejor con
+"threshold must be between 0 and 1" que con "error 500").
+
+---
+
+## 3. ¿Qué son las skills?
+
+### La idea en una frase
+
+Si la tool es **poder hacer** (una capacidad ejecutable), la skill es **saber
+hacer**: conocimiento procedimental empaquetado — instrucciones, criterio,
+trucos del oficio, a veces con recursos o scripts de apoyo — que el agente
+carga cuando la tarea lo pide.
+
+![Tool vs skill](../../assets/s12-tools-vs-skills.svg)
+
+### La distinción con un ejemplo del proyecto
+
+- Tool: `search_budgets(query)` — la *capacidad* de buscar precedentes.
+- Skill: "Cómo estimar un proyecto con ERP: busca por módulo y nunca en
+  global; desconfía de precedentes anteriores a 2019; si el cliente menciona
+  SAP, añade siempre una partida de middleware" — el *manual de la casa* que
+  dice cuándo y cómo usar esa capacidad.
+
+La skill **orquesta** tools: no añade capacidades nuevas, añade criterio sobre
+las que ya hay.
+
+### Dónde lo tienen delante los alumnos
+
+Claude Code (o Cursor) es el ejemplo vivo: sus *skills* son carpetas con un
+`SKILL.md` de instrucciones (+ scripts opcionales) que el agente carga **bajo
+demanda** — en contexto solo viaja el nombre y una línea de descripción, y el
+contenido completo entra únicamente cuando la tarea encaja. Ese "cargar solo
+cuando toca" (*progressive disclosure*) es la gracia: el saber-hacer de la
+casa no quema tokens de contexto hasta que hace falta.
+
+### Honestidad sobre nuestro proyecto
+
+Nuestro agente S12 **no tiene un sistema de skills** — es un concepto más
+reciente que el temario original. Lo más parecido que ya existe: los prompts
+versionados de la S4 (conocimiento de cómo estimar, empaquetado fuera del
+código) y el parámetro `persona` del `agent_loop.py`, que inyecta
+"instrucciones del operador" extra al system prompt. La diferencia con una
+skill de verdad: aquí lo decide el código al arrancar; en un sistema de
+skills, el agente elige qué manual abrir según la tarea.
+
+### El mapa mental para cerrar
+
+> **Tool = mano. Skill = manual. Agente = quien decide qué manual abrir y qué
+> mano usar.**
+
+---
+
+## 4. [PENDIENTE] La Responses API y el bucle a mano
+
+## 5. [PENDIENTE] Demo en vivo con la transcripción compleja
+
+## 6. [PENDIENTE] Ejercicio de los alumnos

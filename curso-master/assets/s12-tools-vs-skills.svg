@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 430" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <rect x="0" y="0" width="860" height="430" fill="#f8fafc" rx="12"/>
+  <text x="430" y="38" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Tool vs Skill — poder hacer vs saber hacer</text>
+
+  <!-- TOOL -->
+  <rect x="45" y="70" width="370" height="290" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="230" y="105" text-anchor="middle" font-size="17" font-weight="700" fill="#14532d">TOOL — «poder hacer»</text>
+  <text x="230" y="135" text-anchor="middle" font-size="13.5" fill="#14532d">Una capacidad de ACTUAR:</text>
+  <text x="230" y="154" text-anchor="middle" font-size="13.5" fill="#14532d">una función ejecutable con contrato</text>
+
+  <rect x="75" y="175" width="310" height="88" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="230" y="199" text-anchor="middle" font-size="12.5" font-family="ui-monospace, monospace" fill="#0f172a">search_budgets(query)</text>
+  <text x="230" y="221" text-anchor="middle" font-size="12.5" font-family="ui-monospace, monospace" fill="#0f172a">derive_task_hours(matches)</text>
+  <text x="230" y="243" text-anchor="middle" font-size="12.5" font-family="ui-monospace, monospace" fill="#0f172a">emitir_reembolso(importe ≤ 100€)</text>
+
+  <text x="230" y="292" text-anchor="middle" font-size="12.5" fill="#475569">Define QUÉ PUEDE hacer el agente</text>
+  <text x="230" y="311" text-anchor="middle" font-size="12.5" fill="#475569">→ su superficie de acción (y de riesgo):</text>
+  <text x="230" y="330" text-anchor="middle" font-size="12.5" fill="#475569">mínimo privilegio, límites con dientes</text>
+
+  <!-- SKILL -->
+  <rect x="445" y="70" width="370" height="290" rx="14" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="630" y="105" text-anchor="middle" font-size="17" font-weight="700" fill="#78350f">SKILL — «saber hacer»</text>
+  <text x="630" y="135" text-anchor="middle" font-size="13.5" fill="#78350f">Conocimiento empaquetado:</text>
+  <text x="630" y="154" text-anchor="middle" font-size="13.5" fill="#78350f">instrucciones + recursos, cargados a demanda</text>
+
+  <rect x="475" y="175" width="310" height="88" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="630" y="199" text-anchor="middle" font-size="12.5" fill="#0f172a">«Cómo estimar un proyecto ERP:</text>
+  <text x="630" y="221" text-anchor="middle" font-size="12.5" fill="#0f172a">busca por módulo, nunca global;</text>
+  <text x="630" y="243" text-anchor="middle" font-size="12.5" fill="#0f172a">desconfía de proyectos &lt; 2019...»</text>
+
+  <text x="630" y="292" text-anchor="middle" font-size="12.5" fill="#475569">Define CÓMO hacer bien un tipo de tarea</text>
+  <text x="630" y="311" text-anchor="middle" font-size="12.5" fill="#475569">→ el manual de la casa: procedimiento,</text>
+  <text x="630" y="330" text-anchor="middle" font-size="12.5" fill="#475569">criterio, trucos del oficio</text>
+
+  <text x="430" y="398" text-anchor="middle" font-size="13.5" font-weight="600" fill="#0f172a">La skill ORQUESTA tools: el manual dice cuándo y cómo usar las manos</text>
+</svg>
