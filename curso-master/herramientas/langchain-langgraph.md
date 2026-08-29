@@ -47,6 +47,11 @@ esperan a un humano piden un grafo, no una cadena.
 - No confundir con **LangSmith**, el tercer producto de la casa: la plataforma
   de observabilidad/evals (SaaS). Aquí ese papel lo cumple Logfire.
 
+
+![alt text](../assets/langchain1.png)
+
+![alt text](../assets/langchain2.png)
+
 ## Dónde verlo en el proyecto
 
 De **LangChain** usamos solo paquetes satélite, como utilidades sueltas:
