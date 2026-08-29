@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 440" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <rect x="0" y="0" width="860" height="440" fill="#f8fafc" rx="12"/>
+  <text x="430" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Lo que viaja en UNA llamada — roles y autoridad</text>
+
+  <!-- payload frame -->
+  <rect x="60" y="60" width="480" height="340" rx="14" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="300" y="88" text-anchor="middle" font-size="13" font-weight="600" fill="#475569">la petición HTTP (messages=[...])</text>
+
+  <!-- system -->
+  <rect x="90" y="105" width="420" height="100" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="110" y="132" font-size="15" font-weight="700" fill="#1e3a8a">SYSTEM PROMPT</text>
+  <text x="110" y="155" font-size="12.5" fill="#1e3a8a">Lo pone EL DESARROLLADOR: identidad, reglas,</text>
+  <text x="110" y="173" font-size="12.5" fill="#1e3a8a">formato de salida. El usuario ni lo ve.</text>
+  <text x="110" y="194" font-size="11.5" font-family="ui-monospace, monospace" fill="#475569">system.j2 · STRUCTURE_SYSTEM_PROMPT</text>
+
+  <!-- user -->
+  <rect x="90" y="220" width="420" height="85" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="110" y="247" font-size="15" font-weight="700" fill="#14532d">USER PROMPT</text>
+  <text x="110" y="270" font-size="12.5" fill="#14532d">Lo pone EL USUARIO: la petición de este turno.</text>
+  <text x="110" y="291" font-size="11.5" font-family="ui-monospace, monospace" fill="#475569">user.j2 · el brief del formulario</text>
+
+  <!-- assistant/tool grayed -->
+  <rect x="90" y="320" width="420" height="60" rx="10" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="2" stroke-dasharray="5 4"/>
+  <text x="110" y="345" font-size="13" font-weight="600" fill="#64748b">assistant / tool</text>
+  <text x="110" y="366" font-size="12" fill="#64748b">los turnos previos y resultados de tools (el historial)</text>
+
+  <!-- master prompt annotation -->
+  <path d="M 515 155 C 570 155, 570 155, 600 155" stroke="#d97706" stroke-width="2" fill="none"/>
+  <rect x="600" y="95" width="220" height="130" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="710" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#78350f">"MASTER PROMPT"</text>
+  <text x="710" y="145" text-anchor="middle" font-size="12" fill="#78350f">jerga, no un rol de la API:</text>
+  <text x="710" y="163" text-anchor="middle" font-size="12" fill="#78350f">el system fundacional del</text>
+  <text x="710" y="181" text-anchor="middle" font-size="12" fill="#78350f">producto, curado y versionado</text>
+  <text x="710" y="204" text-anchor="middle" font-size="11.5" font-family="ui-monospace, monospace" fill="#92400e">estimation/v1→v3/system.j2</text>
+
+  <!-- rule -->
+  <rect x="600" y="250" width="220" height="130" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+  <text x="710" y="277" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">La regla de reparto</text>
+  <text x="710" y="302" text-anchor="middle" font-size="12" fill="#334155">System = reglas del juego</text>
+  <text x="710" y="322" text-anchor="middle" font-size="12" fill="#334155">User = la petición de ahora</text>
+  <text x="710" y="349" text-anchor="middle" font-size="11.5" font-weight="600" fill="#b91c1c">Nunca reglas en el user,</text>
+  <text x="710" y="366" text-anchor="middle" font-size="11.5" font-weight="600" fill="#b91c1c">ni datos de usuario en el system</text>
+
+  <text x="300" y="425" text-anchor="middle" font-size="12" fill="#475569">A más arriba, más autoridad: el system manda sobre el user</text>
+</svg>

@@ -203,8 +203,109 @@ skills, el agente elige qué manual abrir según la tarea.
 
 ---
 
-## 4. [PENDIENTE] La Responses API y el bucle a mano
+## 4. Prompt engineering: master, system y user prompt
 
-## 5. [PENDIENTE] Demo en vivo con la transcripción compleja
+### Los tres niveles
 
-## 6. [PENDIENTE] Ejercicio de los alumnos
+Una llamada a un LLM no lleva "un prompt": lleva una **conversación con
+roles**, y cada rol tiene un peso distinto. De más autoridad a menos:
+
+![Roles de prompt en una llamada](../../assets/s12-prompt-roles.svg)
+
+**System prompt** — las instrucciones del *desarrollador*: quién es el modelo,
+qué reglas sigue, en qué formato responde. El usuario final ni lo ve ni
+debería poder pisarlo (por eso los ataques de *prompt injection* van justo a
+intentar colarse aquí). En nuestro proyecto: los `system.j2` de
+`app/foundation/prompts/` y las constantes `*_SYSTEM_PROMPT` del agente.
+
+**User prompt** — el turno del *usuario*: la petición concreta de esta vez.
+En nuestro proyecto: los `user.j2`, rellenados con el brief del formulario.
+
+**Master prompt** — ojo: NO es un rol de la API (la API solo conoce system /
+user / assistant + tool). Es jerga de la industria para el **system prompt
+fundacional de un producto**: ese documento grande y curado — identidad,
+reglas de negocio, tono, límites — del que a veces se ensamblan variantes. Los
+"system prompts filtrados" de ChatGPT o Claude que circulan por internet son
+exactamente eso: el master prompt del producto. En nuestro proyecto, el
+equivalente es el `system.j2` versionado (v1→v3): el conocimiento de "cómo se
+estima en esta casa", mantenido como un artefacto con versiones — el master
+prompt del estimador.
+
+### La regla de reparto (para la pizarra)
+
+> **System = quién eres y las reglas del juego (lo pone el desarrollador).
+> User = qué te pido ahora (lo pone el usuario).
+> Lo que nunca: reglas en el user prompt, ni datos del usuario en el system.**
+
+Esa última línea es la que separa el prompting amateur del profesional: si las
+reglas viajan en el turno de usuario, cualquier usuario puede renegociarlas.
+
+### En el agente de hoy
+
+El bucle S12 tiene su system prompt (`STRUCTURE_SYSTEM_PROMPT`) y además
+admite un extra de operador (el parámetro `persona`, que se CONCATENA al
+system, nunca al user — coherente con la regla de arriba). Y un matiz nuevo de
+esta sesión: **las descripciones de las tools también son prompt** — el modelo
+decide qué herramienta usar leyéndolas, así que se redactan con el mismo
+cuidado que el system.
+
+---
+
+## 5. El concepto de "sesión" en IA
+
+### La intuición... y la trampa
+
+La intuición natural: "una sesión es una conexión con el servidor del modelo
+que va guardando mi conversación". Cuidado: **el modelo no guarda nada y no
+hay conexión persistente**. Cada llamada a la API es una petición HTTP
+independiente y sin estado — el modelo nace, lee TODO lo que le mandas,
+responde y muere. Si en el turno 10 "se acuerda" del turno 1 es porque
+*alguien le reenvió los 9 turnos anteriores* dentro de la petición.
+
+La definición honesta:
+
+> **Una sesión es una ilusión que construye tu backend: el historial
+> acumulado de una conversación, guardado por ti y reenviado (entero o
+> resumido) en cada turno.** La ventana de contexto no es la sesión — es el
+> LÍMITE físico de cuánto historial cabe por llamada.
+
+![La sesión es una ilusión del backend](../../assets/s12-sesion-ilusion.svg)
+
+### Las tres formas de construir esa ilusión (las tres están en el proyecto)
+
+1. **Historial en tu backend (el modo clásico).** Guardas los mensajes y los
+   reenvías todos en cada llamada. Es nuestra S5: `chat_sessions` en Rails +
+   las sesiones del servicio IA — que viven en un dict en RAM (¡su propio
+   docstring avisa de que eso no sobrevive a un reinicio!).
+2. **Estado en el proveedor (lo nuevo).** La Responses API de OpenAI permite
+   `store=true` + `previous_response_id`: el servidor SÍ retiene la
+   conversación y tú solo mandas el delta. Es exactamente lo que hace nuestro
+   bucle S12 — y por eso encadena turnos sin reenviar el historial (incluido
+   el razonamiento interno, que nunca viaja de vuelta). Aquí la intuición de
+   la "conexión historificada" se vuelve casi verdad... pero es una excepción
+   reciente, no la regla.
+3. **Estado propio con identificador (la versión producción).** Un
+   `thread_id` + persistencia tuya: el checkpointer de LangGraph (S13) guarda
+   el estado del grafo en Postgres por hilo, y la "sesión" sobrevive a
+   reinicios y a pausas de días esperando a un humano.
+
+### Las consecuencias que importan (y que se pagan)
+
+- **El coste crece con la sesión**: en el modo clásico, cada turno re-envía y
+  re-factura todo el historial. De ahí el prompt caching de los proveedores y
+  nuestra obsesión con las cachés.
+- **La ventana de contexto es un techo, no una promesa**: cuando el historial
+  no cabe, alguien decide qué se tira o se resume — nuestra S5 tiene un módulo
+  entero de compresión de conversación por eso.
+- **"El modelo me recuerda" es siempre ingeniería**: memoria entre sesiones
+  (el "recuérdame para la próxima vez") es OTRA capa más — recuperar datos del
+  usuario e inyectarlos al contexto — que alguien construyó. Nada de esto
+  viene de fábrica.
+
+---
+
+## 6. [PENDIENTE] La Responses API y el bucle a mano
+
+## 7. [PENDIENTE] Demo en vivo con la transcripción compleja
+
+## 8. [PENDIENTE] Ejercicio de los alumnos
