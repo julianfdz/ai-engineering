@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 470" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <rect x="0" y="0" width="860" height="470" fill="#f8fafc" rx="12"/>
+  <text x="430" y="34" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">La jerarquía de memoria de un sistema con LLM — como la de un ordenador</text>
+  <text x="430" y="56" text-anchor="middle" font-size="12" fill="#475569">arriba: más rápido, más caro, más volátil · abajo: más lento, más barato, más duradero</text>
+
+  <!-- niveles, de arriba a abajo -->
+  <rect x="230" y="75" width="400" height="60" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="430" y="99" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">KV / PROMPT CACHE (el proveedor)</text>
+  <text x="430" y="118" text-anchor="middle" font-size="11" fill="#1e3a8a">el input ya procesado · vive minutos · ~50–90% dto</text>
+  <text x="700" y="99" font-size="11" font-style="italic" fill="#64748b">≈ registros/L1</text>
+
+  <rect x="205" y="145" width="450" height="60" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="430" y="169" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">VENTANA DE CONTEXTO (memoria de trabajo)</text>
+  <text x="430" y="188" text-anchor="middle" font-size="11" fill="#14532d">lo que el modelo "tiene en mente" ESTA llamada · se evapora al responder</text>
+  <text x="710" y="169" font-size="11" font-style="italic" fill="#64748b">≈ RAM</text>
+
+  <rect x="180" y="215" width="500" height="60" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="430" y="239" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">SESIÓN (historial de conversación)</text>
+  <text x="430" y="258" text-anchor="middle" font-size="11" fill="#78350f">tu backend lo guarda y lo re-inyecta cada turno · S5: chat_sessions · se comprime al crecer</text>
+  <text x="722" y="239" font-size="11" font-style="italic" fill="#64748b">≈ disco</text>
+
+  <rect x="155" y="285" width="550" height="60" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+  <text x="430" y="309" text-anchor="middle" font-size="13" font-weight="700" fill="#831843">ESTADO DE EJECUCIÓN (checkpoint)</text>
+  <text x="430" y="328" text-anchor="middle" font-size="11" fill="#831843">un run a medias, persistido paso a paso · sobrevive reinicios y pausas de días · S13: Postgres</text>
+  <text x="740" y="309" font-size="11" font-style="italic" fill="#64748b">≈ hibernar</text>
+
+  <rect x="130" y="355" width="600" height="60" rx="10" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="430" y="379" text-anchor="middle" font-size="13" font-weight="700" fill="#312e81">MEMORIA A LARGO PLAZO (entre sesiones)</text>
+  <text x="430" y="398" text-anchor="middle" font-size="11" fill="#312e81">"acuérdate de mí la próxima vez" · datos del usuario recuperados e inyectados al contexto · siempre es ingeniería</text>
+  <text x="748" y="379" font-size="11" font-style="italic" fill="#64748b">≈ archivo</text>
+
+  <text x="430" y="448" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f172a">Aparte quedan las cachés de RESPUESTA (exacta/semántica, Redis): no son memoria del agente — son no volver a pensar lo ya pensado</text>
+</svg>
