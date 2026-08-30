@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 460" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="460" fill="#f8fafc" rx="12"/>
+  <text x="430" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">RAG — el conocimiento vive FUERA, y se recupera lo justo en cada pregunta</text>
+
+  <!-- offline: ingesta -->
+  <rect x="40" y="70" width="780" height="90" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="2" stroke-dasharray="6 4"/>
+  <text x="430" y="94" text-anchor="middle" font-size="12.5" font-weight="700" fill="#64748b">ANTES (offline, una vez) — la ingesta</text>
+  <text x="430" y="117" text-anchor="middle" font-size="12" fill="#475569">documentos → trocear (chunking) → convertir cada trozo en vector (embedding) → guardar en la BBDD vectorial</text>
+  <text x="430" y="140" text-anchor="middle" font-size="11.5" font-family="ui-monospace, monospace" fill="#64748b">corpus: presupuestos históricos → pgvector (budget_chunks, vector 1536)</text>
+
+  <!-- online -->
+  <rect x="40" y="195" width="130" height="80" rx="12" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+  <text x="105" y="228" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0f172a">PREGUNTA</text>
+  <text x="105" y="250" text-anchor="middle" font-size="11" fill="#475569">"¿cuánto cuesta</text>
+  <text x="105" y="265" text-anchor="middle" font-size="11" fill="#475569">integrar un ERP?"</text>
+
+  <path d="M 175 235 L 215 235" stroke="#475569" stroke-width="2.5" marker-end="url(#arrr)"/>
+  <rect x="220" y="195" width="150" height="80" rx="12" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+  <text x="295" y="223" text-anchor="middle" font-size="13" font-weight="700" fill="#831843">1 · RETRIEVE</text>
+  <text x="295" y="244" text-anchor="middle" font-size="11.5" fill="#831843">buscar los K trozos</text>
+  <text x="295" y="261" text-anchor="middle" font-size="11.5" fill="#831843">más parecidos (vectores)</text>
+
+  <path d="M 375 235 L 415 235" stroke="#475569" stroke-width="2.5" marker-end="url(#arrr)"/>
+  <rect x="420" y="195" width="150" height="80" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="495" y="223" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">2 · AUGMENT</text>
+  <text x="495" y="244" text-anchor="middle" font-size="11.5" fill="#78350f">montar el prompt CON</text>
+  <text x="495" y="261" text-anchor="middle" font-size="11.5" fill="#78350f">lo recuperado como fuentes</text>
+
+  <path d="M 575 235 L 615 235" stroke="#475569" stroke-width="2.5" marker-end="url(#arrr)"/>
+  <rect x="620" y="195" width="150" height="80" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="695" y="223" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">3 · GENERATE</text>
+  <text x="695" y="244" text-anchor="middle" font-size="11.5" fill="#1e3a8a">responder ANCLADO a</text>
+  <text x="695" y="261" text-anchor="middle" font-size="11.5" fill="#1e3a8a">las fuentes, con citas</text>
+
+  <!-- bbdd vectorial -->
+  <rect x="220" y="315" width="150" height="75" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="295" y="343" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">BBDD VECTORIAL</text>
+  <text x="295" y="363" text-anchor="middle" font-size="11.5" font-family="ui-monospace, monospace" fill="#14532d">pgvector · HNSW</text>
+  <path d="M 295 310 L 295 280" stroke="#16a34a" stroke-width="2.5" marker-end="url(#arrr)"/>
+
+  <!-- respuesta -->
+  <rect x="620" y="315" width="150" height="75" rx="12" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+  <text x="695" y="343" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">RESPUESTA</text>
+  <text x="695" y="363" text-anchor="middle" font-size="11.5" fill="#475569">"~480h, según los</text>
+  <text x="695" y="378" text-anchor="middle" font-size="11.5" fill="#475569">proyectos B-041 y B-112"</text>
+  <path d="M 695 280 L 695 310" stroke="#475569" stroke-width="2.5" marker-end="url(#arrr)"/>
+
+  <text x="430" y="428" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">La apuesta RAG: el corpus es demasiado grande o cambia demasiado para vivir en el prompt —</text>
+  <text x="430" y="448" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">se indexa fuera y cada pregunta recupera SOLO lo relevante (y puede citar de dónde salió)</text>
+</svg>
