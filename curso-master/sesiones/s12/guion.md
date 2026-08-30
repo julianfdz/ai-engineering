@@ -6,7 +6,9 @@
 
 Un agente es un LLM metido en un bucle, con **herramientas** que puede invocar
 y un **objetivo** — donde es el propio modelo, y no tu código, quien decide en
-cada paso qué hacer a continuación.
+cada paso qué hacer a continuación. 
+
+**Es decir, esto ya no es determinista, es agéntico.**
 
 La frase que separa las aguas y sobre la que pivota toda la sesión:
 
