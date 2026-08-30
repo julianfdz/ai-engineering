@@ -33,6 +33,40 @@ título perfecto: *"Don't do RAG when CAG is all you need"*.
    de OpenAI/Anthropic cachea el prefijo largo del contexto entre llamadas —
    CAG a nivel de infraestructura.)
 
+## ¿Por qué se llama "caché"? (la pregunta trampa — y su respuesta de verdad)
+
+Objeción legítima: "meter conocimiento en el prompt es *prompting*, no una
+caché". Correcto — la caché del nombre **no es la de las respuestas**: es la
+**KV cache del propio modelo**. Cuando el LLM lee tu prompt, antes de generar
+nada hace el *prefill*: procesa todos los tokens de entrada calculando su
+estado interno de atención (las *keys* y *values* de cada capa). Ese cómputo
+es caro y crece con la longitud del prompt — pero es **determinista**: mismo
+prefijo de tokens, mismo estado. Así que se puede guardar y reutilizar. Eso es
+la KV cache, y es una caché en el sentido clásico: resultado intermedio
+precomputado que te ahorra recomputar.
+
+La propuesta del paper original es exactamente esa: carga TODO tu corpus como
+un prompt gigante **una vez**, conserva su KV cache, y responde mil preguntas
+contra ese estado ya procesado sin volver a pagarlo. *Cache*-augmented
+generation: generación aumentada por el conocimiento **ya cacheado dentro del
+modelo** — por oposición a *retrieval*-augmented (buscarlo fuera en cada
+pregunta). La versión comercial de esto es el **prompt caching** de los
+proveedores: OpenAI/Anthropic detectan prefijos repetidos y te cobran los
+tokens cacheados a fracción de precio. Si alguna vez pensaste "los proveedores
+cachean el input y por eso sale más barato" — eso ES la caché que da nombre a
+CAG.
+
+**Y una distinción que conviene dar en clase**: las cachés de respuesta del
+proyecto (exacta y semántica, en Redis) son *otra* cosa — cachés de
+aplicación, clásicas, que **sirven la respuesta guardada tal cual, sin
+generar nada nuevo**. Esa es la línea divisoria del vocabulario: si sirves lo
+guardado verbatim, es caché; si recuperas respuestas anteriores para
+*aumentar una generación nueva*, eso ya no es caché — es retrieval (un mini
+RAG sobre tu propio historial, patrón perfectamente válido y distinto). El
+"CAG" del máster agrupa ambas capas bajo un mismo paraguas — el de la
+arquitectura *cache-first* — pero saber que son dos mecanismos distintos (KV
+cache del input vs caché de respuestas) es entenderlo de verdad.
+
 ## "¿Pero esto no es una tontería? Es un prompt y una caché"
 
 Sí — **y esa simplicidad es exactamente el punto**. CAG no impresiona en una
