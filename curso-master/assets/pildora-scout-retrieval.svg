@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 470" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrs" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="470" fill="#f8fafc" rx="12"/>
+  <text x="430" y="34" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">Scout Retrieval — en vez de indexar los ficheros, envía un explorador</text>
+
+  <!-- RAG lado -->
+  <rect x="40" y="60" width="380" height="350" rx="12" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+  <text x="230" y="88" text-anchor="middle" font-size="14" font-weight="700" fill="#831843">RAG clásico (índice determinista)</text>
+  <text x="60" y="115" font-size="11.5" fill="#831843">1 · ANTES: trocear + embeber + indexar TODO</text>
+  <text x="60" y="134" font-size="11.5" fill="#831843">     (se paga aunque nunca se pregunte por ello)</text>
+  <text x="60" y="158" font-size="11.5" fill="#831843">2 · pregunta → top-K por similitud → contexto</text>
+  <rect x="60" y="175" width="340" height="120" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="230" y="198" text-anchor="middle" font-size="11" font-family="ui-monospace, monospace" fill="#334155">docs → chunks → vectores → BBDD</text>
+  <text x="230" y="220" text-anchor="middle" font-size="11" font-family="ui-monospace, monospace" fill="#334155">query → embed → k-NN → top-K</text>
+  <text x="230" y="248" text-anchor="middle" font-size="10.5" fill="#64748b">una sola pasada: lo que el índice no acercó,</text>
+  <text x="230" y="264" text-anchor="middle" font-size="10.5" fill="#64748b">no existe · el corpus queda congelado al ingestar</text>
+  <text x="60" y="325" font-size="11.5" font-weight="600" fill="#831843">Gana cuando: corpus enorme, miles de</text>
+  <text x="60" y="343" font-size="11.5" font-weight="600" fill="#831843">consultas, latencia baja obligatoria</text>
+  <text x="60" y="375" font-size="11" fill="#9d174d">Coste: la ingesta (embeddings) + mantener</text>
+  <text x="60" y="392" font-size="11" fill="#9d174d">el índice fresco (reindexar al cambiar)</text>
+
+  <!-- Scout lado -->
+  <rect x="440" y="60" width="380" height="350" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="630" y="88" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">Scout Retrieval (exploración agéntica)</text>
+  <text x="460" y="115" font-size="11.5" fill="#14532d">0 · sin ingesta: los ficheros se quedan donde están</text>
+  <text x="460" y="139" font-size="11.5" fill="#14532d">1 · pregunta → un agente (o subagente) EXPLORA:</text>
+  <rect x="460" y="155" width="340" height="140" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="480" y="178" font-size="11" font-family="ui-monospace, monospace" fill="#334155">ls  facturas/        → veo 2024/ y 2025/</text>
+  <text x="480" y="198" font-size="11" font-family="ui-monospace, monospace" fill="#334155">grep "ERP" 2025/     → 3 ficheros candidatos</text>
+  <text x="480" y="218" font-size="11" font-family="ui-monospace, monospace" fill="#334155">read presupuesto_b41 → cita a b12, lo sigo</text>
+  <text x="480" y="238" font-size="11" font-family="ui-monospace, monospace" fill="#334155">read presupuesto_b12 → AQUÍ está el dato</text>
+  <text x="630" y="266" text-anchor="middle" font-size="10.5" fill="#64748b">bucle razonar→actuar→observar: cada hallazgo</text>
+  <text x="630" y="282" text-anchor="middle" font-size="10.5" fill="#64748b">guía la siguiente búsqueda, como un humano</text>
+  <text x="460" y="325" font-size="11.5" font-weight="600" fill="#14532d">Gana cuando: corpus vivo (código, docs que</text>
+  <text x="460" y="343" font-size="11.5" font-weight="600" fill="#14532d">cambian), preguntas que piden seguir pistas</text>
+  <text x="460" y="375" font-size="11" fill="#166534">Coste: tokens y latencia POR CONSULTA + exige</text>
+  <text x="460" y="392" font-size="11" fill="#166534">un runtime con acceso a ficheros (eje 4)</text>
+
+  <text x="430" y="443" text-anchor="middle" font-size="12.5" font-weight="600" fill="#0f172a">Es lo que hace Claude Code cuando le preguntas por tu repo: nadie lo indexó — el agente fue a mirar</text>
+</svg>

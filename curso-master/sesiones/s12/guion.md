@@ -373,7 +373,18 @@ ejecución.
 
 ---
 
-## 7. [PENDIENTE] Tipos de agentes: los ejes que la industria mezcla
+## 7. Tipos de agentes: la ficha de 5 preguntas
+
+Desarrollado como píldora (para poder usarla también fuera de esta sesión):
+**[pildoras/tipos-de-agentes.md](../../pildoras/tipos-de-agentes.md)** — los 5
+ejes que la industria mezcla (flujo, tools, memoria, **runtime**, vigilancia),
+el patrón ReAct con su partida de nacimiento, y la tabla de fichas rellenas
+(n8n, nuestro S12, LangGraph, ChatGPT, Claude Code). En clase: proyectar el
+SVG de la ficha, rellenarla en vivo para 2–3 ejemplos que propongan los
+alumnos, y cerrar con la tesis del runtime — *el mismo modelo en dos runtimes
+es dos criaturas distintas*. Píldoras hermanas para preguntas que saldrán:
+[memoria.md](../../pildoras/memoria.md) y
+[human-in-the-loop.md](../../pildoras/human-in-the-loop.md).
 
 ## 8. [PENDIENTE] La Responses API y el bucle a mano
 

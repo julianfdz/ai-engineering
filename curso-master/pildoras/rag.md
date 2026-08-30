@@ -66,3 +66,6 @@ La decisión profesional no es "cuál es mejor" sino **dónde está tu corpus en
 tres ejes**: tamaño (¿cabe en el contexto?), volatilidad (¿cuánto cambia?) y
 trazabilidad (¿hay que citar?). Pequeño + estable + sin citas → CAG. Grande o
 cambiante o auditable → RAG. Ver la píldora hermana: [cag.md](cag.md).
+
+Y hay una tercera vía sin índice — enviar un agente a explorar los ficheros
+directamente: [scout-retrieval.md](scout-retrieval.md).

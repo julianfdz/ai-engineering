@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 480" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <rect x="0" y="0" width="860" height="480" fill="#f8fafc" rx="12"/>
+  <text x="430" y="34" text-anchor="middle" font-size="18" font-weight="700" fill="#0f172a">No preguntes "¿qué tipo de agente es?" — hazle la ficha de 5 preguntas</text>
+
+  <!-- las 5 preguntas -->
+  <rect x="30" y="55" width="245" height="405" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="152" y="82" text-anchor="middle" font-size="13.5" font-weight="700" fill="#1e3a8a">LA FICHA (5 ejes independientes)</text>
+
+  <text x="45" y="112" font-size="12" font-weight="700" fill="#1e3a8a">1 · ¿Quién decide el flujo?</text>
+  <text x="45" y="129" font-size="11" fill="#334155">pipeline fijo ←→ el modelo con volante</text>
+
+  <text x="45" y="158" font-size="12" font-weight="700" fill="#1e3a8a">2 · ¿Qué puede hacer?</text>
+  <text x="45" y="175" font-size="11" fill="#334155">sin tools · tools de negocio · tools generales</text>
+
+  <text x="45" y="204" font-size="12" font-weight="700" fill="#1e3a8a">3 · ¿Cuánto recuerda?</text>
+  <text x="45" y="221" font-size="11" fill="#334155">conversación: one-shot ←→ historificada</text>
+  <text x="45" y="237" font-size="11" fill="#334155">ejecución: efímera ←→ checkpoint reanudable</text>
+
+  <text x="45" y="266" font-size="12" font-weight="700" fill="#1e3a8a">4 · ¿Dónde vive? (RUNTIME)</text>
+  <text x="45" y="283" font-size="11" fill="#334155">enjaulado (tools contadas, sin FS)</text>
+  <text x="45" y="299" font-size="11" fill="#334155">←→ acceso al sistema (POSIX, shell, red)</text>
+
+  <text x="45" y="328" font-size="12" font-weight="700" fill="#1e3a8a">5 · ¿Quién lo vigila?</text>
+  <text x="45" y="345" font-size="11" fill="#334155">autónomo ←→ gates humanos</text>
+
+  <rect x="45" y="370" width="215" height="75" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="152" y="392" text-anchor="middle" font-size="11" font-weight="600" fill="#b91c1c">El mismo modelo con otra ficha</text>
+  <text x="152" y="409" text-anchor="middle" font-size="11" font-weight="600" fill="#b91c1c">es OTRA criatura: la inteligencia</text>
+  <text x="152" y="426" text-anchor="middle" font-size="11" font-weight="600" fill="#b91c1c">no cambia, el radio de acción sí</text>
+
+  <!-- ejemplos -->
+  <text x="565" y="80" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">CUATRO FICHAS RELLENAS</text>
+
+  <rect x="300" y="95" width="255" height="165" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="427" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">Nodo IA en n8n</text>
+  <text x="315" y="140" font-size="11" fill="#78350f">1 · flujo DIBUJADO (determinista)</text>
+  <text x="315" y="158" font-size="11" fill="#78350f">2 · tools contadas del workflow</text>
+  <text x="315" y="176" font-size="11" fill="#78350f">3 · one-shot / ejecución persistida</text>
+  <text x="315" y="194" font-size="11" fill="#78350f">4 · runtime ENJAULADO, sin FS</text>
+  <text x="315" y="212" font-size="11" fill="#78350f">5 · el flujo mismo lo acota</text>
+  <text x="427" y="242" text-anchor="middle" font-size="10.5" font-style="italic" fill="#92400e">autonomía mínima, previsibilidad máxima</text>
+
+  <rect x="575" y="95" width="255" height="165" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="702" y="118" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">Nuestro agente S12</text>
+  <text x="590" y="140" font-size="11" fill="#14532d">1 · el modelo decide (con volante)</text>
+  <text x="590" y="158" font-size="11" fill="#14532d">2 · 3 tools de negocio, strict</text>
+  <text x="590" y="176" font-size="11" fill="#14532d">3 · one-shot (estado solo en vuelo)</text>
+  <text x="590" y="194" font-size="11" fill="#14532d">4 · enjaulado: ni FS ni red libre</text>
+  <text x="590" y="212" font-size="11" fill="#14532d">5 · max_iterations + gates del wizard</text>
+  <text x="702" y="242" text-anchor="middle" font-size="10.5" font-style="italic" fill="#166534">autonomía acotada al flujo</text>
+
+  <rect x="300" y="280" width="255" height="165" rx="10" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+  <text x="427" y="303" text-anchor="middle" font-size="13" font-weight="700" fill="#831843">Grafo LangGraph (S13)</text>
+  <text x="315" y="325" font-size="11" fill="#831843">1 · flujo en CÓDIGO (grafo explícito)</text>
+  <text x="315" y="343" font-size="11" fill="#831843">2 · cada nodo, sus tools</text>
+  <text x="315" y="361" font-size="11" fill="#831843">3 · checkpoint: reanudable en días</text>
+  <text x="315" y="379" font-size="11" fill="#831843">4 · enjaulado en el servicio</text>
+  <text x="315" y="397" font-size="11" fill="#831843">5 · interrupt(): gates humanos</text>
+  <text x="427" y="427" text-anchor="middle" font-size="10.5" font-style="italic" fill="#9d174d">estado industrializado</text>
+
+  <rect x="575" y="280" width="255" height="165" rx="10" fill="#e0e7ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="702" y="303" text-anchor="middle" font-size="13" font-weight="700" fill="#312e81">Claude Code en tu máquina</text>
+  <text x="590" y="325" font-size="11" fill="#312e81">1 · el modelo decide (con volante)</text>
+  <text x="590" y="343" font-size="11" fill="#312e81">2 · tools GENERALES (shell, editar)</text>
+  <text x="590" y="361" font-size="11" fill="#312e81">3 · sesión historificada</text>
+  <text x="590" y="379" font-size="11" fill="#312e81">4 · runtime POSIX: FS + shell + red</text>
+  <text x="590" y="397" font-size="11" fill="#312e81">5 · permisos por acción / sandbox</text>
+  <text x="702" y="427" text-anchor="middle" font-size="10.5" font-style="italic" fill="#3730a3">radio de acción máximo → vigilancia máxima</text>
+</svg>
