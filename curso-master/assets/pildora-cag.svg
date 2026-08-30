@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 430" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="430" fill="#f8fafc" rx="12"/>
+  <text x="430" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">CAG — el conocimiento viaja EN el prompt, y la respuesta se cachea</text>
+
+  <!-- petición -->
+  <rect x="40" y="90" width="150" height="70" rx="12" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+  <text x="115" y="120" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">PETICIÓN</text>
+  <text x="115" y="140" text-anchor="middle" font-size="11.5" fill="#475569">"estima este proyecto"</text>
+
+  <!-- caché exacta -->
+  <path d="M 195 125 L 245 125" stroke="#475569" stroke-width="2.5" marker-end="url(#arrc)"/>
+  <rect x="250" y="75" width="160" height="100" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="330" y="103" text-anchor="middle" font-size="13.5" font-weight="700" fill="#78350f">CACHÉ EXACTA</text>
+  <text x="330" y="124" text-anchor="middle" font-size="11.5" fill="#78350f">¿misma petición literal?</text>
+  <text x="330" y="142" text-anchor="middle" font-size="11.5" fill="#78350f">(hash SHA-256)</text>
+  <text x="330" y="163" text-anchor="middle" font-size="11" font-style="italic" fill="#92400e">hit → respuesta gratis, 0 ms LLM</text>
+
+  <!-- caché semántica -->
+  <path d="M 415 125 L 465 125" stroke="#475569" stroke-width="2.5" marker-end="url(#arrc)"/>
+  <rect x="470" y="75" width="160" height="100" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="550" y="103" text-anchor="middle" font-size="13.5" font-weight="700" fill="#78350f">CACHÉ SEMÁNTICA</text>
+  <text x="550" y="124" text-anchor="middle" font-size="11.5" fill="#78350f">¿pregunta EQUIVALENTE</text>
+  <text x="550" y="142" text-anchor="middle" font-size="11.5" fill="#78350f">ya respondida? (vectores)</text>
+  <text x="550" y="163" text-anchor="middle" font-size="11" font-style="italic" fill="#92400e">similitud ≥ 0.85 → mismo resultado</text>
+
+  <!-- LLM -->
+  <path d="M 635 125 L 685 125" stroke="#475569" stroke-width="2.5" marker-end="url(#arrc)"/>
+  <rect x="690" y="65" width="140" height="120" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="760" y="95" text-anchor="middle" font-size="14" font-weight="700" fill="#1e3a8a">LLM</text>
+  <text x="760" y="118" text-anchor="middle" font-size="11.5" fill="#1e3a8a">solo se paga cuando</text>
+  <text x="760" y="136" text-anchor="middle" font-size="11.5" fill="#1e3a8a">las DOS cachés fallan</text>
+  <text x="760" y="164" text-anchor="middle" font-size="11" font-style="italic" fill="#475569">y su respuesta se guarda</text>
+
+  <!-- el prompt con conocimiento -->
+  <rect x="120" y="235" width="620" height="105" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="430" y="263" text-anchor="middle" font-size="14" font-weight="700" fill="#14532d">EL PROMPT LLEVA TODO EL CONOCIMIENTO — no se busca nada fuera</text>
+  <text x="430" y="288" text-anchor="middle" font-size="12.5" fill="#14532d">reglas del dominio + ejemplos + formato de salida, curados a mano y VERSIONADOS (v1→v3)</text>
+  <text x="430" y="308" text-anchor="middle" font-size="12" font-family="ui-monospace, monospace" fill="#475569">app/foundation/prompts/estimation/ · caches en app/generation/cag/</text>
+  <text x="430" y="328" text-anchor="middle" font-size="11.5" font-style="italic" fill="#475569">cambia el prompt (o el modelo) → las cachés particionan y no sirven respuestas viejas</text>
+  <path d="M 430 230 L 430 195 L 720 195 L 745 190" stroke="#16a34a" stroke-width="2" fill="none" stroke-dasharray="5 4" marker-end="url(#arrc)"/>
+
+  <text x="430" y="395" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">La apuesta CAG: si el conocimiento cabe en el contexto y las preguntas se repiten,</text>
+  <text x="430" y="415" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">no necesitas recuperación — necesitas un buen prompt y cachés agresivas</text>
+</svg>
