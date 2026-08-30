@@ -306,11 +306,80 @@ La definición honesta:
 
 ---
 
-## 6. [PENDIENTE] La Responses API y el bucle a mano
+## 6. La traza del agente: qué es y qué te cuenta
 
-## 7. [PENDIENTE] Demo en vivo con la transcripción compleja
+### La idea en una frase
 
-## 8. [PENDIENTE] Ejercicio de los alumnos
+La traza es el **registro paso a paso del bucle**: por cada STEP, qué razonó
+el modelo, qué acción emitió (tool + argumentos) y qué observó de vuelta. Es
+el razonar→actuar→observar hecho legible — a un agente lo que los logs a un
+servicio, pero contando **decisiones**, no eventos.
+
+### Un ejemplo simple (el brief del gimnasio del notebook `agente-minimo.ipynb`)
+
+```
+STEP 1
+  reasoning:   El proyecto tiene tres piezas; empiezo por el registro de socios.
+  action:      search_tasks({"query": "user registration email verification"})
+  observation: [{"task": "user registration with email verification", "hours": 16}]
+
+STEP 2
+  reasoning:   Ahora los pagos de cuotas; busco un análogo de Stripe.
+  action:      search_tasks({"query": "stripe payment integration"})
+  observation: [{"task": "Stripe payment integration", "hours": 40}]
+
+STEP 3
+  reasoning:   Falta el dashboard de administración con gráficas.
+  action:      search_tasks({"query": "admin dashboard usage charts"})
+  observation: [{"task": "admin dashboard with usage charts", "hours": 60}]
+
+(turno sin tool calls → parada natural → respuesta final: tabla con 116 h)
+```
+
+Qué señalar en ella, línea a línea:
+- **Tres búsquedas porque el brief tenía tres piezas** — nadie programó ese
+  número; con otro brief serían dos o cinco. La traza es donde se VE la
+  decisión adaptativa.
+- La **parada**: terminó porque el modelo dejó de pedir tools (natural), no
+  porque lo cortara `max_iterations`. Si viera `stopped_reason:
+  max_iterations`, sabría que algo no convergía.
+- Si una tool fallara, el error aparecería como `observation` — y en el STEP
+  siguiente verías al modelo **corregirse** (reintentar con otros argumentos).
+  Los errores también dejan huella.
+
+### Qué información te da (los cuatro usos)
+
+1. **Depurar**: ¿por qué buscó "gym membership" en vez de "user registration"?
+   La traza te enseña la query exacta que emitió — y suele apuntar a una
+   description de tool mejorable, no al modelo.
+2. **Auditar**: es la PRUEBA de que el agente decidió dentro de sus límites —
+   qué tocó, qué no, cuántas veces. Sin traza, "confía en que se portó bien"
+   es un acto de fe. (Este es el argumento central del bloque 2.2 de la guía
+   oficial: la traza no es un log, es la evidencia de la autonomía acotada.)
+3. **Atribuir coste**: cada STEP es un round-trip al LLM. Una traza de 12
+   pasos donde esperabas 4 es una factura y una latencia que explicar.
+4. **Explicar al usuario**: en nuestro wizard la traza se renderiza bajo los
+   pasos de estructura y horas — el cliente ve *de dónde* salió cada número.
+
+### Dónde vive en el proyecto
+
+El contrato tipado: `AgentStep`/`AgentTrace` con su `render()` al formato
+`STEP N` (`app/domain/schemas/agent_trace.py`); viaja opcional dentro de las
+respuestas (`agent_trace` en `GenerateResult`/`TaskHoursResult`) y Rails la
+pinta con el partial `_agent_trace.html.erb`. La de ejemplo committeada:
+`ai-service/exercises/session-12/example_trace_complex.txt`. Y la puedes
+generar en vivo con el notebook `agente-minimo.ipynb`, que imprime una por
+ejecución.
+
+---
+
+## 7. [PENDIENTE] Tipos de agentes: los ejes que la industria mezcla
+
+## 8. [PENDIENTE] La Responses API y el bucle a mano
+
+## 9. [PENDIENTE] Demo en vivo con la transcripción compleja
+
+## 10. [PENDIENTE] Ejercicio de los alumnos
 
 
 - ver ejercicio mandado
