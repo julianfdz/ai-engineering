@@ -383,7 +383,6 @@ ejecución.
 
 
 - ver ejercicio mandado
-- ver codigo agent loop
 -- min 10:
 - ver interfaz app lidr config de agentes
 - explicar que es importante la decicion de donde y de que forma crear y meter los agentes en los procesos
@@ -394,3 +393,23 @@ ejecución.
       - estructure
       - hours
 - explicar en shchemas.py que metemos la trace en el esquema, y explicar que es una trace y lo que nos aporta para debugging, agent_trace
+- ver agent_estimation.py
+-- min 40:
+- ver codigo agent loop . explicar que esto es como tal el agente, el core
+- ver en agent_tools la tool de derive_task_hours
+
+-- min 55 aprox: break sesion 10 mins
+
+- ver diapo trazas, traza no es log,
+- ver resultado ejeccion estmacion horas en lidr app, basicamente debe ir de culo fallando buscando estiamciones y marcando con flag rojo aquellas que no tienen dato, analizar esto en profundidad explicando la utilidad de esto y tal , 1h 13 mins y sigue por aqui 
+- hablar de diferentes tecnicas y tal y formas de integrar esto, antonioe s muy conservador, se podrian crear datos isnteticos e ir ajustandolos a lo largo del tiempo, mejor que nunca poner el dato por ejemplo, flagear datos sinteticos en otro color y almenos tienes eso.
+
+-- 1h 40m:
+
+- Se pone a explicar el agent tools, el patron de los schemas de las tools que esm uy improante seguir la conveciony d eque la tool sea declarativa y tal, biendo la description, el agente tiene que razonar sobre eso si la usa o no o como etc, explicar que asi es como funciona cualqueir tool.bue
+
+- ver en agent loop como usa esas tools metiendoals en las llamadas al agente como parametro
+
+- ir respondiendo dudas
+
+--2 h 0 mins, FIN
