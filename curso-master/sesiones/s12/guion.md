@@ -311,3 +311,15 @@ La definición honesta:
 ## 7. [PENDIENTE] Demo en vivo con la transcripción compleja
 
 ## 8. [PENDIENTE] Ejercicio de los alumnos
+
+
+-- ver ejercicio mandado
+-- ver codigo agent loop
+-- ver interfaz app lidr config de agentes
+-- explicar que es importante la decicion de donde y de que forma crear y meter los agentes en los procesos
+-- probar ejeccion en rag rwizard de sample_transcript_complex
+-- min 20 : 
+- usar diapo explicar one shot vs acotado
+- explicar codigo estimate_agent.py los diferentes endpoints para diviidr el prcoeso en varias calls a a la api
+      - estructure
+      - hours
