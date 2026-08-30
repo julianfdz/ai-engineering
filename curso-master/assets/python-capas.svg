@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 440" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="440" fill="#f8fafc" rx="12"/>
+  <text x="430" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Python en IA — lento por fuera, rápido por dentro</text>
+
+  <!-- capa 1: tu código -->
+  <rect x="130" y="65" width="600" height="85" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="430" y="93" text-anchor="middle" font-size="15" font-weight="700" fill="#1e3a8a">TU CÓDIGO — Python legible y corto</text>
+  <text x="430" y="117" text-anchor="middle" font-size="12.5" font-family="ui-monospace, monospace" fill="#1e3a8a">scores = model.encode(chunks)   # 1 línea</text>
+  <text x="430" y="137" text-anchor="middle" font-size="12" fill="#475569">la capa donde piensas el problema, no la máquina</text>
+
+  <path d="M 430 155 L 430 178" stroke="#475569" stroke-width="2.5" marker-end="url(#arrp)"/>
+
+  <!-- capa 2: librerías -->
+  <rect x="130" y="185" width="600" height="85" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="430" y="213" text-anchor="middle" font-size="15" font-weight="700" fill="#78350f">EL ECOSISTEMA — librerías con cara de Python</text>
+  <text x="430" y="237" text-anchor="middle" font-size="12.5" font-family="ui-monospace, monospace" fill="#78350f">torch · numpy · FastAPI · Pydantic · pgvector · LangGraph</text>
+  <text x="430" y="257" text-anchor="middle" font-size="12" fill="#475569">el verdadero motivo: aquí vive TODO el mundo IA</text>
+
+  <path d="M 430 275 L 430 298" stroke="#475569" stroke-width="2.5" marker-end="url(#arrp)"/>
+
+  <!-- capa 3: motor -->
+  <rect x="130" y="305" width="600" height="85" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="430" y="333" text-anchor="middle" font-size="15" font-weight="700" fill="#14532d">EL MOTOR — C / C++ / Rust / CUDA compilado</text>
+  <text x="430" y="357" text-anchor="middle" font-size="12.5" fill="#14532d">donde ocurre el cálculo pesado, a velocidad de máquina</text>
+  <text x="430" y="377" text-anchor="middle" font-size="12" fill="#475569">Python solo ORQUESTA: es el pegamento, no el músculo</text>
+
+  <text x="430" y="422" text-anchor="middle" font-size="13" font-weight="600" fill="#0f172a">La lentitud de Python casi nunca importa en IA: el 99% del tiempo se gasta en las capas de abajo (o esperando al LLM)</text>
+</svg>
