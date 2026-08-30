@@ -382,13 +382,15 @@ ejecución.
 ## 10. [PENDIENTE] Ejercicio de los alumnos
 
 
--- ver ejercicio mandado
--- ver codigo agent loop
--- ver interfaz app lidr config de agentes
--- explicar que es importante la decicion de donde y de que forma crear y meter los agentes en los procesos
--- probar ejeccion en rag rwizard de sample_transcript_complex
+- ver ejercicio mandado
+- ver codigo agent loop
+-- min 10:
+- ver interfaz app lidr config de agentes
+- explicar que es importante la decicion de donde y de que forma crear y meter los agentes en los procesos
+- probar ejeccion en rag rwizard de sample_transcript_complex
 -- min 20 : 
 - usar diapo explicar one shot vs acotado
 - explicar codigo estimate_agent.py los diferentes endpoints para diviidr el prcoeso en varias calls a a la api
       - estructure
       - hours
+- explicar en shchemas.py que metemos la trace en el esquema, y explicar que es una trace y lo que nos aporta para debugging, agent_trace
