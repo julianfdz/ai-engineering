@@ -1,0 +1,38 @@
+# BLOQUE 1 · TRES FALLOS — tests de síntoma + arreglo (exercises/session-14/failure_modes/)
+# Qué se prueba: uv run pytest tests/domain/graph/supervisor/test_failure_modes.py -v. Seis tests, dos por fallo: uno fija el SÍNTOMA (comportamiento roto) y otro el ARREGLO de una línea.
+# Resultado: los 6 en verde. Fallo 1 ping-pong (guarda de legalidad) · Fallo 2 estado que se pisa (reducer operator.add) · Fallo 3 interrupt que no reanuda (mismo thread_id s14:<id>).
+# ---------------------------------------------------------------------------------------------------------------
+
+============================= test session starts =============================
+platform win32 -- Python 3.11.14, pytest-9.0.3, pluggy-1.6.0 -- C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator
+configfile: pyproject.toml
+plugins: anyio-4.13.0, deepeval-4.0.2, Faker-40.18.0, langsmith-0.8.5, logfire-4.37.0, asyncio-1.3.0, repeat-0.9.4, rerunfailures-16.2, xdist-3.8.0, typeguard-4.5.2
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 6 items
+
+tests/domain/graph/supervisor/test_failure_modes.py::test_broken_router_ping_pongs_until_the_step_budget_cuts_it PASSED [ 16%]
+tests/domain/graph/supervisor/test_failure_modes.py::test_fixed_router_converges_without_hitting_the_budget PASSED [ 33%]
+tests/domain/graph/supervisor/test_failure_modes.py::test_plain_channel_rejects_the_concurrent_write PASSED [ 50%]
+tests/domain/graph/supervisor/test_failure_modes.py::test_reducer_channel_keeps_both_writes PASSED [ 66%]
+tests/domain/graph/supervisor/test_failure_modes.py::test_mismatched_thread_id_leaves_the_run_paused PASSED [ 83%]
+tests/domain/graph/supervisor/test_failure_modes.py::test_matching_thread_id_resumes_the_same_run PASSED [100%]Running teardown with pytest sessionfinish...
+
+
+============================== warnings summary ===============================
+app\generation\rag\chunking\strategies\semantic.py:15
+  C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator\app\generation\rag\chunking\strategies\semantic.py:15: DeprecationWarning: `langchain-experimental` is being sunset and is no longer actively maintained. See https://github.com/langchain-ai/langchain-experimental/issues/87 for details.
+    from langchain_experimental.text_splitter import SemanticChunker as _LCSemanticChunker
+
+.venv\Lib\site-packages\langchain_experimental\text_splitter.py:8
+  C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator\.venv\Lib\site-packages\langchain_experimental\text_splitter.py:8: DeprecationWarning: `langchain-community` is being sunset and is no longer actively maintained. See https://github.com/langchain-ai/langchain-community/issues/674 for details and migration guidance toward standalone integration packages.
+    from langchain_community.utils.math import (
+
+.venv\Lib\site-packages\logfire\_internal\config.py:1629
+  C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator\.venv\Lib\site-packages\logfire\_internal\config.py:1629: DeprecationWarning: Importing from 'instructor.client' is deprecated and will be removed in v2.0.0. Please update your imports to use 'instructor.core.client.LambdaRuntimeClient' instead:
+    from instructor.core.client import Instructor, AsyncInstructor, from_openai, from_litellm
+    client = getattr(mod, 'LambdaRuntimeClient', None)
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+======================== 6 passed, 3 warnings in 0.18s ========================
