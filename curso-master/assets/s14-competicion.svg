@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" width="2000" height="1000" font-family="Arial, Helvetica, sans-serif">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs>
+  <rect width="1000" height="500" fill="#ffffff"/>
+  <text x="500" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">Competición — zoom del nodo estimate_generator (flag competitive)</text>
+  <rect x="30" y="180" width="130" height="70" rx="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="95" y="208" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">brief</text>
+  <text x="95" y="228" text-anchor="middle" font-size="11" fill="#475569">components + references</text>
+  <rect x="190" y="195" width="70" height="40" rx="8" fill="#475569"/>
+  <text x="225" y="220" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">START</text>
+  <path d="M160 215 H188" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <path d="M260 210 C300 210 300 110 340 110" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <path d="M260 220 C300 220 300 320 340 320" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <rect x="342" y="70" width="230" height="84" rx="12" fill="#0d9488"/>
+  <text x="457" y="96" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">conservative_estimator</text>
+  <text x="457" y="116" text-anchor="middle" font-size="12" fill="#ccfbf1">RISK-FIRST: fricción, scope abierto = +,</text>
+  <text x="457" y="132" text-anchor="middle" font-size="12" fill="#ccfbf1">certificaciones, incógnitas × multiplicador</text>
+  <rect x="342" y="280" width="230" height="84" rx="12" fill="#2563eb"/>
+  <text x="457" y="306" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">aggressive_estimator</text>
+  <text x="457" y="326" text-anchor="middle" font-size="12" fill="#dbeafe">REUSE-FIRST: análogos históricos,</text>
+  <text x="457" y="342" text-anchor="middle" font-size="12" fill="#dbeafe">scope cerrado, confía en las horas</text>
+  <text x="457" y="222" text-anchor="middle" font-size="12" font-weight="700" fill="#f59e0b">MISMO SUPERSTEP (paralelo real)</text>
+  <text x="457" y="240" text-anchor="middle" font-size="11" fill="#64748b">proposals: Annotated[list, operator.add] — fan-in por reducer</text>
+  <path d="M572 112 C620 112 620 210 660 210" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <path d="M572 322 C620 322 620 230 660 230" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <rect x="662" y="150" width="150" height="130" rx="12" fill="#0f172a"/>
+  <text x="737" y="176" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">synthesizer</text>
+  <text x="737" y="198" text-anchor="middle" font-size="11.5" fill="#cbd5e1">NUNCA promedia</text>
+  <text x="737" y="220" text-anchor="middle" font-size="11.5" fill="#fde68a">→ rango low..high</text>
+  <text x="737" y="238" text-anchor="middle" font-size="11.5" fill="#fde68a">→ driving_assumptions</text>
+  <text x="737" y="256" text-anchor="middle" font-size="11.5" fill="#fde68a">→ open_questions</text>
+  <rect x="662" y="300" width="300" height="70" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="812" y="322" text-anchor="middle" font-size="14" font-weight="700" fill="#92400e">compute_divergence() — ARITMÉTICA, cero LLM</text>
+  <text x="812" y="342" text-anchor="middle" font-size="12" fill="#78350f">spread = high − low · ratio = spread / midpoint</text>
+  <text x="812" y="360" text-anchor="middle" font-size="12" fill="#78350f">level: high ≥ 0.5 · medium ≥ 0.2 · low</text>
+  <path d="M737 280 V298" stroke="#f59e0b" stroke-width="2.5" marker-end="url(#ar)"/>
+  <path d="M812 370 V392" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="622" y="395" width="360" height="90" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="802" y="418" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">_apply_divergence_penalty (coherence_validator)</text>
+  <text x="802" y="438" text-anchor="middle" font-size="12" fill="#334155">confidence −= SUPERVISOR_DIVERGENCE_PENALTY × ratio</text>
+  <text x="802" y="458" text-anchor="middle" font-size="12" font-weight="700" fill="#0d9488">alta divergencia ⇒ baja confianza ⇒ human_review_gate PAUSA</text>
+  <text x="802" y="476" text-anchor="middle" font-size="11" font-style="italic" fill="#64748b">no es un cuarto camino: se conecta a la señal que ya existía</text>
+  <rect x="30" y="300" width="270" height="185" rx="12" fill="#0f172a"/>
+  <text x="165" y="326" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Demo real (tu máquina, ORBITA, --stub)</text>
+  <text x="50" y="356" font-size="13" fill="#99f6e4">conservative   1182 d</text>
+  <text x="50" y="378" font-size="13" fill="#bfdbfe">aggressive      731 d</text>
+  <text x="50" y="404" font-size="13" fill="#fde68a">divergence  ratio 0.472 (high)</text>
+  <text x="50" y="426" font-size="13" fill="#fde68a">synthesized 800..1250 d</text>
+  <text x="50" y="452" font-size="12" fill="#fca5a5">HUMAN REVIEW triggered: YES</text>
+  <text x="50" y="470" font-size="11" fill="#94a3b8">(guía oficial: 705 / 1250 · ratio 0.558)</text>
+</svg>

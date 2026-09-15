@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" width="2000" height="1000" font-family="Arial, Helvetica, sans-serif">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs>
+  <rect width="1000" height="500" fill="#ffffff"/>
+  <text x="500" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">Sandboxing — zoom del persistence_agent (flag sandboxed)</text>
+  <rect x="30" y="70" width="220" height="90" rx="12" fill="#dc2626"/>
+  <text x="140" y="96" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">persistence_agent</text>
+  <text x="140" y="118" text-anchor="middle" font-size="12" fill="#fee2e2">ActionRequest(tool=save_estimate,</text>
+  <text x="140" y="136" text-anchor="middle" font-size="12" fill="#fee2e2">args, estimation_id, step)</text>
+  <path d="M250 115 H288" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="290" y="60" width="440" height="230" rx="14" fill="#0f172a"/>
+  <text x="510" y="88" text-anchor="middle" font-size="16" font-weight="700" fill="#ffffff">guard_action(req, state) → GuardDecision</text>
+  <text x="510" y="106" text-anchor="middle" font-size="11" font-style="italic" fill="#94a3b8">PURO y determinista — código, no modelo</text>
+  <g font-size="12" fill="#e2e8f0">
+    <text x="310" y="136">1) privilegio</text><text x="410" y="136">tool ∈ AGENT_TOOL_GRANTS[agent]?</text>
+    <text x="310" y="166">2) argumentos</text><text x="410" y="166">args válidos · save lleva estimate</text>
+    <text x="310" y="196">3) TENENCIA</text><text x="410" y="196">req.estimation_id == run.estimation_id?</text>
+    <text x="310" y="226">4) riesgo</text><text x="410" y="226">IRREVERSIBLE y sin approve?</text>
+  </g>
+  <g font-size="12" font-weight="700">
+    <text x="710" y="136" text-anchor="end" fill="#fca5a5">no → DENIED</text>
+    <text x="710" y="166" text-anchor="end" fill="#fca5a5">no → DENIED</text>
+    <text x="710" y="196" text-anchor="end" fill="#fca5a5">no → DENIED</text>
+    <text x="716" y="226" text-anchor="end" fill="#fde68a">sí → needs approval</text>
+  </g>
+  <text x="510" y="262" text-anchor="middle" font-size="12" fill="#99f6e4">la 3) es la que la gente olvida: impide que un run escriba la estimación de otro</text>
+  <rect x="760" y="60" width="210" height="100" rx="12" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="865" y="84" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">Capa 1 · verify_tool_grants()</text>
+  <text x="865" y="104" text-anchor="middle" font-size="11.5" fill="#78350f">tools con riesgo READ / WRITE /</text>
+  <text x="865" y="120" text-anchor="middle" font-size="11.5" fill="#78350f">IRREVERSIBLE. Se ejecuta al construir</text>
+  <text x="865" y="136" text-anchor="middle" font-size="11.5" fill="#78350f">el grafo: si la tabla es incoherente,</text>
+  <text x="865" y="152" text-anchor="middle" font-size="11.5" font-weight="700" fill="#b45309">ROMPE EL ARRANQUE</text>
+  <path d="M510 290 V318" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="530" y="310" font-size="12" font-weight="700" fill="#16a34a">allowed</text>
+  <rect x="290" y="320" width="440" height="80" rx="12" fill="#0d9488"/>
+  <text x="510" y="345" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">execute_guarded(req, state) → sink de escritura</text>
+  <text x="510" y="366" text-anchor="middle" font-size="12" fill="#ccfbf1">AUDIT structlog de TODO: allowed · DENIED · DEFERRED</text>
+  <text x="510" y="384" text-anchor="middle" font-size="12" fill="#ccfbf1">estimation_id + preview REDACTADO + digest SHA-256 completo</text>
+  <rect x="290" y="420" width="140" height="60" rx="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="360" y="444" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">[ ok ]</text>
+  <text x="360" y="464" text-anchor="middle" font-size="10" fill="#166534">persisted · human-authorised</text>
+  <rect x="440" y="420" width="140" height="60" rx="10" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="510" y="444" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">[DENIED]</text>
+  <text x="510" y="464" text-anchor="middle" font-size="10" fill="#991b1b">el run sobrevive (strict=false)</text>
+  <rect x="590" y="420" width="140" height="60" rx="10" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="660" y="444" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">DEFERRED</text>
+  <text x="660" y="464" text-anchor="middle" font-size="11" fill="#92400e">espera al gate humano</text>
+  <rect x="760" y="180" width="210" height="220" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="865" y="206" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">La pausa DOBLE</text>
+  <text x="772" y="232" font-size="11.5" fill="#334155">gate.py::review_reasons añade el</text>
+  <text x="772" y="248" font-size="11.5" fill="#334155">4º disparador si persist_requested:</text>
+  <text x="772" y="270" font-size="11" font-style="italic" fill="#0d9488">"an irreversible save_estimate is</text>
+  <text x="772" y="285" font-size="11" font-style="italic" fill="#0d9488">queued; the human pause authorises</text>
+  <text x="772" y="300" font-size="11" font-style="italic" fill="#0d9488">the write"</text>
+  <text x="772" y="326" font-size="11.5" font-weight="700" fill="#0f172a">Aprobar el estimate =</text>
+  <text x="772" y="342" font-size="11.5" font-weight="700" fill="#0f172a">autorizar el save.</text>
+  <text x="772" y="366" font-size="11.5" fill="#334155">Una estimación rechazada</text>
+  <text x="772" y="382" font-size="11.5" fill="#334155">NUNCA se persiste (deferred).</text>
+  <text x="30" y="200" font-size="12" font-weight="700" fill="#0f172a">Qué NO es:</text>
+  <text x="30" y="220" font-size="11.5" fill="#475569">aislamiento de proceso,</text>
+  <text x="30" y="236" font-size="11.5" fill="#475569">sandbox de SO, secretos</text>
+  <text x="30" y="252" font-size="11.5" fill="#475569">de runtime → eso es S15.</text>
+  <text x="30" y="290" font-size="12" font-weight="700" fill="#0f172a">Sí es:</text>
+  <text x="30" y="310" font-size="11.5" fill="#475569">privilegio + argumentos</text>
+  <text x="30" y="326" font-size="11.5" fill="#475569">+ auditoría, en Python</text>
+  <text x="30" y="342" font-size="11.5" fill="#475569">plano de aplicación.</text>
+</svg>

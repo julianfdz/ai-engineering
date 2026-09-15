@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" width="2000" height="1040" font-family="Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker>
+  </defs>
+  <rect width="1000" height="520" fill="#ffffff"/>
+  <text x="500" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">Mapa maestro — una estimación (ORBITA) recorre esto de principio a fin</text>
+  <rect x="30" y="200" width="120" height="60" rx="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="90" y="226" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">transcript</text>
+  <text x="90" y="246" text-anchor="middle" font-size="12" fill="#475569">ORBITA</text>
+  <path d="M150 230 H190" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="192" y="150" width="200" height="160" rx="14" fill="#0f172a"/>
+  <text x="292" y="182" text-anchor="middle" font-size="17" font-weight="700" fill="#ffffff">supervisor</text>
+  <text x="292" y="204" text-anchor="middle" font-size="12" fill="#cbd5e1">router LLM enjaulado</text>
+  <text x="292" y="232" text-anchor="middle" font-size="12" fill="#fde68a">· presupuesto de pasos (8)</text>
+  <text x="292" y="252" text-anchor="middle" font-size="12" fill="#fde68a">· guarda de legalidad</text>
+  <text x="292" y="272" text-anchor="middle" font-size="12" fill="#fde68a">· fallback determinista</text>
+  <text x="292" y="296" text-anchor="middle" font-size="11" font-style="italic" fill="#94a3b8">Command(goto=…)</text>
+  <g font-size="13" font-weight="700" fill="#ffffff">
+    <rect x="470" y="70"  width="230" height="44" rx="10" fill="#1e293b"/><text x="585" y="97"  text-anchor="middle">requirements_extractor</text>
+    <rect x="470" y="130" width="230" height="44" rx="10" fill="#1e293b"/><text x="585" y="157" text-anchor="middle">budget_searcher</text>
+    <rect x="470" y="190" width="230" height="44" rx="10" fill="#f59e0b"/><text x="585" y="217" text-anchor="middle" fill="#1f2937">estimate_generator</text>
+    <rect x="470" y="250" width="230" height="44" rx="10" fill="#1e293b"/><text x="585" y="277" text-anchor="middle">coherence_validator</text>
+    <rect x="470" y="310" width="230" height="44" rx="10" fill="#475569"/><text x="585" y="337" text-anchor="middle">finish</text>
+  </g>
+  <g stroke="#475569" stroke-width="2" fill="none">
+    <path d="M392 200 C430 200 430 92 468 92" marker-end="url(#ar)"/>
+    <path d="M392 215 C430 215 430 152 468 152" marker-end="url(#ar)"/>
+    <path d="M392 230 C430 230 430 212 468 212" marker-end="url(#ar)"/>
+    <path d="M392 245 C430 245 430 272 468 272" marker-end="url(#ar)"/>
+    <path d="M392 260 C430 260 430 332 468 332" marker-end="url(#ar)"/>
+  </g>
+  <path d="M700 92 H740 V40 H292 V148" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#ar)"/>
+  <text x="520" y="56" text-anchor="middle" font-size="11" fill="#64748b">aristas de vuelta (estáticas): cada agente devuelve el control al supervisor</text>
+  <text x="712" y="266" font-size="11" fill="#475569">escribe HECHOS: confidence ·</text>
+  <text x="712" y="281" font-size="11" fill="#475569">out_of_range · grounded · divergence</text>
+  <rect x="712" y="196" width="150" height="30" rx="8" fill="#fef3c7" stroke="#f59e0b"/>
+  <text x="787" y="216" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">ZOOM B2 · competición</text>
+  <path d="M585 354 V392" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="440" y="395" width="290" height="52" rx="10" fill="#0d9488"/>
+  <text x="585" y="417" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">human_review_gate</text>
+  <text x="585" y="436" text-anchor="middle" font-size="11" fill="#ccfbf1">interrupt() SÓLO si hay señal · approve / adjust / reject</text>
+  <rect x="742" y="405" width="120" height="30" rx="8" fill="#ccfbf1" stroke="#0d9488"/>
+  <text x="802" y="425" text-anchor="middle" font-size="12" font-weight="700" fill="#134e4a">ZOOM B4 · HITL</text>
+  <path d="M585 447 V470" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="420" y="472" width="310" height="40" rx="10" fill="#dc2626"/>
+  <text x="575" y="489" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">persistence_agent → END</text>
+  <text x="575" y="505" text-anchor="middle" font-size="10.5" fill="#fee2e2">la ÚNICA escritura · guarded · autorizada por el humano</text>
+  <rect x="742" y="477" width="160" height="30" rx="8" fill="#fee2e2" stroke="#dc2626"/>
+  <text x="822" y="497" text-anchor="middle" font-size="12" font-weight="700" fill="#7f1d1d">ZOOM B3 · sandboxing</text>
+  <rect x="30" y="360" width="380" height="140" rx="12" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="48" y="386" font-size="14" font-weight="700" fill="#0f172a">Leyenda</text>
+  <text x="48" y="410" font-size="12.5" fill="#334155">■ La estrella (supervisor ↔ agentes) es el pre-ejercicio.</text>
+  <text x="48" y="432" font-size="12.5" fill="#334155">■ Hoy solo cambian 3 tramos, todos detrás de un flag:</text>
+  <text x="62" y="452" font-size="12.5" fill="#92400e">competitive → estimate_generator compite (B2)</text>
+  <text x="62" y="470" font-size="12.5" fill="#134e4a">gate condicional → se testea por invariantes (B4)</text>
+  <text x="62" y="488" font-size="12.5" fill="#7f1d1d">sandboxed → aparece persistence_agent (B3)</text>
+</svg>

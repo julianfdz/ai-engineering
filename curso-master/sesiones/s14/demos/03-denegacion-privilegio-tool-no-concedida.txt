@@ -1,3 +1,8 @@
+# DEMO 3 · DENEGACIÓN DE PRIVILEGIO — un agente intenta usar una tool que no tiene (bloque 3)
+# Qué se prueba: run_supervisor_s14.py --memory --stub --violate. El script inyecta (fuera del código de producción) una llamada de budget_searcher a validate_estimate, tool que NO está en su concesión de mínimo privilegio; guarded_dispatch la deniega antes de ejecutarla y la registra.
+# Resultado: fila [DENIED] budget_searcher tool:validate_estimate en el AUDIT TRAIL + evento agent_privilege_denied (nivel error) en el log; el run SOBREVIVE (SUPERVISOR_PRIVILEGE_STRICT=false) y termina normal. Buscar: DENIED, agent_privilege_denied.
+# ---------------------------------------------------------------------------------------------------------------
+
 2026-09-15 16:19:29 [info     ] logfire_configured             service_name=estimator
 ==============================================================================
 transcript     : C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator\exercises\session-14\sample_transcript_edge_case.txt

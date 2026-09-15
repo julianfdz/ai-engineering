@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 500" width="2000" height="1000" font-family="Arial, Helvetica, sans-serif">
+  <defs><marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#475569"/></marker></defs>
+  <rect width="1000" height="500" fill="#ffffff"/>
+  <text x="500" y="36" text-anchor="middle" font-size="22" font-weight="700" fill="#0f172a">El gate condicional — zoom del human_review_gate</text>
+  <rect x="30" y="80" width="200" height="150" rx="12" fill="#1e293b"/>
+  <text x="130" y="106" text-anchor="middle" font-size="14" font-weight="700" fill="#ffffff">coherence_validator</text>
+  <text x="130" y="124" text-anchor="middle" font-size="11" font-style="italic" fill="#94a3b8">escribe HECHOS, no veredictos</text>
+  <g font-size="12.5" fill="#fde68a"><text x="50" y="152">· confidence (0..1)</text><text x="50" y="172">· out_of_range</text><text x="50" y="192">· grounded_components</text><text x="50" y="212">· persist_requested</text></g>
+  <path d="M230 155 H268" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="270" y="70" width="330" height="170" rx="12" fill="#0f172a"/>
+  <text x="435" y="96" text-anchor="middle" font-size="15" font-weight="700" fill="#ffffff">review_reasons(state) — función PURA</text>
+  <text x="435" y="114" text-anchor="middle" font-size="11" font-style="italic" fill="#94a3b8">sin reloj ni red: interrupt() la re-ejecuta en el resume</text>
+  <g font-size="12.5" fill="#e2e8f0">
+    <text x="290" y="142">1  confidence &lt; SUPERVISOR_CONFIDENCE_THRESHOLD (0.6)</text>
+    <text x="290" y="164">2  out_of_range (fuera del rango histórico plausible)</text>
+    <text x="290" y="186">3  grounded / total &lt; SUPERVISOR_MIN_GROUNDED_RATIO (0.5)</text>
+    <text x="290" y="208">4  persist_requested (escritura irreversible en cola)</text>
+  </g>
+  <text x="435" y="230" text-anchor="middle" font-size="11" fill="#99f6e4">el validador escribe hechos · el gate posee el veredicto</text>
+  <path d="M435 240 V270" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <polygon points="435,272 520,312 435,352 350,312" fill="#fef3c7" stroke="#f59e0b" stroke-width="2"/>
+  <text x="435" y="317" text-anchor="middle" font-size="13" font-weight="700" fill="#92400e">¿algún motivo?</text>
+  <path d="M350 312 H210" stroke="#16a34a" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="280" y="302" text-anchor="middle" font-size="12" font-weight="700" fill="#16a34a">NO</text>
+  <rect x="30" y="280" width="180" height="64" rx="10" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="120" y="306" text-anchor="middle" font-size="13" font-weight="700" fill="#166534">auto-approve → END</text>
+  <text x="120" y="326" text-anchor="middle" font-size="11" fill="#166534">la mayoría de runs no pausan</text>
+  <path d="M520 312 H600" stroke="#dc2626" stroke-width="2.5" marker-end="url(#ar)"/>
+  <text x="560" y="302" text-anchor="middle" font-size="12" font-weight="700" fill="#dc2626">SÍ</text>
+  <rect x="602" y="272" width="180" height="80" rx="10" fill="#0d9488"/>
+  <text x="692" y="296" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">interrupt({reasons…})</text>
+  <text x="692" y="316" text-anchor="middle" font-size="11" fill="#ccfbf1">⏸ status = awaiting_human_review</text>
+  <text x="692" y="334" text-anchor="middle" font-size="11" fill="#ccfbf1">persiste en el checkpoint (Postgres)</text>
+  <path d="M782 312 H818" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="820" y="262" width="160" height="100" rx="10" fill="#e2e8f0" stroke="#94a3b8"/>
+  <text x="900" y="286" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">humano</text>
+  <text x="900" y="306" text-anchor="middle" font-size="11.5" fill="#334155">minutos… o días</text>
+  <text x="900" y="326" text-anchor="middle" font-size="11.5" fill="#334155">approve / adjust / reject</text>
+  <text x="900" y="346" text-anchor="middle" font-size="11" fill="#64748b">bandeja Rails (work queue)</text>
+  <path d="M900 362 V392 H700" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#ar)"/>
+  <rect x="440" y="372" width="260" height="40" rx="10" fill="#1e293b"/>
+  <text x="570" y="397" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Command(resume={decision})</text>
+  <path d="M440 392 H400" stroke="#475569" stroke-width="2.5" marker-end="url(#ar)"/>
+  <rect x="200" y="362" width="200" height="60" rx="10" fill="#0f172a"/>
+  <text x="300" y="386" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">_apply_decision</text>
+  <text x="300" y="404" text-anchor="middle" font-size="11" fill="#cbd5e1">reject → rejected (estimate intacto)</text>
+  <text x="300" y="418" text-anchor="middle" font-size="11" fill="#cbd5e1">adjust → overrides + rederiva total</text>
+  <rect x="30" y="432" width="940" height="56" rx="10" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="500" y="452" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Se testea por INVARIANTES (la ruta la decide el LLM, no es determinista):</text>
+  <text x="500" y="474" text-anchor="middle" font-size="12" fill="#334155">pausa correcta · estado persistido · resume aplica la decisión · nadie actuó sin precondiciones · techo de pasos · resume idempotente</text>
+</svg>

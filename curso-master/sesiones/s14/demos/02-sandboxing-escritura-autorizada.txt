@@ -1,3 +1,8 @@
+# DEMO 2 · SANDBOXING — la única escritura del sistema, contenida y autorizada por el humano (bloque 3)
+# Qué se prueba: run_supervisor_s14.py --memory --stub --persist. Con SUPERVISOR_PERSISTENCE_ENABLED el validador encola un save_estimate (tool de riesgo IRREVERSIBLE); el gate humano añade el 4º motivo de pausa; tras aprobar, el persistence_agent ejecuta la escritura bajo execute_guarded (privilegio + args + tenencia del estimation_id + auditoría).
+# Resultado: HUMAN REVIEW muestra 'an irreversible save_estimate is queued; the human pause authorises the write' → decisión approve → AUDIT TRAIL: [ok] persistence_agent tool:save_estimate 'estimate persisted (guarded, human-authorised)'. Buscar: HUMAN REVIEW, save_estimate, persistence.
+# ---------------------------------------------------------------------------------------------------------------
+
 2026-09-15 16:18:49 [info     ] logfire_configured             service_name=estimator
 ==============================================================================
 transcript     : C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator\exercises\session-14\sample_transcript_edge_case.txt
