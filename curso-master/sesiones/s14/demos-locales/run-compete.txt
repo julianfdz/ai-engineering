@@ -1,0 +1,183 @@
+2026-09-15 16:18:02 [info     ] logfire_configured             service_name=estimator
+==============================================================================
+transcript     : C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering\estimator\exercises\session-14\sample_transcript_edge_case.txt
+estimation_id  : s14-sample_transcript_edge_case
+router model   : gpt-4o-mini
+threshold      : 0.6
+checkpointer   : MemorySaver
+variant        : competitive=True · sandboxed=False
+==============================================================================
+2026-09-15 16:18:12 [info     ] llm_structured_call_started    model=gpt-4o-mini response_model=SupervisorDecision
+2026-09-15 16:18:16 [info     ] llm_structured_call_completed  latency_ms=3312 model=gpt-4o-mini provider=openai
+2026-09-15 16:18:16 [info     ] supervisor_route               goto=requirements_extractor next_agent=requirements_extractor reason='The state has a transcript but no extracted requirements or components, making this agent the only one that can produce the next outputs needed.' source=llm step=0
+2026-09-15 16:18:16 [info     ] llm_structured_call_started    model=gpt-4o-mini response_model=RequirementsExtraction
+2026-09-15 16:18:19 [info     ] llm_structured_call_completed  latency_ms=3080 model=gpt-4o-mini provider=openai
+2026-09-15 16:18:19 [info     ] agent_action                   action=extract_requirements agent=requirements_extractor allowed=[] duration_ms=3081 estimation_id=s14-sample_transcript_edge_case model=gpt-4o-mini outcome=ok result_summary='11 requirements extracted from the transcript' step=1 tool=None
+2026-09-15 16:18:19 [info     ] llm_structured_call_started    model=gpt-4o-mini response_model=ComponentClassification
+2026-09-15 16:18:20 [info     ] llm_structured_call_completed  latency_ms=1715 model=gpt-4o-mini provider=openai
+2026-09-15 16:18:20 [info     ] agent_action                   action=classify_components agent=requirements_extractor allowed=[] duration_ms=1715 estimation_id=s14-sample_transcript_edge_case model=gpt-4o-mini outcome=ok result_summary='11 components: Telemetry Collection Platform, Quantum Encryption Integration, Swiss Hardware SDK Integration, Traffic Reporting FTP Service, Real-Time Antenna Status Panel' step=1 tool=None
+2026-09-15 16:18:20 [info     ] supervisor_agent_requirements_extractor components=11 requirements=11
+2026-09-15 16:18:20 [info     ] llm_structured_call_started    model=gpt-4o-mini response_model=SupervisorDecision
+2026-09-15 16:18:21 [info     ] llm_structured_call_completed  latency_ms=1012 model=gpt-4o-mini provider=openai
+2026-09-15 16:18:21 [info     ] supervisor_route               goto=budget_searcher next_agent=budget_searcher reason='The state contains requirements, components, and no budget matches; the budget_searcher can find budget matches for the components.' source=llm step=1
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Telemetry Collection Platform (backend)' results=2
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=e51995f768d5 args_preview='{"filters": {"component_type": "backend", "sectors": null}, "query": "Telemetry Collection Platform (backend)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="2 historical items for 'Telemetry Collection Platform (backend)'; hours=[1150.0, 940.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Quantum Encryption Integration (integration)' results=1
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=2c5cbf1f3e47 args_preview='{"filters": {"component_type": "integration", "sectors": null}, "query": "Quantum Encryption Integration (integration)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="1 historical items for 'Quantum Encryption Integration (integration)'; hours=[860.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Swiss Hardware SDK Integration (integration)' results=1
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=9c61fe48092a args_preview='{"filters": {"component_type": "integration", "sectors": null}, "query": "Swiss Hardware SDK Integration (integration)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="1 historical items for 'Swiss Hardware SDK Integration (integration)'; hours=[860.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Traffic Reporting FTP Service (integration)' results=2
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=e923df5902db args_preview='{"filters": {"component_type": "integration", "sectors": null}, "query": "Traffic Reporting FTP Service (integration)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="2 historical items for 'Traffic Reporting FTP Service (integration)'; hours=[860.0, 430.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Real-Time Antenna Status Panel (frontend)' results=1
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=a384a07eb26c args_preview='{"filters": {"component_type": "frontend", "sectors": null}, "query": "Real-Time Antenna Status Panel (frontend)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="1 historical items for 'Real-Time Antenna Status Panel (frontend)'; hours=[560.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Multi-language User Interface (frontend)' results=0
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=4bd387d0f146 args_preview='{"filters": {"component_type": "frontend", "sectors": null}, "query": "Multi-language User Interface (frontend)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="no historical items for 'Multi-language User Interface (frontend)'" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='User Management System (backend)' results=2
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=2286c5316dee args_preview='{"filters": {"component_type": "backend", "sectors": null}, "query": "User Management System (backend)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="2 historical items for 'User Management System (backend)'; hours=[1150.0, 940.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Biometric Authentication Module (backend)' results=5
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=95816c87d1b8 args_preview='{"filters": {"component_type": "backend", "sectors": null}, "query": "Biometric Authentication Module (backend)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="5 historical items for 'Biometric Authentication Module (backend)'; hours=[420.0, 380.0, 1150.0, 940.0, 430.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Key Management System (infrastructure)' results=0
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=b06f3d18ec98 args_preview='{"filters": {"component_type": "infrastructure", "sectors": null}, "query": "Key Management System (infrastructure)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="no historical items for 'Key Management System (infrastructure)'" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='SOC2 Compliance Assurance (infrastructure)' results=0
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=812e81850d4b args_preview='{"filters": {"component_type": "infrastructure", "sectors": null}, "query": "SOC2 Compliance Assurance (infrastructure)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="no historical items for 'SOC2 Compliance Assurance (infrastructure)'" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] agent_tool_search_budgets      query='Report Generation Service (backend)' results=2
+2026-09-15 16:18:21 [info     ] agent_action                   action=tool:search_budgets agent=budget_searcher allowed=['search_budgets'] args_digest=66d0fac39e65 args_preview='{"filters": {"component_type": "backend", "sectors": null}, "query": "Report Generation Service (backend)"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="2 historical items for 'Report Generation Service (backend)'; hours=[1150.0, 940.0]" step=2 tool=search_budgets
+2026-09-15 16:18:21 [info     ] supervisor_agent_budget_searcher components=11 matches=16
+2026-09-15 16:18:21 [info     ] llm_structured_call_started    model=gpt-4o-mini response_model=SupervisorDecision
+2026-09-15 16:18:23 [info     ] llm_structured_call_completed  latency_ms=1438 model=gpt-4o-mini provider=openai
+2026-09-15 16:18:23 [info     ] supervisor_route               goto=estimate_generator next_agent=estimate_generator reason='The state has budget_matches for some components, but the estimate has not been produced yet, making estimate_generator the next one to act.' source=llm step=2
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=1045 neighbors=2 reliability=0.45 task='Telemetry Collection Platform'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=fd024263d63d args_preview='{"module": "backend", "neighbors": [{"budget_id": "BUD-CORE-2023-02", "distance": 0.5, "estimated_hours": 1150, "source_id": null}, {"budget_id": "BUD-CORE-2022-09", "distance": 0.5, "estimated_hours"' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'Telemetry Collection Platform': 1045h (reliability 0.45) from 2 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=860 neighbors=1 reliability=0.5 task='Quantum Encryption Integration'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=084b0760088b args_preview='{"module": "integration", "neighbors": [{"budget_id": "BUD-SAP-2023-05", "distance": 0.5, "estimated_hours": 860, "source_id": null}], "task": "Quantum Encryption Integration"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'Quantum Encryption Integration': 860h (reliability 0.5) from 1 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=860 neighbors=1 reliability=0.5 task='Swiss Hardware SDK Integration'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=e69a9301b834 args_preview='{"module": "integration", "neighbors": [{"budget_id": "BUD-SAP-2023-05", "distance": 0.5, "estimated_hours": 860, "source_id": null}], "task": "Swiss Hardware SDK Integration"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'Swiss Hardware SDK Integration': 860h (reliability 0.5) from 1 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=645 neighbors=2 reliability=0.333 task='Traffic Reporting FTP Service'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=0991429d6604 args_preview='{"module": "integration", "neighbors": [{"budget_id": "BUD-SAP-2023-05", "distance": 0.5, "estimated_hours": 860, "source_id": null}, {"budget_id": "BUD-BI-2022-04", "distance": 0.5, "estimated_hours"' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'Traffic Reporting FTP Service': 645h (reliability 0.333) from 2 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=560 neighbors=1 reliability=0.5 task='Real-Time Antenna Status Panel'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=023c87cf3478 args_preview='{"module": "frontend", "neighbors": [{"budget_id": "BUD-BI-2023-01", "distance": 0.5, "estimated_hours": 560, "source_id": null}], "task": "Real-Time Antenna Status Panel"}' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'Real-Time Antenna Status Panel': 560h (reliability 0.5) from 1 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=1045 neighbors=2 reliability=0.45 task='User Management System'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=d1ca8451a9a3 args_preview='{"module": "backend", "neighbors": [{"budget_id": "BUD-CORE-2023-02", "distance": 0.5, "estimated_hours": 1150, "source_id": null}, {"budget_id": "BUD-CORE-2022-09", "distance": 0.5, "estimated_hours"' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'User Management System': 1045h (reliability 0.45) from 2 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=664 neighbors=5 reliability=0.26 task='Biometric Authentication Module'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=0f5a222b5741 args_preview='{"module": "backend", "neighbors": [{"budget_id": "BUD-AUTH-2023-07", "distance": 0.5, "estimated_hours": 420, "source_id": null}, {"budget_id": "BUD-AUTH-2022-11", "distance": 0.5, "estimated_hours":' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'Biometric Authentication Module': 664h (reliability 0.26) from 5 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] agent_tool_derive_task_hours   hours=1045 neighbors=2 reliability=0.45 task='Report Generation Service'
+2026-09-15 16:18:23 [info     ] agent_action                   action=tool:derive_task_hours agent=estimate_generator allowed=['derive_task_hours'] args_digest=13b93fac8dde args_preview='{"module": "backend", "neighbors": [{"budget_id": "BUD-CORE-2023-02", "distance": 0.5, "estimated_hours": 1150, "source_id": null}, {"budget_id": "BUD-CORE-2022-09", "distance": 0.5, "estimated_hours"' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary="'Report Generation Service': 1045h (reliability 0.45) from 2 analogs" step=3 tool=derive_task_hours
+2026-09-15 16:18:23 [info     ] llm_structured_call_started    model=gpt-4o response_model=ConsolidatedEstimate
+2026-09-15 16:18:29 [info     ] llm_structured_call_completed  latency_ms=6514 model=gpt-4o provider=openai
+2026-09-15 16:18:29 [info     ] agent_action                   action=consolidate_estimate agent=estimate_generator allowed=['derive_task_hours'] duration_ms=6515 estimation_id=s14-sample_transcript_edge_case model=gpt-4o outcome=ok result_summary='total 784d over 11 components (confidence medium)' step=3 tool=None
+2026-09-15 16:18:29 [info     ] supervisor_agent_estimate_generator anchored=8 components=11 total_engineer_days=784
+2026-09-15 16:18:29 [info     ] llm_structured_call_started    model=gpt-4o response_model=EstimateProposal
+2026-09-15 16:18:29 [info     ] llm_structured_call_started    model=gpt-4o response_model=EstimateProposal
+2026-09-15 16:18:34 [info     ] llm_structured_call_completed  latency_ms=4302 model=gpt-4o provider=openai
+2026-09-15 16:18:34 [info     ] competition_conservative       total=1182
+2026-09-15 16:18:36 [info     ] llm_structured_call_completed  latency_ms=6892 model=gpt-4o provider=openai
+2026-09-15 16:18:36 [info     ] competition_aggressive         total=731
+2026-09-15 16:18:36 [info     ] llm_structured_call_started    model=gpt-4o response_model=SynthesizedEstimate
+2026-09-15 16:18:41 [info     ] llm_structured_call_completed  latency_ms=4687 model=gpt-4o provider=openai
+2026-09-15 16:18:41 [info     ] competition_synthesis          divergence=0.472 high=1250 low=800
+2026-09-15 16:18:41 [info     ] agent_action                   action=competition_aggressive agent=estimate_generator allowed=['derive_task_hours'] duration_ms=None estimation_id=s14-sample_transcript_edge_case model=None outcome=ok result_summary='aggressive total = 731d' step=3 tool=None
+2026-09-15 16:18:41 [info     ] agent_action                   action=competition_conservative agent=estimate_generator allowed=['derive_task_hours'] duration_ms=None estimation_id=s14-sample_transcript_edge_case model=None outcome=ok result_summary='conservative total = 1182d' step=3 tool=None
+2026-09-15 16:18:41 [info     ] agent_action                   action=competition_synthesis agent=estimate_generator allowed=['derive_task_hours'] duration_ms=None estimation_id=s14-sample_transcript_edge_case model=None outcome=ok result_summary='range 800..1250d, divergence 0.472 (medium)' step=3 tool=None
+2026-09-15 16:18:41 [info     ] supervisor_agent_competitive_estimate_generator divergence=0.472
+2026-09-15 16:18:41 [info     ] llm_structured_call_started    model=gpt-4o-mini response_model=SupervisorDecision
+2026-09-15 16:18:42 [info     ] llm_structured_call_completed  latency_ms=1067 model=gpt-4o-mini provider=openai
+2026-09-15 16:18:42 [info     ] supervisor_route               goto=coherence_validator next_agent=coherence_validator reason='The estimate has been produced, but validation has not yet run, making the coherence_validator the next agent to act.' source=llm step=3
+2026-09-15 16:18:42 [info     ] agent_tool_validate_estimate   issues=3 ok=False
+2026-09-15 16:18:42 [info     ] agent_action                   action=tool:validate_estimate agent=coherence_validator allowed=['validate_estimate'] args_digest=f9df78e1d32d args_preview='{"components": [{"estimated_hours": 968.0, "name": "Telemetry Collection Platform [backend]", "reference_amounts": [1150.0, 940.0]}, {"estimated_hours": 864.0, "name": "Quantum Encryption Integration ' duration_ms=0 estimation_id=s14-sample_transcript_edge_case outcome=ok result_summary='3 issue(s) found' step=4 tool=validate_estimate
+2026-09-15 16:18:42 [info     ] supervisor_agent_coherence_validator confidence=0.0 grounded=8 issues=3 total=11
+2026-09-15 16:18:42 [info     ] llm_structured_call_started    model=gpt-4o-mini response_model=SupervisorDecision
+2026-09-15 16:18:43 [info     ] llm_structured_call_completed  latency_ms=1379 model=gpt-4o-mini provider=openai
+2026-09-15 16:18:43 [info     ] supervisor_route               goto=human_review_gate next_agent=finish reason='All required outputs have been produced and validated, enabling the process to finish.' source=llm step=4
+
+  ⏸ human gate 'low_confidence_review' — resuming with 'approve'
+      · confidence 0.00 is below the 0.60 threshold
+2026-09-15 16:18:43 [info     ] human_review_gate_resumed      action=approve reasons=1 status=validated
+==============================================================================
+SESSION 14 — SUPERVISOR MULTI-AGENT RUN
+==============================================================================
+
+ROUTING (supervisor decisions)
+------------------------------------------------------------------------------
+  1. supervisor → requirements_extractor   [llm]  The state has a transcript but no extracted requirements or components, making this agent 
+  2. supervisor → budget_searcher          [llm]  The state contains requirements, components, and no budget matches; the budget_searcher ca
+  3. supervisor → estimate_generator       [llm]  The state has budget_matches for some components, but the estimate has not been produced y
+  4. supervisor → coherence_validator      [llm]  The estimate has been produced, but validation has not yet run, making the coherence_valid
+  5. supervisor → finish                   [llm]  All required outputs have been produced and validated, enabling the process to finish.
+
+TOOL PRIVILEGE (declared allowlists)
+------------------------------------------------------------------------------
+  supervisor               : (no tools)
+  requirements_extractor   : (no tools)
+  budget_searcher          : search_budgets
+  estimate_generator       : derive_task_hours
+  coherence_validator      : validate_estimate
+
+COMPETITION (conservative vs aggressive)
+------------------------------------------------------------------------------
+  aggressive         731d  risks: Unforeseen challenges in Multi-language UI implementation., SOC2 Compliance requirements may evolve or be more stringent than anticipated., Quantum and Swiss Hardware integrations might encounter unique compatibility issues.
+  conservative      1182d  risks: INTEGRATION FRICTION with Swiss Hardware SDK and older FTP protocols may introduce unforeseen delays., TECHNICAL UNKNOWNS in Quantum Encryption Integration could significantly extend timelines due to lack of in-house expertise., VAGUE requirements for the multi-language component might snowball into constraint-driven design loops.
+  divergence   : ratio 0.472 (medium), spread 451d
+  synthesized  : 800..1250d (confidence low)
+    open question: How reusable are the existing telemetry collection modules in the current project context?
+    open question: What are the specific requirements and potential complexities for the multi-language UI?
+    open question: Are there updated or emerging standards for SOC2 Compliance that need to be considered?
+
+AUDIT TRAIL (agent_contributions)
+------------------------------------------------------------------------------
+  [  ok  ] requirements_extractor   extract_requirements         11 requirements extracted from the transcript                (-, 3081ms)
+  [  ok  ] requirements_extractor   classify_components          11 components: Telemetry Collection Platform, Quantum Encryp (-, 1715ms)
+  [  ok  ] budget_searcher          tool:search_budgets          2 historical items for 'Telemetry Collection Platform (backe (e51995f768d5, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          1 historical items for 'Quantum Encryption Integration (inte (2c5cbf1f3e47, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          1 historical items for 'Swiss Hardware SDK Integration (inte (9c61fe48092a, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          2 historical items for 'Traffic Reporting FTP Service (integ (e923df5902db, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          1 historical items for 'Real-Time Antenna Status Panel (fron (a384a07eb26c, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          no historical items for 'Multi-language User Interface (fron (4bd387d0f146, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          2 historical items for 'User Management System (backend)'; h (2286c5316dee, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          5 historical items for 'Biometric Authentication Module (bac (95816c87d1b8, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          no historical items for 'Key Management System (infrastructu (b06f3d18ec98, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          no historical items for 'SOC2 Compliance Assurance (infrastr (812e81850d4b, 0ms)
+  [  ok  ] budget_searcher          tool:search_budgets          2 historical items for 'Report Generation Service (backend)' (66d0fac39e65, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'Telemetry Collection Platform': 1045h (reliability 0.45) fr (fd024263d63d, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'Quantum Encryption Integration': 860h (reliability 0.5) fro (084b0760088b, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'Swiss Hardware SDK Integration': 860h (reliability 0.5) fro (e69a9301b834, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'Traffic Reporting FTP Service': 645h (reliability 0.333) fr (0991429d6604, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'Real-Time Antenna Status Panel': 560h (reliability 0.5) fro (023c87cf3478, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'User Management System': 1045h (reliability 0.45) from 2 an (d1ca8451a9a3, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'Biometric Authentication Module': 664h (reliability 0.26) f (0f5a222b5741, 0ms)
+  [  ok  ] estimate_generator       tool:derive_task_hours       'Report Generation Service': 1045h (reliability 0.45) from 2 (13b93fac8dde, 0ms)
+  [  ok  ] estimate_generator       consolidate_estimate         total 784d over 11 components (confidence medium)            (-, 6515ms)
+  [  ok  ] estimate_generator       competition_aggressive       aggressive total = 731d                                      (-, -)
+  [  ok  ] estimate_generator       competition_conservative     conservative total = 1182d                                   (-, -)
+  [  ok  ] estimate_generator       competition_synthesis        range 800..1250d, divergence 0.472 (medium)                  (-, -)
+  [  ok  ] coherence_validator      tool:validate_estimate       3 issue(s) found                                             (f9df78e1d32d, 0ms)
+  [  ok  ] human                    review_decision              human approve: auto-approved by the S14 runner               (-, -)
+
+HUMAN REVIEW
+------------------------------------------------------------------------------
+  triggered: YES
+    - confidence 0.00 is below the 0.60 threshold
+  decision : approve
+
+ESTIMATE
+------------------------------------------------------------------------------
+  Telemetry Collection Platform [backend]              121d
+  Quantum Encryption Integration [integration]             108d
+  Swiss Hardware SDK Integration [integration]             108d
+  Traffic Reporting FTP Service [integration]              54d
+  Real-Time Antenna Status Panel [frontend]              70d
+  Multi-language User Interface [frontend]   — (unbudgeted)
+  User Management System [backend]                     121d
+  Biometric Authentication Module [backend]              81d
+  Key Management System [infrastructure]     — (unbudgeted)
+  SOC2 Compliance Assurance [infrastructure]   — (unbudgeted)
+  Report Generation Service [backend]                  121d
+  TOTAL                                                784d
+  RANGE (competition)                            800..1250d
+  status = validated · model confidence = medium
+
+ISSUES
+------------------------------------------------------------------------------
+  - 'Multi-language User Interface [frontend]' has no historical reference (unbudgeted).
+  - 'Key Management System [infrastructure]' has no historical reference (unbudgeted).
+  - 'SOC2 Compliance Assurance [infrastructure]' has no historical reference (unbudgeted).
+
