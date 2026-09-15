@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 560" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/></marker>
+    <marker id="arrowb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/></marker>
+    <marker id="arrowg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="#16a34a"/></marker>
+  </defs>
+  <rect x="0" y="0" width="1080" height="560" fill="#f8fafc" rx="12"/>
+  <text x="540" y="34" text-anchor="middle" font-size="20" font-weight="700" fill="#0f172a">A2A (Agent2Agent) — un agente habla con otro agente que no controla</text>
+  <text x="540" y="56" text-anchor="middle" font-size="12" font-style="italic" fill="#475569">Google, abril 2025 → Linux Foundation, junio 2025 · JSON-RPC 2.0 sobre HTTP(S) · agentes OPACOS: solo Tasks, Messages y Artifacts</text>
+
+  <!-- client agent -->
+  <rect x="40" y="130" width="230" height="200" rx="14" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="155" y="160" text-anchor="middle" font-size="16" font-weight="700" fill="#1e3a8a">AGENTE CLIENTE</text>
+  <text x="155" y="180" text-anchor="middle" font-size="12" fill="#1e3a8a">(p. ej. nuestro supervisor)</text>
+  <text x="155" y="210" text-anchor="middle" font-size="12" fill="#1e3a8a">1 · lee la Agent Card</text>
+  <text x="155" y="230" text-anchor="middle" font-size="12" fill="#1e3a8a">2 · message/send (Task)</text>
+  <text x="155" y="250" text-anchor="middle" font-size="12" fill="#1e3a8a">3 · sigue el progreso (SSE / push)</text>
+  <text x="155" y="270" text-anchor="middle" font-size="12" fill="#1e3a8a">4 · responde si input-required</text>
+  <text x="155" y="290" text-anchor="middle" font-size="12" fill="#1e3a8a">5 · recibe Artifacts</text>
+  <text x="155" y="315" text-anchor="middle" font-size="11" font-style="italic" fill="#475569">sus tools las usa por MCP</text>
+
+  <!-- remote agent -->
+  <rect x="810" y="130" width="230" height="200" rx="14" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="925" y="160" text-anchor="middle" font-size="16" font-weight="700" fill="#14532d">AGENTE REMOTO</text>
+  <text x="925" y="180" text-anchor="middle" font-size="12" fill="#14532d">(otro equipo / proveedor / SaaS)</text>
+  <text x="925" y="210" text-anchor="middle" font-size="12" fill="#14532d">razona por su cuenta</text>
+  <text x="925" y="230" text-anchor="middle" font-size="12" fill="#14532d">puede tardar horas o días</text>
+  <text x="925" y="250" text-anchor="middle" font-size="12" fill="#14532d">puede pedir aclaraciones</text>
+  <text x="925" y="270" text-anchor="middle" font-size="12" fill="#14532d">puede fallar o cancelarse</text>
+  <text x="925" y="300" text-anchor="middle" font-size="11" font-weight="700" fill="#166534">NO expone memoria, tools ni estado</text>
+  <text x="925" y="316" text-anchor="middle" font-size="11" font-style="italic" fill="#475569">sandboxing por contrato</text>
+
+  <!-- agent card -->
+  <rect x="770" y="72" width="290" height="44" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="915" y="90" text-anchor="middle" font-size="12" font-weight="700" fill="#92400e">Agent Card · /.well-known/agent-card.json</text>
+  <text x="915" y="106" text-anchor="middle" font-size="10" fill="#92400e">nombre · URL · skills · modos · streaming · AUTH exigida</text>
+  <path d="M 270 150 C 500 90, 700 90, 788 96" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#arrow)"/>
+  <text x="520" y="92" text-anchor="middle" font-size="11" fill="#92400e">1 · discovery: GET Agent Card</text>
+
+  <!-- send -->
+  <path d="M 270 200 H 805" stroke="#2563eb" stroke-width="2.5" marker-end="url(#arrowb)"/>
+  <text x="540" y="192" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">2 · message/send  { Message: [TextPart · FilePart · DataPart] }</text>
+
+  <!-- task lifecycle -->
+  <rect x="300" y="222" width="480" height="60" rx="10" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="540" y="242" text-anchor="middle" font-size="12" font-weight="700" fill="#0f172a">3 · Task { id, status } — ciclo de vida</text>
+  <g font-size="11" font-weight="700">
+    <rect x="312" y="252" width="82" height="22" rx="6" fill="#e2e8f0"/><text x="353" y="267" text-anchor="middle" fill="#334155">submitted</text>
+    <rect x="404" y="252" width="72" height="22" rx="6" fill="#dbeafe"/><text x="440" y="267" text-anchor="middle" fill="#1e3a8a">working</text>
+    <rect x="486" y="252" width="112" height="22" rx="6" fill="#fef3c7"/><text x="542" y="267" text-anchor="middle" fill="#92400e">input-required</text>
+    <rect x="608" y="252" width="80" height="22" rx="6" fill="#dcfce7"/><text x="648" y="267" text-anchor="middle" fill="#166534">completed</text>
+    <rect x="698" y="252" width="72" height="22" rx="6" fill="#fee2e2"/><text x="734" y="267" text-anchor="middle" fill="#991b1b">failed</text>
+  </g>
+  <path d="M 394 263 H 402" stroke="#475569" stroke-width="1.5"/><path d="M 476 263 H 484" stroke="#475569" stroke-width="1.5"/><path d="M 598 263 H 606" stroke="#475569" stroke-width="1.5"/>
+  <text x="540" y="298" text-anchor="middle" font-size="11" fill="#475569">progreso por SSE (message/stream) o push a un webhook · tasks/get · tasks/cancel</text>
+
+  <!-- input required loop -->
+  <path d="M 542 282 V 330 H 285" stroke="#d97706" stroke-width="1.5" stroke-dasharray="5 4" fill="none" marker-end="url(#arrow)"/>
+  <text x="440" y="342" text-anchor="middle" font-size="11" fill="#92400e">4 · input-required = el interrupt() de LangGraph, pero cruzando la frontera de la empresa</text>
+
+  <!-- artifacts back -->
+  <path d="M 805 360 H 275" stroke="#16a34a" stroke-width="2.5" marker-end="url(#arrowg)"/>
+  <text x="540" y="352" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">5 · Artifacts = el RESULTADO (parts tipadas) — hechos, nunca el razonamiento interno</text>
+  <path d="M 925 330 V 358" stroke="#16a34a" stroke-width="2.5"/>
+  <path d="M 155 330 V 358" stroke="#16a34a" stroke-width="2.5" marker-end="url(#arrowg)"/>
+
+  <!-- MCP vs A2A -->
+  <rect x="40" y="395" width="480" height="140" rx="12" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="280" y="420" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">MCP vs A2A — complementarios</text>
+  <text x="60" y="446" font-size="12" font-weight="700" fill="#1e3a8a">MCP (Anthropic)</text>
+  <text x="60" y="464" font-size="11.5" fill="#334155">agente → herramientas y datos (tools con schema)</text>
+  <text x="60" y="480" font-size="11.5" fill="#334155">vertical: el modelo invoca, el servidor ejecuta</text>
+  <text x="60" y="504" font-size="12" font-weight="700" fill="#14532d">A2A (Google → Linux Foundation)</text>
+  <text x="60" y="522" font-size="11.5" fill="#334155">agente ↔ agente que razona, tarda, pregunta o falla · horizontal</text>
+
+  <!-- mapping to our project -->
+  <rect x="560" y="395" width="480" height="140" rx="12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="800" y="420" text-anchor="middle" font-size="14" font-weight="700" fill="#0f172a">Traducido a nuestro supervisor (S14)</text>
+  <g font-size="11.5" fill="#334155">
+    <text x="580" y="446">Command(goto=agente)  →  message/send</text>
+    <text x="580" y="464">AGENT_TOOL_GRANTS  →  skills + auth de la Agent Card</text>
+    <text x="580" y="482">agent_contributions (hechos)  →  Artifacts</text>
+    <text x="580" y="500">interrupt() / Command(resume)  →  input-required + nuevo send</text>
+    <text x="580" y="518">Send fan-out (competición)  →  N Tasks en paralelo, fan-in en tu synthesizer</text>
+  </g>
+  <text x="540" y="552" text-anchor="middle" font-size="11" font-style="italic" fill="#64748b">No lo usamos en el proyecto (todos los agentes son nuestros y comparten estado); entra cuando un especialista es de OTRA organización — y el resto del grafo no cambia.</text>
+</svg>
