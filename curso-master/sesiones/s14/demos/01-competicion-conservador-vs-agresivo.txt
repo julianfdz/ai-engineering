@@ -1,6 +1,6 @@
 # DEMO 1 · COMPETICIÓN — dos estimadores con priores opuestos (bloque 2 de la sesión)
 # Qué se prueba: run_supervisor_s14.py --memory --stub --compete sobre el transcript ORBITA. El nodo estimate_generator lanza en PARALELO un estimador RISK-FIRST (conservador) y otro REUSE-FIRST (agresivo); compute_divergence() mide la distancia con aritmética (sin LLM) y el synthesizer devuelve un RANGO + supuestos + preguntas abiertas, nunca un promedio.
-# Resultado: conservador 1182d vs agresivo 731d → divergencia 0.472 (high) → rango 800–1250d; la divergencia baja la confianza y el gate humano PAUSA el run. Buscar: COMPETITION, divergence, synthesized, HUMAN REVIEW.
+# Resultado: conservador 1182d vs agresivo 731d → divergencia 0.472 (medium, a un pelo de high ≥ 0.5) → rango 800–1250d; la divergencia baja la confianza y el gate humano PAUSA el run. Buscar: COMPETITION, divergence, synthesized, HUMAN REVIEW.
 # ---------------------------------------------------------------------------------------------------------------
 
 2026-09-15 16:18:02 [info     ] logfire_configured             service_name=estimator

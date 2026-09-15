@@ -43,7 +43,7 @@
   <text x="165" y="326" text-anchor="middle" font-size="13" font-weight="700" fill="#ffffff">Demo real (tu máquina, ORBITA, --stub)</text>
   <text x="50" y="356" font-size="13" fill="#99f6e4">conservative   1182 d</text>
   <text x="50" y="378" font-size="13" fill="#bfdbfe">aggressive      731 d</text>
-  <text x="50" y="404" font-size="13" fill="#fde68a">divergence  ratio 0.472 (high)</text>
+  <text x="50" y="404" font-size="13" fill="#fde68a">divergence  ratio 0.472 (medium)</text>
   <text x="50" y="426" font-size="13" fill="#fde68a">synthesized 800..1250 d</text>
   <text x="50" y="452" font-size="12" fill="#fca5a5">HUMAN REVIEW triggered: YES</text>
   <text x="50" y="470" font-size="11" fill="#94a3b8">(guía oficial: 705 / 1250 · ratio 0.558)</text>

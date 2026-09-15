@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 460" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#16a34a"/>
+    </marker>
+    <marker id="arrr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+    </marker>
+    <marker id="arra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#d97706"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="460" fill="#f8fafc" rx="12"/>
+  <text x="430" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Sandboxing de aplicación — tres capas alrededor del único agente que escribe</text>
+
+  <!-- capa 1: riesgo -->
+  <rect x="30" y="55" width="800" height="40" rx="10" fill="#e2e8f0" stroke="#475569" stroke-width="1.5"/>
+  <text x="45" y="72" font-size="11.5" font-weight="700" fill="#334155">CAPA 1 · concesión con RIESGO</text>
+  <text x="45" y="88" font-size="9.5" fill="#334155">ToolRisk: READ (search_budgets, derive_task_hours, validate_estimate) · WRITE · IRREVERSIBLE (save_estimate) — AGENT_TOOL_GRANTS + verify_tool_grants()</text>
+
+  <!-- persistence_agent -->
+  <rect x="30" y="125" width="210" height="80" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="135" y="148" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">persistence_agent</text>
+  <text x="135" y="166" text-anchor="middle" font-size="10.5" fill="#1e3a8a">ActionRequest(tool=save_estimate,</text>
+  <text x="135" y="180" text-anchor="middle" font-size="10.5" fill="#1e3a8a">args, estimation_id, step)</text>
+  <text x="135" y="197" text-anchor="middle" font-size="10" font-style="italic" fill="#1e40af">risk = IRREVERSIBLE</text>
+  <path d="M 245 165 L 275 165" stroke="#475569" stroke-width="2.5" marker-end="url(#arrh)"/>
+
+  <!-- capa 2: guard_action -->
+  <rect x="280" y="110" width="300" height="140" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="430" y="132" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">CAPA 2 · guard_action(req, state) — PURA</text>
+  <text x="295" y="155" font-size="10.5" fill="#78350f">1 · privilegio   tool ∈ AGENT_TOOL_GRANTS[agent] ?</text>
+  <text x="295" y="175" font-size="10.5" fill="#78350f">2 · argumentos   objeto · save exige 'estimate' ?</text>
+  <text x="295" y="195" font-size="10.5" font-weight="700" fill="#78350f">3 · TENENCIA   req.estimation_id == state.estimation_id</text>
+  <text x="295" y="215" font-size="10.5" fill="#78350f">4 · riesgo   IRREVERSIBLE sin aprobación humana ?</text>
+  <text x="430" y="238" text-anchor="middle" font-size="9.5" font-style="italic" fill="#92400e">un "no" en 1–3 → DENIED · un "sí" en 4 → requires_human_approval</text>
+
+  <!-- decisiones -->
+  <path d="M 580 140 C 605 140, 605 125, 625 125" stroke="#16a34a" stroke-width="2.5" fill="none" marker-end="url(#arrg)"/>
+  <rect x="630" y="108" width="200" height="34" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="730" y="124" text-anchor="middle" font-size="12" font-weight="700" fill="#14532d">allowed</text>
+  <text x="730" y="137" text-anchor="middle" font-size="9.5" fill="#166534">las 4 comprobaciones pasan</text>
+
+  <path d="M 580 180 L 625 180" stroke="#dc2626" stroke-width="2.5" marker-end="url(#arrr)"/>
+  <rect x="630" y="163" width="200" height="34" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="730" y="179" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">DENIED</text>
+  <text x="730" y="192" text-anchor="middle" font-size="9.5" fill="#7f1d1d">no se ejecuta — pero SÍ se audita</text>
+
+  <path d="M 580 220 C 605 220, 605 235, 625 235" stroke="#d97706" stroke-width="2.5" fill="none" marker-end="url(#arra)"/>
+  <rect x="630" y="218" width="200" height="34" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="730" y="234" text-anchor="middle" font-size="12" font-weight="700" fill="#78350f">DEFERRED</text>
+  <text x="730" y="247" text-anchor="middle" font-size="9.5" fill="#92400e">🚧 gate humano · approve → allowed</text>
+
+  <!-- capa 3: execute_guarded + audit -->
+  <path d="M 430 250 L 430 280" stroke="#475569" stroke-width="2.5" marker-end="url(#arrh)"/>
+  <rect x="280" y="285" width="300" height="58" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="430" y="306" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14532d">execute_guarded(req, state)</text>
+  <text x="430" y="322" text-anchor="middle" font-size="10.5" fill="#14532d">sink inyectable (memoria; la BBDD real es S15)</text>
+  <text x="430" y="336" text-anchor="middle" font-size="10" font-style="italic" fill="#166534">y registra TODA intención, también las denegadas</text>
+  <path d="M 580 314 L 625 314" stroke="#475569" stroke-width="2.5" marker-end="url(#arrh)"/>
+  <rect x="630" y="285" width="200" height="58" rx="12" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+  <text x="730" y="305" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">CAPA 3 · AUDIT (structlog)</text>
+  <text x="730" y="321" text-anchor="middle" font-size="10.5" fill="#334155">allowed · DENIED · DEFERRED</text>
+  <text x="730" y="335" text-anchor="middle" font-size="10.5" fill="#334155">preview REDACTADO + digest SHA-256</text>
+
+  <!-- verify_tool_grants -->
+  <rect x="30" y="270" width="210" height="73" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="135" y="292" text-anchor="middle" font-size="12" font-weight="700" fill="#991b1b">verify_tool_grants()</text>
+  <text x="135" y="309" text-anchor="middle" font-size="10.5" fill="#7f1d1d">en build_supervisor_graph: si la tabla</text>
+  <text x="135" y="323" text-anchor="middle" font-size="10.5" fill="#7f1d1d">de concesiones es incoherente,</text>
+  <text x="135" y="337" text-anchor="middle" font-size="10.5" font-weight="700" fill="#991b1b">ROMPE EL ARRANQUE (no un run)</text>
+
+  <!-- regla de cierre -->
+  <rect x="30" y="365" width="800" height="52" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="430" y="386" text-anchor="middle" font-size="12" font-weight="700" fill="#78350f">Lo irreversible pasa por el gate humano: la pausa que revisa la estimación ES la autorización de la escritura</text>
+  <text x="430" y="405" text-anchor="middle" font-size="10.5" fill="#78350f">review_reasons 4º disparador (persist_requested) → interrupt() → approve → human_review_gate → persistence_agent → END · reject → nunca se persiste</text>
+
+  <text x="430" y="443" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Qué NO es: aislamiento de proceso/SO, red, secretos — eso es infraestructura (S15). Esto es lo que garantiza el código de la app.</text>
+</svg>

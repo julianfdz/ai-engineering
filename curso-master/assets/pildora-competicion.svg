@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 440" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+    <marker id="arra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#d97706"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="440" fill="#f8fafc" rx="12"/>
+  <text x="430" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Competición — dos priores opuestos; la DIVERGENCIA es el dato, no los totales</text>
+  <text x="430" y="54" text-anchor="middle" font-size="11.5" font-style="italic" fill="#475569">subgrafo dentro del nodo estimate_generator · fan-out desde START · fan-in por reducer: proposals: Annotated[list, operator.add]</text>
+
+  <!-- brief -->
+  <rect x="30" y="175" width="120" height="60" rx="10" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+  <text x="90" y="199" text-anchor="middle" font-size="12" font-weight="700" fill="#334155">brief</text>
+  <text x="90" y="216" text-anchor="middle" font-size="10.5" fill="#334155">ORBITA (11 comp.)</text>
+  <path d="M 150 195 C 180 195, 180 132, 205 132" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#arrh)"/>
+  <path d="M 150 215 C 180 215, 180 297, 205 297" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#arrh)"/>
+  <text x="178" y="120" text-anchor="middle" font-size="10" fill="#475569">en PARALELO</text>
+
+  <!-- conservative -->
+  <rect x="210" y="85" width="225" height="95" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="322" y="108" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">conservative_estimator</text>
+  <text x="322" y="126" text-anchor="middle" font-size="11" font-weight="600" fill="#92400e">RISK-FIRST</text>
+  <text x="322" y="142" text-anchor="middle" font-size="10.5" fill="#78350f">fricción de integraciones · deuda de spec</text>
+  <text x="322" y="156" text-anchor="middle" font-size="10.5" fill="#78350f">certificaciones · desconocidos técnicos</text>
+  <text x="322" y="174" text-anchor="middle" font-size="12.5" font-weight="700" fill="#78350f">→ 1182 d</text>
+
+  <!-- aggressive -->
+  <rect x="210" y="250" width="225" height="95" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="322" y="273" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">aggressive_estimator</text>
+  <text x="322" y="291" text-anchor="middle" font-size="11" font-weight="600" fill="#166534">REUSE-FIRST</text>
+  <text x="322" y="307" text-anchor="middle" font-size="10.5" fill="#14532d">reutilización · alcance cerrado</text>
+  <text x="322" y="321" text-anchor="middle" font-size="10.5" fill="#14532d">análogos históricos</text>
+  <text x="322" y="339" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14532d">→ 731 d</text>
+
+  <!-- fan-in -->
+  <path d="M 435 132 C 468 132, 468 185, 490 185" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#arrh)"/>
+  <path d="M 435 297 C 468 297, 468 245, 490 245" stroke="#475569" stroke-width="2.5" fill="none" marker-end="url(#arrh)"/>
+
+  <!-- synthesizer -->
+  <rect x="495" y="130" width="230" height="170" rx="12" fill="#dbeafe" stroke="#2563eb" stroke-width="2"/>
+  <text x="610" y="153" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">synthesizer</text>
+  <text x="610" y="172" text-anchor="middle" font-size="10.5" font-weight="600" fill="#1e3a8a">1 · compute_divergence() — 0 LLM</text>
+  <text x="610" y="188" text-anchor="middle" font-size="10.5" fill="#1e3a8a">spread = 1182 − 731 = 451 d</text>
+  <text x="610" y="203" text-anchor="middle" font-size="10.5" fill="#1e3a8a">ratio = 451 / 956 = 0.472</text>
+  <text x="610" y="226" text-anchor="middle" font-size="10.5" font-weight="600" fill="#1e3a8a">2 · SynthesizedEstimate — NUNCA promedia</text>
+  <text x="610" y="244" text-anchor="middle" font-size="12.5" font-weight="700" fill="#1e3a8a">rango 800..1250 d</text>
+  <text x="610" y="261" text-anchor="middle" font-size="10.5" fill="#1e3a8a">+ driving_assumptions</text>
+  <text x="610" y="276" text-anchor="middle" font-size="10.5" fill="#1e3a8a">+ open_questions (¿reutilización? ¿SOC2?)</text>
+  <text x="610" y="292" text-anchor="middle" font-size="9.5" font-style="italic" fill="#1e40af">(promediar daría 956 d: nadie defendió ese número)</text>
+
+  <!-- niveles -->
+  <rect x="735" y="150" width="100" height="100" rx="8" fill="#ffffff" stroke="#94a3b8"/>
+  <text x="785" y="170" text-anchor="middle" font-size="11" font-weight="700" fill="#334155">nivel</text>
+  <text x="785" y="190" text-anchor="middle" font-size="10.5" fill="#991b1b">high ≥ 0.5</text>
+  <text x="785" y="207" text-anchor="middle" font-size="10.5" fill="#92400e">medium ≥ 0.2</text>
+  <text x="785" y="224" text-anchor="middle" font-size="10.5" fill="#166534">low &lt; 0.2</text>
+  <text x="785" y="242" text-anchor="middle" font-size="9.5" font-style="italic" fill="#475569">0.472 → medium</text>
+
+  <!-- hacia el gate -->
+  <path d="M 610 300 L 610 355" stroke="#d97706" stroke-width="2.5" marker-end="url(#arra)"/>
+  <rect x="30" y="360" width="800" height="48" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="430" y="380" text-anchor="middle" font-size="11.5" font-weight="700" fill="#78350f">_apply_divergence_penalty: penalty = SUPERVISOR_DIVERGENCE_PENALTY × ratio → confidence ↓</text>
+  <text x="430" y="398" text-anchor="middle" font-size="11" fill="#78350f">confidence &lt; 0.6 → review_reasons → interrupt() → 🚧 human_review_gate — el gate de siempre, nada nuevo aguas abajo</text>
+
+  <text x="430" y="430" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Si los dos coinciden: ratio ≈ 0, penalización 0 — la ausencia de discrepancia también es información</text>
+</svg>

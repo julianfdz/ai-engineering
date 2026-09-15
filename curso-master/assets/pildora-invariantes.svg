@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 450" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrh" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="450" fill="#f8fafc" rx="12"/>
+  <text x="430" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Si la ruta la decide un LLM, no testees el paso N — testea invariantes</text>
+
+  <!-- lo que NO se testea -->
+  <rect x="30" y="60" width="255" height="105" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="157" y="83" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">✗ LO QUE NO SE TESTEA</text>
+  <text x="157" y="104" text-anchor="middle" font-size="11" fill="#7f1d1d">"en el paso 2 corre budget_searcher"</text>
+  <text x="157" y="121" text-anchor="middle" font-size="11" fill="#7f1d1d">"la ruta es A → B → C → D"</text>
+  <text x="157" y="143" text-anchor="middle" font-size="10.5" font-style="italic" fill="#991b1b">la decide el modelo → flaky por diseño;</text>
+  <text x="157" y="157" text-anchor="middle" font-size="10.5" font-style="italic" fill="#991b1b">rompe con el siguiente cambio de modelo</text>
+
+  <!-- fakes -->
+  <rect x="30" y="185" width="255" height="130" rx="12" fill="#e2e8f0" stroke="#475569" stroke-width="2"/>
+  <text x="157" y="208" text-anchor="middle" font-size="13" font-weight="700" fill="#334155">FAKES DETERMINISTAS</text>
+  <text x="157" y="227" text-anchor="middle" font-size="10.5" fill="#334155">conftest.py::FakeWrapper + wire</text>
+  <text x="157" y="242" text-anchor="middle" font-size="10.5" fill="#334155">escriptan el router y el retrieval — 0 red</text>
+  <text x="157" y="262" text-anchor="middle" font-size="10.5" font-weight="600" fill="#334155">cada señal se fuerza con HECHOS:</text>
+  <text x="157" y="279" text-anchor="middle" font-size="10.5" fill="#334155">confidence &lt; 0.6 · out_of_range</text>
+  <text x="157" y="294" text-anchor="middle" font-size="10.5" fill="#334155">grounded / total &lt; 0.5 · persist_requested</text>
+  <text x="157" y="309" text-anchor="middle" font-size="9.5" font-style="italic" fill="#475569">review_reasons(state) es PURA → testable sola</text>
+
+  <!-- edge cases -->
+  <rect x="30" y="335" width="255" height="80" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="157" y="357" text-anchor="middle" font-size="12" font-weight="700" fill="#78350f">TRANSCRIPTS EDGE-CASE</text>
+  <text x="157" y="375" text-anchor="middle" font-size="10.5" fill="#78350f">exercises/session-14/edge_cases/</text>
+  <text x="157" y="391" text-anchor="middle" font-size="10.5" fill="#78350f">low_confidence · out_of_historical_range</text>
+  <text x="157" y="406" text-anchor="middle" font-size="10.5" fill="#78350f">no_precedent (+ ORBITA, las tres a la vez)</text>
+
+  <path d="M 285 250 L 320 250" stroke="#475569" stroke-width="2.5" marker-end="url(#arrh)"/>
+  <text x="302" y="240" text-anchor="middle" font-size="9.5" fill="#475569">12 tests</text>
+
+  <!-- invariantes -->
+  <rect x="325" y="60" width="505" height="355" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="577" y="83" text-anchor="middle" font-size="13.5" font-weight="700" fill="#14532d">✓ SEIS INVARIANTES — ciertas cualquiera que sea el camino</text>
+
+  <rect x="340" y="95" width="475" height="46" rx="8" fill="#ffffff" stroke="#86efac"/>
+  <text x="352" y="113" font-size="11.5" font-weight="700" fill="#14532d">1 · La pausa salta cuando debe</text>
+  <text x="352" y="130" font-size="10.5" fill="#166534">snapshot.next == ("human_review_gate",) y el motivo correcto — por cada señal</text>
+
+  <rect x="340" y="147" width="475" height="46" rx="8" fill="#ffffff" stroke="#86efac"/>
+  <text x="352" y="165" font-size="11.5" font-weight="700" fill="#14532d">2 · El estado pausado persiste</text>
+  <text x="352" y="182" font-size="10.5" fill="#166534">el checkpoint contiene el run a medias (reanudable mañana)</text>
+
+  <rect x="340" y="199" width="475" height="46" rx="8" fill="#ffffff" stroke="#86efac"/>
+  <text x="352" y="217" font-size="11.5" font-weight="700" fill="#14532d">3 · El resume aplica la decisión humana</text>
+  <text x="352" y="234" font-size="10.5" fill="#166534">Command(resume={"decision": "approve"}) → status == "validated" · next == ()</text>
+
+  <rect x="340" y="251" width="475" height="46" rx="8" fill="#ffffff" stroke="#86efac"/>
+  <text x="352" y="269" font-size="11.5" font-weight="700" fill="#14532d">4 · Nadie actuó sin sus precondiciones</text>
+  <text x="352" y="286" font-size="10.5" fill="#166534">despacho leído de routing_history ⊆ SUBSECUENCIA de extractor → searcher → generator → validator</text>
+
+  <rect x="340" y="303" width="475" height="46" rx="8" fill="#ffffff" stroke="#86efac"/>
+  <text x="352" y="321" font-size="11.5" font-weight="700" fill="#14532d">5 · El techo de pasos se respetó</text>
+  <text x="352" y="338" font-size="10.5" fill="#166534">len(routing_history) ≤ SUPERVISOR_MAX_STEPS (8), decida lo que decida el router</text>
+
+  <rect x="340" y="355" width="475" height="46" rx="8" fill="#ffffff" stroke="#86efac"/>
+  <text x="352" y="373" font-size="11.5" font-weight="700" fill="#14532d">6 · El resume es idempotente</text>
+  <text x="352" y="390" font-size="10.5" fill="#166534">un 2º resume sobre un run terminado no toca el estado · en HTTP: 409 en POST …/{id}/resume</text>
+
+  <text x="430" y="437" text-anchor="middle" font-size="11" font-weight="600" fill="#0f172a">Un test HITL que falla "a veces" casi nunca es un bug: es que se testeó el camino en vez de una invariante</text>
+</svg>
