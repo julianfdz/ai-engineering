@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 430" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="430" fill="#f8fafc" rx="12"/>
+  <text x="430" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">PII — pseudonimizar ANTES del embedding, con un mapping reversible</text>
+
+  <!-- texto original -->
+  <rect x="25" y="80" width="190" height="120" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="120" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#7f1d1d">TEXTO ORIGINAL</text>
+  <text x="120" y="128" text-anchor="middle" font-size="11" fill="#991b1b">"Laura Fernández confirmó</text>
+  <text x="120" y="145" text-anchor="middle" font-size="11" fill="#991b1b">BUDGET-2024-0315 por</text>
+  <text x="120" y="162" text-anchor="middle" font-size="11" fill="#991b1b">correo a laura@acme.com"</text>
+  <text x="120" y="186" text-anchor="middle" font-size="10" font-style="italic" fill="#b91c1c">PII en claro</text>
+
+  <!-- analyzer -->
+  <path d="M 220 140 L 252 140" stroke="#475569" stroke-width="2.5" marker-end="url(#arrp)"/>
+  <rect x="258" y="80" width="170" height="120" rx="12" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="343" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#0c4a6e">1 · DETECTAR</text>
+  <text x="343" y="122" text-anchor="middle" font-size="10.5" fill="#0369a1">Presidio analyzer</text>
+  <text x="343" y="144" text-anchor="middle" font-size="11" fill="#0c4a6e">spaCy EN ESPAÑOL</text>
+  <text x="343" y="161" text-anchor="middle" font-size="11" fill="#0c4a6e">+ recognizers propios</text>
+  <text x="343" y="178" text-anchor="middle" font-size="10.5" fill="#075985">(BUDGET-…, CLI-…)</text>
+
+  <!-- pseudonimizador -->
+  <path d="M 433 140 L 465 140" stroke="#475569" stroke-width="2.5" marker-end="url(#arrp)"/>
+  <rect x="471" y="80" width="170" height="120" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="556" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">2 · SUSTITUIR</text>
+  <text x="556" y="122" text-anchor="middle" font-size="10.5" fill="#92400e">Faker es_ES</text>
+  <text x="556" y="144" text-anchor="middle" font-size="11" fill="#78350f">nombre → otro nombre</text>
+  <text x="556" y="161" text-anchor="middle" font-size="11" fill="#78350f">email → otro email</text>
+  <text x="556" y="178" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">mismo valor → mismo falso</text>
+
+  <!-- texto seguro -->
+  <path d="M 646 140 L 678 140" stroke="#475569" stroke-width="2.5" marker-end="url(#arrp)"/>
+  <rect x="684" y="80" width="152" height="120" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="760" y="104" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">AL EMBEDDING</text>
+  <text x="760" y="128" text-anchor="middle" font-size="11" fill="#166534">"Carlos Martínez</text>
+  <text x="760" y="145" text-anchor="middle" font-size="11" fill="#166534">confirmó BUDGET-2027-…</text>
+  <text x="760" y="162" text-anchor="middle" font-size="11" fill="#166534">a dalila38@…"</text>
+  <text x="760" y="186" text-anchor="middle" font-size="10" font-style="italic" fill="#15803d">coherencia semántica intacta</text>
+
+  <!-- mapping table -->
+  <path d="M 556 205 L 556 238" stroke="#7c3aed" stroke-width="2" marker-end="url(#arrp)"/>
+  <rect x="380" y="244" width="352" height="96" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="556" y="268" text-anchor="middle" font-size="13.5" font-weight="700" fill="#3b0764">MAPPING TABLE (aparte, cifrada)</text>
+  <text x="556" y="290" text-anchor="middle" font-size="11" fill="#4c1d95">entity_type · HMAC del original · pseudónimo · fuente</text>
+  <text x="556" y="308" text-anchor="middle" font-size="11" fill="#4c1d95">se guarda el hash, NUNCA el valor en claro</text>
+  <text x="556" y="328" text-anchor="middle" font-size="11" font-weight="700" fill="#3b0764">→ hace posible el derecho al olvido (art. 17)</text>
+
+  <!-- modos filtración -->
+  <rect x="25" y="244" width="330" height="140" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="190" y="268" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Tres modos de filtración vía RAG</text>
+  <text x="40" y="294" font-size="11.5" fill="#0f172a"><tspan font-weight="700">Directa</tspan> — el dato sale literal en la respuesta</text>
+  <text x="40" y="318" font-size="11.5" fill="#0f172a"><tspan font-weight="700">Agregación</tspan> — preguntas inocuas que juntas</text>
+  <text x="40" y="334" font-size="11.5" fill="#0f172a">reidentifican</text>
+  <text x="40" y="358" font-size="11.5" fill="#0f172a"><tspan font-weight="700">Inferencia</tspan> — la más peligrosa: la señal</text>
+  <text x="40" y="374" font-size="11.5" fill="#0f172a">está en el lenguaje, no en los ids</text>
+
+  <text x="556" y="372" text-anchor="middle" font-size="11.5" font-style="italic" fill="#64748b">El control de acceso de la app no protege nada de esto:</text>
+  <text x="556" y="390" text-anchor="middle" font-size="11.5" font-style="italic" fill="#64748b">un dato dentro del espacio vectorial está al alcance de cualquier consulta</text>
+</svg>

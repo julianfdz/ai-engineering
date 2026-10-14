@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 430" font-family="system-ui, -apple-system, Segoe UI, sans-serif">
+  <defs>
+    <marker id="arrl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#475569"/>
+    </marker>
+  </defs>
+  <rect x="0" y="0" width="860" height="430" fill="#f8fafc" rx="12"/>
+  <text x="430" y="36" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Limpiar NO es validar — dos pasos, dos responsabilidades</text>
+
+  <!-- datos sucios -->
+  <rect x="30" y="80" width="180" height="230" rx="12" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="120" y="104" text-anchor="middle" font-size="13.5" font-weight="700" fill="#7f1d1d">DATOS SUCIOS</text>
+  <text x="120" y="132" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7f1d1d">heterogeneidad</text>
+  <text x="120" y="148" text-anchor="middle" font-size="10.5" fill="#991b1b">"EUR" · "eur" · "€"</text>
+  <text x="120" y="174" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7f1d1d">nulos disfrazados</text>
+  <text x="120" y="190" text-anchor="middle" font-size="10.5" fill="#991b1b">"TBD" · "N/A" · "-"</text>
+  <text x="120" y="216" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7f1d1d">duplicados divergentes</text>
+  <text x="120" y="232" text-anchor="middle" font-size="10.5" fill="#991b1b">mismo id, 30.000 vs 32.000</text>
+  <text x="120" y="258" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7f1d1d">fuera de rango</text>
+  <text x="120" y="274" text-anchor="middle" font-size="10.5" fill="#991b1b">total = -50000</text>
+
+  <!-- limpieza -->
+  <path d="M 216 195 L 256 195" stroke="#475569" stroke-width="2.5" marker-end="url(#arrl)"/>
+  <rect x="262" y="110" width="190" height="170" rx="12" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+  <text x="357" y="136" text-anchor="middle" font-size="13.5" font-weight="700" fill="#0c4a6e">1 · LIMPIEZA</text>
+  <text x="357" y="154" text-anchor="middle" font-size="11" fill="#0369a1">pandas · permisiva</text>
+  <text x="357" y="180" text-anchor="middle" font-size="11" fill="#0c4a6e">normaliza monedas y fechas</text>
+  <text x="357" y="198" text-anchor="middle" font-size="11" fill="#0c4a6e">"TBD" → nulo real</text>
+  <text x="357" y="216" text-anchor="middle" font-size="11" fill="#0c4a6e">dedup: el último por fecha</text>
+  <text x="357" y="246" text-anchor="middle" font-size="10.5" font-weight="700" fill="#075985">errors="coerce":</text>
+  <text x="357" y="262" text-anchor="middle" font-size="10.5" fill="#075985">repara, NO decide</text>
+
+  <!-- validación -->
+  <path d="M 458 195 L 498 195" stroke="#475569" stroke-width="2.5" marker-end="url(#arrl)"/>
+  <rect x="504" y="110" width="170" height="170" rx="12" fill="#ede9fe" stroke="#7c3aed" stroke-width="2"/>
+  <text x="589" y="136" text-anchor="middle" font-size="13.5" font-weight="700" fill="#3b0764">2 · VALIDACIÓN</text>
+  <text x="589" y="154" text-anchor="middle" font-size="11" fill="#5b21b6">Pandera · estricta</text>
+  <text x="589" y="180" text-anchor="middle" font-size="11" fill="#3b0764">schema por columna</text>
+  <text x="589" y="198" text-anchor="middle" font-size="11" fill="#3b0764">reglas entre columnas</text>
+  <text x="589" y="216" text-anchor="middle" font-size="11" fill="#3b0764">strict=True</text>
+  <text x="589" y="246" text-anchor="middle" font-size="10.5" font-weight="700" fill="#4c1d95">lazy=True:</text>
+  <text x="589" y="262" text-anchor="middle" font-size="10.5" fill="#4c1d95">recoge TODOS los fallos</text>
+
+  <!-- cubetas -->
+  <path d="M 680 160 L 712 120" stroke="#475569" stroke-width="2" marker-end="url(#arrl)"/>
+  <path d="M 680 195 L 712 195" stroke="#475569" stroke-width="2" marker-end="url(#arrl)"/>
+  <path d="M 680 230 L 712 270" stroke="#475569" stroke-width="2" marker-end="url(#arrl)"/>
+  <rect x="716" y="92" width="120" height="52" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="776" y="114" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">válidas</text>
+  <text x="776" y="131" text-anchor="middle" font-size="10.5" fill="#166534">→ al RAG</text>
+  <rect x="716" y="169" width="120" height="52" rx="10" fill="#fef9c3" stroke="#ca8a04" stroke-width="2"/>
+  <text x="776" y="191" text-anchor="middle" font-size="13" font-weight="700" fill="#713f12">cuarentena</text>
+  <text x="776" y="208" text-anchor="middle" font-size="10.5" fill="#854d0e">revisión humana</text>
+  <rect x="716" y="246" width="120" height="52" rx="10" fill="#fee2e2" stroke="#dc2626" stroke-width="2"/>
+  <text x="776" y="268" text-anchor="middle" font-size="13" font-weight="700" fill="#7f1d1d">descartadas</text>
+  <text x="776" y="285" text-anchor="middle" font-size="10.5" fill="#991b1b">fuera · con log</text>
+
+  <rect x="140" y="332" width="580" height="62" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="430" y="356" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Un único punto del pipeline: entre el parser y el Document canónico</text>
+  <text x="430" y="378" text-anchor="middle" font-size="11.5" fill="#334155">no parches repartidos por el chunker, el embedder y el retriever</text>
+  <text x="430" y="414" text-anchor="middle" font-size="11.5" font-style="italic" fill="#64748b">El contrato es estricto desde el día 1; lo que se relaja en desarrollo es la política, no el schema</text>
+</svg>
