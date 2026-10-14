@@ -5,8 +5,7 @@ ROTI y cierre) y le intercala diapos propias que siguen el guion del directo:
 código de cada pieza, salida real de las demos, defensa oral y chuleta.
 
     python build_deck.py
-    # → ../Sesion06-Julian-Fernandez.pdf         (alumnos: sin notas internas)
-    # → ../Sesion06-Julian-Fernandez-MENTOR.pdf  (Julián: guion en la franja + chuleta)
+    # → ../Sesion06-Julian-Fernandez.pdf   y   ../Sesion06-Julian-Fernandez.pptx
 
 Para iterar: cambia el contenido de las funciones ``slide_*`` y vuelve a lanzar.
 """
@@ -807,6 +806,24 @@ def build(mentor: bool) -> None:
     d.save()
 
 
+def export_pptx() -> None:
+    """Exporta el deck de alumnos a .pptx: una imagen a pantalla completa por diapo (idéntico al PDF)."""
+    from io import BytesIO
+    from pptx import Presentation
+    from pptx.util import Emu
+    pdf = fitz.open(OUTPUT_PUBLIC)
+    prs = Presentation()
+    prs.slide_width, prs.slide_height = Emu(12192000), Emu(6858000)   # 16:9
+    blank = prs.slide_layouts[6]
+    for page in pdf:
+        png = page.get_pixmap(dpi=220).tobytes("png")
+        slide = prs.slides.add_slide(blank)
+        slide.shapes.add_picture(BytesIO(png), 0, 0, width=prs.slide_width, height=prs.slide_height)
+    out = OUTPUT_PUBLIC.with_suffix(".pptx")
+    prs.save(out)
+    print(f"{out.name}: {len(prs.slides)} diapos")
+
+
 if __name__ == "__main__":
     build(mentor=False)
-    build(mentor=True)
+    export_pptx()

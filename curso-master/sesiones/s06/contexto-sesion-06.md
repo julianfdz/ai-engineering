@@ -1053,9 +1053,10 @@ que son los que hay que cubrir en el deck.
 
 ## 7. Material para clase
 
-- **Deck alumnos**: [Sesion06-Julian-Fernandez.pdf](Sesion06-Julian-Fernandez.pdf) (sin notas internas).
-- **Deck mentor**: [Sesion06-Julian-Fernandez-MENTOR.pdf](Sesion06-Julian-Fernandez-MENTOR.pdf)
-  (franja con el guion + chuleta de comandos). Ambos se regeneran con `deck/build_deck.py`.
+- **Deck**: [Sesion06-Julian-Fernandez.pdf](Sesion06-Julian-Fernandez.pdf) y
+  [Sesion06-Julian-Fernandez.pptx](Sesion06-Julian-Fernandez.pptx) (mismo contenido; se
+  regeneran con `deck/build_deck.py`).
+- **Guion personal**: [guion-julian.md](guion-julian.md).
 - **Píldoras**:
   [decision-cag-rag-hibrido.md](../../pildoras/decision-cag-rag-hibrido.md) ·
   [catalogo-de-fuentes.md](../../pildoras/catalogo-de-fuentes.md) ·
