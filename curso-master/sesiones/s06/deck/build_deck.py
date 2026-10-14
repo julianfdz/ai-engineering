@@ -497,6 +497,35 @@ no_existe                     → HTTP 404 unknown_source""", "Demo · salida re
            "los tenéis en el repo de referencia.</div>")
 
 
+def slide_madurez(d: Deck) -> None:
+    p = d.new("La madurez documental marca el techo de precisión",
+              "Lo que hay que saber de antemano, antes de prometerle nada a un cliente",
+              "Bloque 2 · 1:18 · idea propia de Julián · contarlo con un ejemplo real de cliente")
+    steps = [
+        ("~60 %", "Fácil", "Un RAG directo sobre los documentos tal cual llegan. Impresiona en la demo.", "peach"),
+        ("60 → 80 %", "Un salto enorme", "Catálogo, Document canónico, limpieza, validación y PII: "
+         "exactamente lo que construimos hoy.", "lav"),
+        ("≈ 100 %", "Meses de trabajo… o imposible", "Sin errores en una adopción agéntica o RAG: meses de "
+         "iteración, o directamente inalcanzable por la propia naturaleza de la IA.", "mint"),
+    ]
+    y = 74
+    for pct, name, desc, k in steps:
+        d.box(p, (40, y, 400, y + 70),
+              f'<span class="big"><b>{pct}</b></span> &nbsp;<b>{name}</b><br/>{desc}', kind=k, pad=8)
+        y += 80
+    d.box(p, (415, 74, 685, 228),
+          '<div class="t">No se empieza la casa por el tejado</div>'
+          "Muchas empresas aún no han digitalizado de verdad: documentos sueltos en Word, carpetas compartidas "
+          "sin orden, ERPs de hace 20 años.<br/><br/>"
+          "Sin esa base, la IA <b>no tiene de dónde leer</b>. Primero digitalizar y ordenar; después, IA.",
+          kind="beige")
+    d.box(p, (415, 238, 685, 312),
+          '<div class="t">Por qué importa</div>'
+          "Si no se sabe desde el principio, llegan las quejas: del cliente, del jefe de proyecto… "
+          "y la culpa acaba siendo \"de la IA\".",
+          kind="note")
+
+
 def slide_24_code(d: Deck) -> None:
     p = d.new("Limpiar y validar son dos pasos distintos",
               "Limpieza permisiva (repara lo reparable) · validación estricta (decide qué entra)",
@@ -762,6 +791,7 @@ def build(mentor: bool) -> None:
     slide_23_code(d)
     d.template(9, "2.3 · 1:10 · [Slide 9] offline vs online: por eso la indexación es 202 + polling")
     slide_23_demo(d)
+    slide_madurez(d)
     d.template(10, "2.4 · 1:20 · [Slide 10] las cuatro familias de suciedad, plantadas en data/seed/budgets/")
     slide_24_code(d)
     slide_24_demo(d)
