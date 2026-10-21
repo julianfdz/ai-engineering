@@ -486,12 +486,12 @@ cliente HTTP) solo envía el documento con su tipo.
 | Pieza | Fichero | Qué es |
 |---|---|---|
 | Plantilla base de LIDR | [`deck/plantilla-lidr-s07.pdf`](deck/plantilla-lidr-s07.pdf) | 12 páginas oficiales: portada, tres arquitecturas, cinco patrones de error, Matryoshka, cuatro familias, fixed vs recursive, sentence-window vs structural, Contextual Retrieval, hierarchical, cierre/S8, ROTI y gracias |
-| Versión de Julián | [`Sesion07-Julian-Fernandez.pdf`](Sesion07-Julian-Fernandez.pdf) | 32 diapos, un solo PDF para todos (sin versión mentor ni PPTX): las 12 de la plantilla + 20 propias con los números reales del corpus |
+| Versión de Julián | [`Sesion07-Julian-Fernandez.pdf`](Sesion07-Julian-Fernandez.pdf) | 36 diapos, un solo PDF para todos (sin versión mentor ni PPTX): las 12 de la plantilla + 24 propias con los números reales del corpus, incluidas las de vocabulario (chunk, token, vector), las columnas del Chunking Lab (p50, p95, huérfanos, obesos) y por qué no se comparan vectores de distinta dimensión |
 | Generador | [`deck/build_deck.py`](deck/build_deck.py) | `python build_deck.py` regenera el PDF; rasteriza los SVG con Edge headless |
 | Guion oficial | [`guion-directo.md`](guion-directo.md) | el guion de LIDR con la nota de cómo se lanza en local |
 
 Diagramas nuevos en `curso-master/assets/` (SVG fuente + PNG): `s07-pipeline-hoy`, `s07-anatomia-chunk`
-y `s07-late-chunking`. Se reutilizan además `s07-espacio-semantico.png`, `s07-metricas-similitud.png`
+`s07-late-chunking` y `s07-tamano-chunks` (distribución de tamaños por estrategia). Se reutilizan además `s07-espacio-semantico.png`, `s07-metricas-similitud.png`
 y `s07-familias-chunking.png` (los del artículo).
 
 Los números de las diapos de mecánicas son los de la ejecución en local (`--output-table`:

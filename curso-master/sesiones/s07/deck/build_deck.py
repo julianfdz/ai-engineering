@@ -27,7 +27,8 @@ TEMPLATE = HERE / "plantilla-lidr-s07.pdf"
 ASSETS = HERE.parent.parent.parent / "assets"
 OUTPUT = HERE.parent / "Sesion07-Julian-Fernandez.pdf"
 EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
-SVGS = {"s07-pipeline-hoy": 330, "s07-anatomia-chunk": 430, "s07-late-chunking": 430}
+SVGS = {"s07-pipeline-hoy": 330, "s07-anatomia-chunk": 430, "s07-late-chunking": 430,
+        "s07-tamano-chunks": 430}
 
 W, H = 720, 405
 BADGE = fitz.Rect(7, 7, 72, 35)
@@ -495,6 +496,91 @@ norm_b = math.sqrt(sum(y * y for y in b))   #  768""", "Si no la tienes: nuestro
           kind="mint")
 
 
+def slide_vocabulario(d: Deck) -> None:
+    p = d.new("Chunk, token y vector", "Tres palabras que vamos a usar todo el rato", "Embeddings")
+    steps = [("Documento", "un presupuesto entero", "beige"), ("Chunks", "los trozos en que lo partimos", "lav"),
+             ("Tokens", "cómo mide el modelo cada trozo", "note"), ("Vectores", "1536 números por chunk", "mint")]
+    x = 30
+    for i, (t, s, k) in enumerate(steps):
+        d.box(p, (x, 68, x + 145, 112), f'<div class="t center">{t}</div><div class="s center">{s}</div>', kind=k, pad=5)
+        if i < 3:
+            d.html(p, (x + 145, 80, x + 172, 100), '<div class="center big"><b>→</b></div>')
+        x += 172
+    d.box(p, (30, 124, 250, 296),
+          '<div class="t">Chunk</div>'
+          "El <b>trozo de documento</b> que se indexa y se recupera como una unidad. Es lo que el RAG le "
+          "entrega al LLM como contexto.<br/><br/>"
+          '<span class="s">En nuestro proyecto, por defecto, un componente del presupuesto.</span>',
+          kind="lav")
+    d.box(p, (260, 124, 470, 296),
+          '<div class="t">Token</div>'
+          "La unidad en la que el modelo cuenta el texto: <b>unos ¾ de palabra</b> en inglés "
+          "(tokenizador <code>cl100k_base</code>, con tiktoken).<br/><br/>"
+          '<span class="s">Medimos los chunks en tokens, no en caracteres: es lo que cobra la API y lo que '
+          "limita el modelo (8191 tokens de entrada como máximo).</span>",
+          kind="note")
+    d.box(p, (480, 124, 690, 296),
+          '<div class="t">Vector (embedding)</div>'
+          "Los <b>1536 números</b> que el modelo devuelve para un chunk. <b>Un chunk → un vector.</b><br/><br/>"
+          '<span class="s">Buscar = comparar el vector de la consulta con el de cada chunk y quedarse con '
+          "los más cercanos.</span>",
+          kind="mint")
+    d.box(p, (30, 306, 690, 345),
+          '<div class="center">Si un chunk está mal cortado, su vector lo representa mal… '
+          "<b>y ningún modelo de embeddings lo arregla después.</b></div>",
+          kind="peach")
+
+
+def slide_columnas_lab(d: Deck) -> None:
+    p = d.new("Las columnas del Chunking Lab", "Qué significa cada estadística y cuándo es buena o mala señal",
+              "Chunking I · mecánicas")
+    rows = [
+        ("Chunks", "cuántos trozos (y vectores) produce la estrategia",
+         "ni bueno ni malo: más chunks = índice más grande y más coste de embeber"),
+        ("min · max", "el chunk más pequeño y el más grande, en tokens",
+         "un max muy alto avisa de un obeso; un min muy bajo, de huérfanos"),
+        ("p50", "la <b>mediana</b>: la mitad de los chunks mide menos que esto. El chunk típico",
+         "conviene que caiga en la zona sana, lejos de los dos extremos"),
+        ("p95", "el 95 % de los chunks mide menos que esto (p90: lo mismo con el 90 %)",
+         "si está muy lejos de p50, los tamaños son irregulares"),
+        ("Huérfanos", "chunks de <b>menos de 20 tokens</b>",
+         "<span class=\"r\">malo</span>: sin contexto, dan coincidencias con score alto que no sirven"),
+        ("Obesos", "chunks de <b>más de 800 tokens</b>",
+         "<span class=\"r\">malo</span>: mezclan temas, su vector es un promedio difuso y llenan el contexto del LLM"),
+        ("Coste $ · Segundos", "lo que cuesta trocear el corpus (la ingesta)",
+         "solo las estrategias que llaman a un LLM o a embeddings cuestan algo"),
+    ]
+    d.box(p, (24, 66, 696, 312),
+          "<table><tr><th>Columna</th><th>Qué es</th><th>¿Bueno o malo?</th></tr>"
+          + "".join(f"<tr><td><b>{a}</b></td><td>{b}</td><td>{c}</td></tr>" for a, b, c in rows)
+          + "</table>",
+          kind="beige", role="table")
+    d.html(p, (24, 318, 696, 345),
+           '<div class="center s">No hay un número mágico. Lo que buscamos: <b>cero huérfanos, cero obesos</b> y un p50 '
+           "que tenga sentido para el tipo de documento.</div>")
+
+
+def slide_tamano_chunks(d: Deck) -> None:
+    p = d.new("Leer las estadísticas sobre nuestro corpus",
+              "El mismo corpus, cuatro formas de partirlo", "Chunking I · mecánicas")
+    d.image(p, (16, 62, 538, 300), "s07-tamano-chunks.png")
+    d.box(p, (546, 68, 704, 140),
+          '<div class="t">structural</div>'
+          "p50 78, p95 96,5: muy homogéneo. Un obeso: <code>MONO-001</code>, 1391 tokens.",
+          kind="mint")
+    d.box(p, (546, 148, 704, 220),
+          '<div class="t">sentence_window</div>'
+          "p50 21: la mitad roza el límite. <b>34 huérfanos</b> de 78.",
+          kind="note")
+    d.box(p, (546, 228, 704, 300),
+          '<div class="t">propositional</div>'
+          "p50 11: <b>765 huérfanos</b> de 778. Mucho score, poco contexto.",
+          kind="peach")
+    d.html(p, (24, 306, 696, 345),
+           '<div class="center s">Recursive es el más irregular (de 10 a 494 tokens): corta a 512 tokens por '
+           "separadores sin mirar dónde empieza un componente.</div>")
+
+
 def slide_anatomia(d: Deck) -> None:
     p = d.new("El chunk de nuestro proyecto",
               "app/generation/rag/chunking/structural.py · la estrategia de referencia", "Embeddings")
@@ -791,10 +877,13 @@ def build() -> None:
     slide_modelos(d)
     d.template(3)
     slide_dimensiones(d)
+    slide_vocabulario(d)
     slide_anatomia(d)
     slide_por_que_chunking(d)
     d.template(4)
     slide_doce(d)
+    slide_columnas_lab(d)
+    slide_tamano_chunks(d)
     d.template(5)
     d.template(6)
     slide_mecanicas(d)
