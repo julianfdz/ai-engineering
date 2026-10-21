@@ -20,6 +20,32 @@ COPY pyproject.toml uv.lock* ./
 # uv will generate the lockfile if it doesn't exist yet.
 RUN uv sync --no-install-project --no-dev
 
+# -----------------------------------------------------------------------------
+# LOCAL (fork) — torch CPU + modelo spaCy en español
+# -----------------------------------------------------------------------------
+# unstructured[all-docs] arrastra torch + torchvision con el runtime CUDA
+# (nvidia-*, triton: varios GB) aunque aquí nada corre en GPU. Se cambian por
+# las ruedas CPU de la MISMA versión. El guard tolera que torch no esté.
+ARG TORCH_CPU_ONLY=true
+RUN if [ "$TORCH_CPU_ONLY" = "true" ]; then \
+        FREEZE="$(uv pip freeze --python /app/.venv)"; \
+        TORCH_VERSION="$(echo "$FREEZE" | sed -n 's/^torch==\([0-9][0-9.]*\).*/\1/p')"; \
+        TV_VERSION="$(echo "$FREEZE" | sed -n 's/^torchvision==\([0-9][0-9.]*\).*/\1/p')"; \
+        if [ -n "$TORCH_VERSION" ]; then \
+            CUDA_PKGS="$(echo "$FREEZE" | cut -d= -f1 | grep -E '^(nvidia-|triton$)' || true)"; \
+            uv pip uninstall --python /app/.venv torch torchvision $CUDA_PKGS && \
+            uv pip install --python /app/.venv --no-deps \
+                --index-url https://download.pytorch.org/whl/cpu \
+                "torch==${TORCH_VERSION}" ${TV_VERSION:+"torchvision==${TV_VERSION}"}; \
+        fi; \
+    fi
+
+# El analyzer de Presidio y el preflight necesitan es_core_news_md, que no está
+# en pyproject.toml. El venv de uv no trae pip (spacy download no funciona), así
+# que se instala la rueda oficial compatible con spaCy 3.8.x.
+RUN uv pip install --python /app/.venv --no-deps \
+    "es_core_news_md @ https://github.com/explosion/spacy-models/releases/download/es_core_news_md-3.8.0/es_core_news_md-3.8.0-py3-none-any.whl"
+
 
 # =============================================================================
 # Stage 2 — Runtime
@@ -54,6 +80,10 @@ ENV PYTHONDONTWRITEBYTECODE=1
 
 # Switch to the non-root user for all subsequent commands and at runtime.
 USER appuser
+
+# LOCAL (fork): datos de NLTK para la estrategia sentence_window. El código los
+# descarga la primera vez que se usa (necesita internet en mitad de la demo).
+RUN python -c "import nltk; nltk.download('punkt_tab', quiet=True); nltk.download('punkt', quiet=True)"
 
 EXPOSE 8000
 
