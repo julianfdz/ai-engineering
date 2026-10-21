@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 430" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="860" height="430" fill="#ffffff"/>
+  <text x="430" y="34" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Anatomía de un chunk: qué se embebe y qué viaja al lado</text>
+
+  <!-- presupuesto padre -->
+  <rect x="20" y="62" width="205" height="300" rx="12" fill="#e2e8f0" stroke="#64748b" stroke-width="2"/>
+  <text x="122" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">PRESUPUESTO (JSON)</text>
+  <text x="32" y="110" font-size="10.5" fill="#334155" font-family="Consolas, Courier New, monospace">budget_id: BUD-2024-001</text>
+  <text x="32" y="127" font-size="10.5" fill="#334155" font-family="Consolas, Courier New, monospace">client: FintechCorp</text>
+  <text x="32" y="144" font-size="10.5" fill="#334155" font-family="Consolas, Courier New, monospace">sector: finance</text>
+  <text x="32" y="161" font-size="10.5" fill="#334155" font-family="Consolas, Courier New, monospace">year: 2024</text>
+  <text x="32" y="178" font-size="10.5" fill="#334155" font-family="Consolas, Courier New, monospace">main_technology: rails</text>
+  <text x="32" y="195" font-size="10.5" fill="#334155" font-family="Consolas, Courier New, monospace">summary: "Mobile banking…"</text>
+  <rect x="32" y="210" width="181" height="140" rx="8" fill="#ffffff" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="122" y="229" text-anchor="middle" font-size="11.5" font-weight="700" fill="#0f172a">components[ ]</text>
+  <rect x="42" y="238" width="161" height="26" rx="6" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="122" y="255" text-anchor="middle" font-size="10.5" fill="#1e3a8a">AUTH-001 · OAuth 2.0 backend</text>
+  <rect x="42" y="269" width="161" height="24" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="122" y="285" text-anchor="middle" font-size="10.5" fill="#475569">PSD2-002 · open banking</text>
+  <rect x="42" y="297" width="161" height="24" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="122" y="313" text-anchor="middle" font-size="10.5" fill="#475569">TXN-003 · ledger</text>
+  <rect x="42" y="325" width="161" height="20" rx="6" fill="#f1f5f9" stroke="#94a3b8"/>
+  <text x="122" y="339" text-anchor="middle" font-size="10" fill="#475569">NOTIF-004 · notifications</text>
+
+  <path d="M 205 251 L 254.5 198.0" stroke="#475569" stroke-width="2.5"/><polygon points="262,190 258.9,202.1 250.1,193.9" fill="#475569"/>
+  <text x="122" y="384" text-anchor="middle" font-size="12" font-weight="700" fill="#1e3a8a">1 componente = 1 chunk</text>
+
+  <!-- texto embebido -->
+  <rect x="268" y="62" width="352" height="230" rx="12" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="444" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#312e81">text → SE EMBEBE (1536 floats)</text>
+  <rect x="280" y="96" width="328" height="48" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="288" y="114" font-size="10.5" fill="#78350f" font-family="Consolas, Courier New, monospace">[Project: Mobile banking API with OAuth…]</text>
+  <text x="288" y="132" font-size="10.5" fill="#78350f" font-family="Consolas, Courier New, monospace">[Client sector: finance | Year: 2024 | …]</text>
+  <text x="444" y="158" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">↑ cabecera con el contexto del presupuesto padre</text>
+  <text x="288" y="182" font-size="10.5" fill="#1e1b4b" font-family="Consolas, Courier New, monospace">Component: OAuth 2.0 authentication backend</text>
+  <text x="288" y="199" font-size="10.5" fill="#1e1b4b" font-family="Consolas, Courier New, monospace">Description: Implementation of OAuth 2.0…</text>
+  <text x="288" y="216" font-size="10.5" fill="#1e1b4b" font-family="Consolas, Courier New, monospace">Tech stack: ruby_on_rails, postgresql, redis</text>
+  <text x="288" y="233" font-size="10.5" fill="#1e1b4b" font-family="Consolas, Courier New, monospace">Complexity: high</text>
+  <text x="288" y="250" font-size="10.5" fill="#1e1b4b" font-family="Consolas, Courier New, monospace">Estimated hours: 120</text>
+  <text x="444" y="278" text-anchor="middle" font-size="10.5" fill="#4338ca">lo que da significado para una consulta en lenguaje natural</text>
+
+  <!-- metadata -->
+  <rect x="632" y="62" width="208" height="230" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="736" y="86" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">metadata → NO se embebe</text>
+  <text x="644" y="110" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">budget_id</text>
+  <text x="644" y="126" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">component_id</text>
+  <text x="644" y="142" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">client_sector: finance</text>
+  <text x="644" y="158" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">main_technology</text>
+  <text x="644" y="174" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">year: 2024</text>
+  <text x="644" y="190" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">complexity: high</text>
+  <text x="644" y="206" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">estimated_hours: 120</text>
+  <text x="736" y="232" text-anchor="middle" font-size="10.5" font-weight="700" fill="#14532d">para FILTRAR exacto (S8):</text>
+  <text x="736" y="250" text-anchor="middle" font-size="10" fill="#166534" font-family="Consolas, Courier New, monospace">sector='finance' AND year&gt;=2024</text>
+  <text x="736" y="278" text-anchor="middle" font-size="9.5" fill="#166534">números y fechas: el vector no los entiende</text>
+
+  <!-- id -->
+  <rect x="268" y="306" width="572" height="56" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="554" y="330" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">chunk_id = BUD-2024-001::AUTH-001  ·  token_count (tiktoken)</text>
+  <text x="554" y="350" text-anchor="middle" font-size="11" fill="#334155">trazable: citar la fuente, auditar e invalidar · tokens contados ANTES de llamar a la API</text>
+
+  <text x="554" y="384" text-anchor="middle" font-size="11.5" font-style="italic" fill="#64748b">Sector, año y horas van en los dos: en el texto dan contexto; en el metadata, filtro exacto</text>
+</svg>

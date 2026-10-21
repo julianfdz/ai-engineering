@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 430" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="860" height="430" fill="#ffffff"/>
+  <text x="430" y="34" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Late chunking: cambiar el orden de las operaciones</text>
+
+  <!-- tradicional -->
+  <text x="30" y="72" font-size="14" font-weight="700" fill="#7f1d1d">Tradicional: primero se parte, luego se embebe cada trozo</text>
+  <rect x="30" y="86" width="210" height="46" rx="10" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <text x="135" y="114" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Documento</text>
+  <path d="M 246 109 L 275.0 109.0" stroke="#475569" stroke-width="2.5"/><polygon points="286,109 275.0,115.0 275.0,103.0" fill="#475569"/>
+  <rect x="292" y="86" width="74" height="46" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="329" y="114" text-anchor="middle" font-size="11.5" fill="#7f1d1d">trozo 1</text>
+  <rect x="372" y="86" width="74" height="46" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="409" y="114" text-anchor="middle" font-size="11.5" fill="#7f1d1d">trozo 2</text>
+  <rect x="452" y="86" width="74" height="46" rx="8" fill="#fee2e2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="489" y="114" text-anchor="middle" font-size="11.5" fill="#7f1d1d">trozo 3</text>
+  <path d="M 532 109 L 561.0 109.0" stroke="#475569" stroke-width="2.5"/><polygon points="572,109 561.0,115.0 561.0,103.0" fill="#475569"/>
+  <rect x="578" y="86" width="252" height="46" rx="10" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="704" y="106" text-anchor="middle" font-size="11.5" font-weight="700" fill="#7f1d1d">3 embeddings aislados</text>
+  <text x="704" y="122" text-anchor="middle" font-size="10.5" fill="#991b1b">"el modelo" del trozo 2 ya no sabe a qué se refiere</text>
+
+  <!-- late -->
+  <text x="30" y="186" font-size="14" font-weight="700" fill="#14532d">Late chunking: primero se embebe el documento entero, luego se parte</text>
+  <rect x="30" y="200" width="210" height="46" rx="10" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <text x="135" y="228" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Documento</text>
+  <path d="M 246 223 L 275.0 223.0" stroke="#475569" stroke-width="2.5"/><polygon points="286,223 275.0,229.0 275.0,217.0" fill="#475569"/>
+  <rect x="292" y="200" width="234" height="46" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="409" y="220" text-anchor="middle" font-size="11.5" font-weight="700" fill="#14532d">embedding de TODO el documento</text>
+  <text x="409" y="236" text-anchor="middle" font-size="10.5" fill="#166534">un vector por token, con contexto global</text>
+  <path d="M 532 223 L 561.0 223.0" stroke="#475569" stroke-width="2.5"/><polygon points="572,223 561.0,229.0 561.0,217.0" fill="#475569"/>
+  <rect x="578" y="200" width="80" height="46" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="618" y="228" text-anchor="middle" font-size="11" fill="#14532d">pool 1</text>
+  <rect x="664" y="200" width="80" height="46" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="704" y="228" text-anchor="middle" font-size="11" fill="#14532d">pool 2</text>
+  <rect x="750" y="200" width="80" height="46" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="790" y="228" text-anchor="middle" font-size="11" fill="#14532d">pool 3</text>
+  <text x="830" y="266" text-anchor="end" font-size="10.5" fill="#166534">cada chunk = media de SUS tokens, que ya vieron todo el documento</text>
+
+  <!-- requisitos -->
+  <rect x="30" y="296" width="390" height="90" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="225" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#78350f">Qué necesita</text>
+  <text x="225" y="342" text-anchor="middle" font-size="11.5" fill="#78350f">un modelo con ventana larga (8K–32K tokens)</text>
+  <text x="225" y="362" text-anchor="middle" font-size="11.5" fill="#78350f">y que exponga embeddings por token (p. ej. jina-embeddings-v3)</text>
+  <rect x="440" y="296" width="390" height="90" rx="12" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="635" y="320" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">En nuestro proyecto</text>
+  <text x="635" y="342" text-anchor="middle" font-size="11.5" fill="#334155">text-embedding-3-small no expone embeddings por token:</text>
+  <text x="635" y="362" text-anchor="middle" font-size="11.5" fill="#334155">hoy es concepto, no demo · técnica emergente (Jina, 2024)</text>
+  <text x="430" y="412" text-anchor="middle" font-size="12" font-style="italic" fill="#64748b">Útil cuando el significado de cada parte depende mucho del documento completo</text>
+</svg>

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 330" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="860" height="330" fill="#ffffff"/>
+  <text x="430" y="32" text-anchor="middle" font-size="19" font-weight="700" fill="#0f172a">Dónde estamos en el pipeline RAG</text>
+  <text x="430" y="54" text-anchor="middle" font-size="12.5" fill="#475569">Pipeline offline de indexación: Load → Parse → Chunk → Embed → base vectorial</text>
+
+  <!-- S6 -->
+  <rect x="20" y="80" width="150" height="110" rx="12" fill="#e2e8f0" stroke="#64748b" stroke-width="1.5"/>
+  <text x="95" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#475569">SESIÓN 6</text>
+  <text x="95" y="128" text-anchor="middle" font-size="12.5" font-weight="700" fill="#0f172a">Load + Parse</text>
+  <text x="95" y="148" text-anchor="middle" font-size="11" fill="#334155">catálogo · Document</text>
+  <text x="95" y="164" text-anchor="middle" font-size="11" fill="#334155">limpieza · PII</text>
+  <path d="M 175 135 L 194.0 135.0" stroke="#475569" stroke-width="2.5"/><polygon points="205,135 194.0,141.0 194.0,129.0" fill="#475569"/>
+
+  <!-- HOY -->
+  <rect x="210" y="70" width="420" height="160" rx="14" fill="#eef2ff" stroke="#4f46e5" stroke-width="3"/>
+  <text x="420" y="94" text-anchor="middle" font-size="13" font-weight="700" fill="#312e81">SESIÓN 7 · HOY</text>
+  <rect x="226" y="106" width="185" height="108" rx="10" fill="#ffffff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="318" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#312e81">CHUNK</text>
+  <text x="318" y="152" text-anchor="middle" font-size="11" fill="#3730a3">¿cómo partimos</text>
+  <text x="318" y="168" text-anchor="middle" font-size="11" fill="#3730a3">cada documento?</text>
+  <text x="318" y="194" text-anchor="middle" font-size="11" font-weight="700" fill="#4338ca">8 estrategias</text>
+  <path d="M 415 160 L 429.0 160.0" stroke="#475569" stroke-width="2.5"/><polygon points="440,160 429.0,166.0 429.0,154.0" fill="#475569"/>
+  <rect x="445" y="106" width="170" height="108" rx="10" fill="#ffffff" stroke="#6366f1" stroke-width="1.5"/>
+  <text x="530" y="130" text-anchor="middle" font-size="14" font-weight="700" fill="#312e81">EMBED</text>
+  <text x="530" y="152" text-anchor="middle" font-size="11" fill="#3730a3">text-embedding-3-small</text>
+  <text x="530" y="168" text-anchor="middle" font-size="11" fill="#3730a3">1536 dims · lotes de 100</text>
+  <text x="530" y="194" text-anchor="middle" font-size="11" font-weight="700" fill="#4338ca">vectores EN MEMORIA</text>
+  <path d="M 635 150 L 654.0 150.0" stroke="#475569" stroke-width="2.5"/><polygon points="665,150 654.0,156.0 654.0,144.0" fill="#475569"/>
+
+  <!-- S8 -->
+  <rect x="670" y="80" width="170" height="110" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="755" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#166534">SESIÓN 8</text>
+  <text x="755" y="128" text-anchor="middle" font-size="12.5" font-weight="700" fill="#14532d">pgvector</text>
+  <text x="755" y="148" text-anchor="middle" font-size="11" fill="#166534">persistencia · índices</text>
+  <text x="755" y="164" text-anchor="middle" font-size="11" fill="#166534">retrieval con filtros</text>
+
+  <rect x="160" y="248" width="520" height="58" rx="12" fill="#fef3c7" stroke="#d97706" stroke-width="1.5"/>
+  <text x="420" y="272" text-anchor="middle" font-size="12" font-weight="700" fill="#78350f">Lo que sale hoy: POST /embeddings/ingest y POST /embeddings/compare</text>
+  <text x="420" y="292" text-anchor="middle" font-size="11.5" fill="#78350f">todo en app/generation/rag/ · nada se persiste todavía</text>
+</svg>
