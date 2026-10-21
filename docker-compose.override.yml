@@ -1,0 +1,17 @@
+# Override LOCAL de Julián: nombres de contenedor propios para no chocar
+# con los de otras sesiones (estimator, estimator-web... siguen existiendo
+# parados) y montaje de evals/. Los nombres de SERVICIO no cambian: los comandos
+# funcionan igual añadiendo -p aieng-s07live.
+services:
+  estimator:
+    container_name: s07-estimator
+    volumes:
+      - ./estimator/evals:/app/evals
+  redis:
+    container_name: s07-redis
+  estimator-postgres:
+    container_name: s07-estimator-postgres
+  estimator-web:
+    container_name: s07-estimator-web
+  postgres:
+    container_name: s07-web-postgres
