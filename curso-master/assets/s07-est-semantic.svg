@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+<text x="380.0" y="28.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="700">Semantic: corta donde más cambia el significado</text>
+<text x="380.0" y="48.0" font-size="11.5" fill="#64748b" text-anchor="middle">Ejemplo real: BUD-2024-001 · distancia entre trozos consecutivos = 1 − coseno</text>
+<rect x="24.0" y="64.0" width="380.0" height="30.0" rx="5" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="34.0" y="84.0" font-size="10.5" fill="#1e3a8a" text-anchor="start">0  [Project…] [Client…]  AUTH-001: nombre + descripción</text>
+<rect x="24.0" y="110.0" width="380.0" height="30.0" rx="5" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="34.0" y="130.0" font-size="10.5" fill="#1e3a8a" text-anchor="start">1  AUTH-001: stack y horas  ·  PSD2-002: nombre + descripción</text>
+<rect x="24.0" y="156.0" width="380.0" height="30.0" rx="5" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="34.0" y="176.0" font-size="10.5" fill="#4c1d95" text-anchor="start">2  PSD2-002: stack y horas  ·  TXN-003: nombre + descripción</text>
+<rect x="24.0" y="202.0" width="380.0" height="30.0" rx="5" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="34.0" y="222.0" font-size="10.5" fill="#4c1d95" text-anchor="start">3  TXN-003: stack y horas  ·  NOTIF-004: nombre + descripción</text>
+<rect x="24.0" y="248.0" width="380.0" height="30.0" rx="5" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="34.0" y="268.0" font-size="10.5" fill="#4c1d95" text-anchor="start">4  NOTIF-004: stack y horas</text>
+<text x="214.0" y="302.0" font-size="10.5" fill="#334155" text-anchor="middle" font-weight="700">sem0 = trozos 0-1 (150 tok)  ·  sem1 = trozos 2-4 (128 tok)</text>
+<text x="450.0" y="74.0" font-size="11" fill="#334155" text-anchor="start" font-weight="700">distancia entre trozos</text>
+<rect x="450.0" y="94.0" width="26.8" height="16.0" rx="3" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="482.8" y="106.0" font-size="10.5" fill="#334155" text-anchor="start">0,025</text>
+<rect x="450.0" y="140.0" width="171.8" height="16.0" rx="3" fill="#fee2e2" fill-opacity="1.0" stroke="#dc2626" stroke-width="1.2"/>
+<text x="627.8" y="152.0" font-size="10.5" fill="#7f1d1d" text-anchor="start" font-weight="700">0,164  ← CORTE</text>
+<rect x="450.0" y="186.0" width="97.7" height="16.0" rx="3" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="553.6" y="198.0" font-size="10.5" fill="#334155" text-anchor="start">0,093</text>
+<rect x="450.0" y="232.0" width="128.6" height="16.0" rx="3" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="584.6" y="244.0" font-size="10.5" fill="#334155" text-anchor="start">0,122</text>
+<line x1="615.3" y1="80.0" x2="615.3" y2="270.0" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="615.3" y="284.0" font-size="10.5" fill="#7f1d1d" text-anchor="middle" font-weight="700">percentil 95 = 0,157</text>
+<rect x="24.0" y="312.0" width="712.0" height="40.0" rx="8" fill="#fef3c7" fill-opacity="1.0" stroke="#d97706" stroke-width="1.5"/>
+<text x="34.0" y="328.0" font-size="10.5" fill="#78350f" text-anchor="start">Parte el texto por «. »: cada trozo junta el final de un componente con el principio del siguiente.</text>
+<text x="34.0" y="344.0" font-size="10.5" fill="#78350f" text-anchor="start" font-weight="700">Resultado: la descripción de PSD2-002 queda en un chunk y su stack y sus horas, en el otro.</text>
+<rect x="20.0" y="354.0" width="720.0" height="32.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="380.0" y="375.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="700">En nuestro corpus: 34 chunks (17 × 2: un corte por presupuesto) · 0,000094 $ · 5,3 s de ingesta</text>
+</svg>

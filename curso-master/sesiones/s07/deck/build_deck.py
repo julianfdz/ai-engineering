@@ -15,6 +15,7 @@ Para iterar: cambia el contenido de las funciones ``slide_*`` y vuelve a lanzar.
 from __future__ import annotations
 
 import html
+import re
 import subprocess
 import tempfile
 import time
@@ -27,8 +28,10 @@ TEMPLATE = HERE / "plantilla-lidr-s07.pdf"
 ASSETS = HERE.parent.parent.parent / "assets"
 OUTPUT = HERE.parent / "Sesion07-Julian-Fernandez.pdf"
 EDGE = Path(r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe")
-SVGS = {"s07-pipeline-hoy": 330, "s07-anatomia-chunk": 430, "s07-late-chunking": 430,
-        "s07-tamano-chunks": 430}
+SVGS = ["s07-pipeline-hoy", "s07-anatomia-chunk", "s07-late-chunking", "s07-tamano-chunks"]
+ESTRATEGIAS = ["fixed", "recursive", "sentence", "structural", "semantic", "propositional", "contextual",
+               "hierarchical"]
+SVGS += [f"s07-est-{n}" for n in ESTRATEGIAS]   # generados por diagramas_estrategias.py
 
 W, H = 720, 405
 BADGE = fitz.Rect(7, 7, 72, 35)
@@ -66,7 +69,7 @@ th { color: #555; font-weight: bold; border-bottom: 0.8pt solid #999; }
 
 # Las diapos se maquetan en y ∈ [62, 345] y se estiran a [62, 378] para usar toda la altura.
 Y0, Y1, Y1_REAL = 62, 345, 378
-TEXT_PT = (10, 13.5)   # rango del autoajuste del texto de las cajas
+TEXT_PT = (9, 13.5)    # rango del autoajuste del texto de las cajas
 CODE_PT = (7, 10.5)    # y del código (además, sin partir líneas: ver Deck.flush)
 TABLE_PT = (8, 11)     # cajas que son una tabla
 MONO_EM = 0.6          # ancho de un carácter monoespaciado, en em
@@ -79,14 +82,15 @@ def esc(text: str) -> str:
 def render_svgs() -> None:
     """Rasteriza los SVG de assets a PNG (solo si el SVG es más nuevo que su PNG)."""
     profile = Path(tempfile.gettempdir()) / "s07-deck-edge-profile"
-    for name, height in SVGS.items():
+    for name in SVGS:
         svg, png = ASSETS / f"{name}.svg", ASSETS / f"{name}.png"
         if png.exists() and png.stat().st_mtime >= svg.stat().st_mtime:
             continue
+        width, height = re.search(r'viewBox="0 0 (\d+) (\d+)"', svg.read_text(encoding="utf-8")).groups()
         before = png.stat().st_mtime if png.exists() else 0
         subprocess.run([str(EDGE), "--headless=new", "--disable-gpu", "--hide-scrollbars",
                         f"--user-data-dir={profile}", "--force-device-scale-factor=2.5",
-                        f"--window-size=860,{height}", f"--screenshot={png}", svg.as_uri()],
+                        f"--window-size={width},{height}", f"--screenshot={png}", svg.as_uri()],
                        check=True, capture_output=True)
         # msedge.exe devuelve el control antes de que el proceso hijo escriba el PNG
         for _ in range(60):
@@ -581,6 +585,58 @@ def slide_tamano_chunks(d: Deck) -> None:
            "separadores sin mirar dónde empieza un componente.</div>")
 
 
+# Una diapo por estrategia del código: diagrama con un ejemplo real + tres ideas en lenguaje llano.
+ESTRATEGIA = {
+    "fixed": ("Fixed-size", "Mecánica", "Chunking I · mecánicas",
+              "Cuenta 512 tokens y corta, sin mirar frases ni componentes. Repite 80 tokens entre trozos para no "
+              "perder lo que cae en el borde.",
+              "La línea base contra la que comparar. Texto sin ninguna estructura.",
+              "Parte palabras y frases por la mitad. En nuestro corpus solo actúa en MONO-001."),
+    "recursive": ("Recursive", "Mecánica", "Chunking I · mecánicas",
+                  "Intenta cortar por párrafos; si el trozo sigue siendo grande, por líneas; luego por frases; y en "
+                  "último caso, por palabras.",
+                  "El punto de partida razonable cuando no hay estructura: 400–512 tokens y 10–20 % de solape.",
+                  "Si el documento cabe entero, lo deja en un chunk y mezcla temas. Puede dejar huérfanos."),
+    "sentence": ("Sentence-window", "Mecánica", "Chunking I · mecánicas",
+                 "Cada frase es un chunk. Se busca por la frase, pero al LLM se le entrega la frase con sus vecinas.",
+                 "Prosa larga en la que una frase concreta responde a la pregunta.",
+                 "Frases cortas sin contexto: huérfanos con un score alto que no sirven."),
+    "structural": ("Structural", "Estructural", "Chunking I · mecánicas",
+                   "Respeta la forma del documento: cada componente del JSON es un chunk, con una cabecera que dice de "
+                   "qué presupuesto viene.",
+                   "Datos con estructura: JSON, Markdown, HTML. Es la palanca de mayor retorno.",
+                   "No parte lo que es demasiado grande: el obeso MONO-001 entra entero."),
+    "semantic": ("Semantic", "Semántica", "Chunking II · semánticas",
+                 "Embebe cada frase y corta donde la siguiente se parece menos a la anterior.",
+                 "Prosa larga que cambia de tema sin avisar.",
+                 "Cuesta una pasada de embeddings en la ingesta. Con texto estructurado, corta donde no debe."),
+    "propositional": ("Propositional", "Semántica", "Chunking II · semánticas",
+                      "Un LLM reescribe cada componente en frases cortas que se entienden solas: las proposiciones.",
+                      "Textos densos en hechos (legal, médico) y preguntas muy concretas.",
+                      "Una llamada al LLM por componente. Multiplica los chunks por 13 y casi todos son huérfanos."),
+    "contextual": ("Contextual Retrieval", "Contextual", "Chunking II · semánticas",
+                   "Antes de embeber, un LLM escribe una o dos frases que explican de dónde viene el chunk, y se pegan "
+                   "delante.",
+                   "Chunks que pierden el sentido leídos solos. Afinar un RAG que ya funciona.",
+                   "Es la más cara: 0,14 $ y 3,4 minutos aquí. Nuestra cabecera structural ya hace una versión gratis."),
+    "hierarchical": ("Hierarchical", "Estructural", "Chunking III · avanzadas",
+                     "Guarda dos tamaños a la vez: el componente (hijo) para encontrar y el presupuesto (padre) para "
+                     "responder.",
+                     "Documentos largos: manuales, contratos, documentación legal.",
+                     "Indexa más y los padres pueden ser obesos. Es demasiado para FAQs o tickets cortos."),
+}
+
+
+def slide_estrategia(d: Deck, key: str) -> None:
+    name, family, section, idea, bien, cuidado = ESTRATEGIA[key]
+    n = ESTRATEGIAS.index(key) + 1
+    p = d.new(f"{n}/8 · {name}", f"Familia {family.lower()} · las 8 estrategias del código, una a una", section)
+    d.image(p, (16, 62, 538, 330), f"s07-est-{key}.png")
+    d.box(p, (546, 66, 704, 160), f'<div class="t">La idea</div>{idea}', kind="lav")
+    d.box(p, (546, 168, 704, 252), f'<div class="t">Úsala para</div>{bien}', kind="mint")
+    d.box(p, (546, 260, 704, 344), f'<div class="t">Cuidado con</div>{cuidado}', kind="peach")
+
+
 def slide_anatomia(d: Deck) -> None:
     p = d.new("El chunk de nuestro proyecto",
               "app/generation/rag/chunking/structural.py · la estrategia de referencia", "Embeddings")
@@ -884,14 +940,22 @@ def build() -> None:
     slide_doce(d)
     slide_columnas_lab(d)
     slide_tamano_chunks(d)
+    slide_estrategia(d, "fixed")
+    slide_estrategia(d, "recursive")
     d.template(5)
+    slide_estrategia(d, "sentence")
+    slide_estrategia(d, "structural")
     d.template(6)
     slide_mecanicas(d)
+    slide_estrategia(d, "semantic")
     slide_semantic(d)
+    slide_estrategia(d, "propositional")
     slide_propositional(d)
+    slide_estrategia(d, "contextual")
     d.template(7)
     slide_contextual_code(d)
     slide_gdpr(d)
+    slide_estrategia(d, "hierarchical")
     d.template(8)
     slide_hierarchical_demo(d)
     slide_late(d)

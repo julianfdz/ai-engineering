@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+<text x="380.0" y="28.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="700">Fixed-size: ventanas de 512 tokens, solapadas 80</text>
+<text x="380.0" y="48.0" font-size="11.5" fill="#64748b" text-anchor="middle">Ejemplo real: BUD-2024-016 · MONO-001, el componente gigante de 1391 tokens</text>
+<rect x="50.0" y="64.0" width="660.0" height="26.0" rx="5" fill="#e2e8f0" fill-opacity="1.0" stroke="#64748b" stroke-width="1.5"/>
+<text x="380.0" y="81.0" font-size="11.5" fill="#0f172a" text-anchor="middle" font-weight="700">el componente entero: 1391 tokens</text>
+<rect x="50.0" y="104.0" width="242.9" height="28.0" rx="5" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="171.5" y="122.0" font-size="11" fill="#1e3a8a" text-anchor="middle" font-weight="700">p0 · 512 tokens</text>
+<rect x="255.0" y="140.0" width="242.9" height="28.0" rx="5" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="376.4" y="158.0" font-size="11" fill="#4c1d95" text-anchor="middle" font-weight="700">p1 · 512 tokens</text>
+<rect x="459.9" y="176.0" width="242.9" height="28.0" rx="5" fill="#fef3c7" fill-opacity="1.0" stroke="#d97706" stroke-width="1.5"/>
+<text x="581.4" y="194.0" font-size="11" fill="#78350f" text-anchor="middle" font-weight="700">p2 · 512 tokens</text>
+<rect x="664.9" y="212.0" width="45.1" height="28.0" rx="5" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.5"/>
+<text x="656.9" y="230.0" font-size="11" fill="#14532d" text-anchor="end" font-weight="700">p3 · 95 tokens</text>
+<rect x="255.0" y="104" width="38.0" height="64" fill="#0f172a" fill-opacity="0.13"/>
+<rect x="459.9" y="140" width="38.0" height="64" fill="#0f172a" fill-opacity="0.13"/>
+<rect x="664.9" y="176" width="38.0" height="64" fill="#0f172a" fill-opacity="0.13"/>
+<text x="274.0" y="98.0" font-size="10" fill="#334155" text-anchor="middle" font-weight="700">80 repetidos</text>
+<line x1="50.0" y1="254.0" x2="710.0" y2="254.0" stroke="#334155" stroke-width="1.2"/>
+<line x1="50.0" y1="254.0" x2="50.0" y2="259.0" stroke="#334155" stroke-width="1.2"/>
+<text x="50.0" y="271.0" font-size="10" fill="#334155" text-anchor="middle">0</text>
+<line x1="292.9" y1="254.0" x2="292.9" y2="259.0" stroke="#334155" stroke-width="1.2"/>
+<text x="292.9" y="271.0" font-size="10" fill="#334155" text-anchor="middle">512</text>
+<line x1="535.9" y1="254.0" x2="535.9" y2="259.0" stroke="#334155" stroke-width="1.2"/>
+<text x="535.9" y="271.0" font-size="10" fill="#334155" text-anchor="middle">1024</text>
+<line x1="710.0" y1="254.0" x2="710.0" y2="259.0" stroke="#334155" stroke-width="1.2"/>
+<text x="710.0" y="271.0" font-size="10" fill="#334155" text-anchor="middle">1391</text>
+<text x="710.0" y="286.0" font-size="10" fill="#64748b" text-anchor="end">tokens</text>
+<rect x="50.0" y="292.0" width="660.0" height="54.0" rx="8" fill="#fee2e2" fill-opacity="1.0" stroke="#dc2626" stroke-width="1.5"/>
+<text x="62.0" y="312.0" font-size="11.5" fill="#7f1d1d" text-anchor="start" font-weight="700">Dónde cae el corte (texto real)</text>
+<text x="62.0" y="332.0" font-size="11" fill="#7f1d1d" text-anchor="start">p3 empieza en «it knowledge is the single largest project risk…»: la palabra anterior quedó partida.</text>
+<rect x="20.0" y="354.0" width="720.0" height="32.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="380.0" y="375.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="700">Los otros 59 componentes miden menos de 512 tokens: ahí no corta nada (1 componente = 1 chunk)</text>
+</svg>

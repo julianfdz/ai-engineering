@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+<text x="380.0" y="28.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="700">Hierarchical: indexa hijos y padres a la vez</text>
+<text x="380.0" y="48.0" font-size="11.5" fill="#64748b" text-anchor="middle">Ejemplo real: BUD-2024-001 → 1 padre + 4 hijos en el mismo índice</text>
+<rect x="24.0" y="64.0" width="440.0" height="50.0" rx="8" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="244.0" y="84.0" font-size="12" fill="#4c1d95" text-anchor="middle" font-weight="700">PADRE · BUD-2024-001::parent · 278 tokens</text>
+<text x="244.0" y="102.0" font-size="10.5" fill="#4c1d95" text-anchor="middle">el presupuesto entero: contexto completo para el LLM</text>
+<line x1="244.0" y1="114.0" x2="74.0" y2="152.0" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="24.0" y="152.0" width="104.0" height="52.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="76.0" y="167.2" font-size="10.5" fill="#1e3a8a" text-anchor="middle" font-weight="700">HIJO</text>
+<text x="76.0" y="181.4" font-size="10.5" fill="#1e3a8a" text-anchor="middle">AUTH-001</text>
+<text x="76.0" y="195.6" font-size="10.5" fill="#1e3a8a" text-anchor="middle">106 tokens</text>
+<line x1="244.0" y1="114.0" x2="186.0" y2="152.0" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="136.0" y="152.0" width="104.0" height="52.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="188.0" y="167.2" font-size="10.5" fill="#1e3a8a" text-anchor="middle" font-weight="700">HIJO</text>
+<text x="188.0" y="181.4" font-size="10.5" fill="#1e3a8a" text-anchor="middle">PSD2-002</text>
+<text x="188.0" y="195.6" font-size="10.5" fill="#1e3a8a" text-anchor="middle">96 tokens</text>
+<line x1="244.0" y1="114.0" x2="298.0" y2="152.0" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="248.0" y="152.0" width="104.0" height="52.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="300.0" y="167.2" font-size="10.5" fill="#1e3a8a" text-anchor="middle" font-weight="700">HIJO</text>
+<text x="300.0" y="181.4" font-size="10.5" fill="#1e3a8a" text-anchor="middle">TXN-003</text>
+<text x="300.0" y="195.6" font-size="10.5" fill="#1e3a8a" text-anchor="middle">93 tokens</text>
+<line x1="244.0" y1="114.0" x2="410.0" y2="152.0" stroke="#7c3aed" stroke-width="1.4" stroke-dasharray="4 3"/>
+<rect x="360.0" y="152.0" width="104.0" height="52.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="412.0" y="167.2" font-size="10.5" fill="#1e3a8a" text-anchor="middle" font-weight="700">HIJO</text>
+<text x="412.0" y="181.4" font-size="10.5" fill="#1e3a8a" text-anchor="middle">NOTIF-004</text>
+<text x="412.0" y="195.6" font-size="10.5" fill="#1e3a8a" text-anchor="middle">88 tokens</text>
+<text x="244.0" y="226.0" font-size="10.5" fill="#334155" text-anchor="middle" font-style="italic">cada hijo guarda metadata.parent_chunk_id</text>
+<rect x="490.0" y="64.0" width="248.0" height="50.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="498.0" y="85.3" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-weight="700">1 · La consulta encuentra un HIJO</text>
+<text x="498.0" y="99.5" font-size="10.5" fill="#1e3a8a" text-anchor="start">pequeño y preciso → buen recall</text>
+<line x1="614.0" y1="114.0" x2="614.0" y2="118.0" stroke="#475569" stroke-width="1.8"/>
+<polygon points="614.0,128.0 608.5,118.0 619.5,118.0" fill="#475569"/>
+<rect x="490.0" y="128.0" width="248.0" height="50.0" rx="8" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="498.0" y="149.3" font-size="10.5" fill="#4c1d95" text-anchor="start" font-weight="700">2 · Se resuelve su PADRE</text>
+<text x="498.0" y="163.5" font-size="10.5" fill="#4c1d95" text-anchor="start">parent_chunk_id → presupuesto entero</text>
+<line x1="614.0" y1="178.0" x2="614.0" y2="182.0" stroke="#475569" stroke-width="1.8"/>
+<polygon points="614.0,192.0 608.5,182.0 619.5,182.0" fill="#475569"/>
+<rect x="490.0" y="192.0" width="248.0" height="50.0" rx="8" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.5"/>
+<text x="498.0" y="213.3" font-size="10.5" fill="#14532d" text-anchor="start" font-weight="700">3 · El LLM recibe el PADRE</text>
+<text x="498.0" y="227.5" font-size="10.5" fill="#14532d" text-anchor="start">con todo el contexto para responder</text>
+<rect x="24.0" y="244.0" width="714.0" height="62.0" rx="8" fill="#fef3c7" fill-opacity="1.0" stroke="#d97706" stroke-width="1.5"/>
+<text x="36.0" y="264.0" font-size="11" fill="#78350f" text-anchor="start" font-weight="700">Consulta «GDPR compliance and audit logging» (real):</text>
+<text x="36.0" y="282.0" font-size="10.5" fill="#78350f" text-anchor="start">1. BUD-2024-009::CONSENT-004 (hijo) 0,418   ·   2. BUD-2024-012::parent 0,307 ← un padre entero en el top-3</text>
+<text x="36.0" y="298.0" font-size="10.5" fill="#78350f" text-anchor="start">Para una consulta abstracta, a veces el presupuesto completo es mejor respuesta que un componente.</text>
+<rect x="20.0" y="354.0" width="720.0" height="32.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="380.0" y="375.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="700">En nuestro corpus: 77 chunks = 17 padres + 60 hijos · 2 obesos (el padre de BUD-2024-016: 1472 tokens) · 0 $</text>
+</svg>

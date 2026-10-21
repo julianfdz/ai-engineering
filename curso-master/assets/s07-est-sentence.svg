@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+<text x="380.0" y="28.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="700">Sentence-window: se busca por frase, se devuelve la ventana</text>
+<text x="380.0" y="48.0" font-size="11.5" fill="#64748b" text-anchor="middle">Ejemplo real: MONO-001 partido en frases (WINDOW_SIZE = 2)</text>
+<rect x="24.0" y="62.0" width="420.0" height="27.0" rx="5" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="32.0" y="80.0" font-size="10.5" fill="#334155" text-anchor="start">s0  This component covers the full extraction of the general ledger…</text>
+<rect x="24.0" y="95.0" width="420.0" height="27.0" rx="5" fill="#e0f2fe" fill-opacity="1.0" stroke="#0284c7" stroke-width="1.2"/>
+<text x="32.0" y="113.0" font-size="10.5" fill="#0c4a6e" text-anchor="start">s1  The work begins with a complete reverse-engineering exercise…</text>
+<rect x="24.0" y="128.0" width="420.0" height="27.0" rx="5" fill="#e0f2fe" fill-opacity="1.0" stroke="#0284c7" stroke-width="1.2"/>
+<text x="32.0" y="146.0" font-size="10.5" fill="#0c4a6e" text-anchor="start">s2  Each stored procedure is catalogued, its inputs and outputs…</text>
+<rect x="24.0" y="161.0" width="420.0" height="27.0" rx="5" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="2.4"/>
+<text x="32.0" y="179.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-weight="700">s3  Once the golden master is in place, the new service is built…</text>
+<rect x="24.0" y="194.0" width="420.0" height="27.0" rx="5" fill="#e0f2fe" fill-opacity="1.0" stroke="#0284c7" stroke-width="1.2"/>
+<text x="32.0" y="212.0" font-size="10.5" fill="#0c4a6e" text-anchor="start">s4  Then the write path is migrated account-product by account-product…</text>
+<rect x="24.0" y="227.0" width="420.0" height="27.0" rx="5" fill="#e0f2fe" fill-opacity="1.0" stroke="#0284c7" stroke-width="1.2"/>
+<text x="32.0" y="245.0" font-size="10.5" fill="#0c4a6e" text-anchor="start">s5  Every write is dual-written to both systems during a bake-in…</text>
+<rect x="24.0" y="260.0" width="420.0" height="27.0" rx="5" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.2"/>
+<text x="32.0" y="278.0" font-size="10.5" fill="#334155" text-anchor="start">s6  The component also includes the design of the event schema…</text>
+<path d="M 452 98 L 460 98 L 460 252 L 452 252" fill="none" stroke="#0284c7" stroke-width="2"/>
+<text x="468.0" y="150.0" font-size="11" fill="#0c4a6e" text-anchor="start" font-weight="700">ventana ±2</text>
+<text x="468.0" y="165.0" font-size="10" fill="#0c4a6e" text-anchor="start">(metadata.window_text)</text>
+<text x="468.0" y="180.0" font-size="10.5" fill="#0c4a6e" text-anchor="start">→ es lo que recibe el LLM</text>
+<text x="468.0" y="210.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-weight="700">s3 → lo único que se</text>
+<text x="468.0" y="224.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-weight="700">embebe y se busca</text>
+<rect x="600.0" y="62.0" width="140.0" height="190.0" rx="8" fill="#fee2e2" fill-opacity="1.0" stroke="#dc2626" stroke-width="1.5"/>
+<text x="670.0" y="82.0" font-size="12" fill="#7f1d1d" text-anchor="middle" font-weight="700">El riesgo</text>
+<text x="670.0" y="104.0" font-size="10" fill="#7f1d1d" text-anchor="middle">BUD-2024-017 · MVP-001</text>
+<text x="670.0" y="126.0" font-size="11.5" fill="#7f1d1d" text-anchor="middle" font-weight="700">«Email and</text>
+<text x="670.0" y="142.0" font-size="11.5" fill="#7f1d1d" text-anchor="middle" font-weight="700">password login.»</text>
+<text x="670.0" y="162.0" font-size="10.5" fill="#7f1d1d" text-anchor="middle">5 tokens</text>
+<text x="670.0" y="190.0" font-size="10" fill="#7f1d1d" text-anchor="middle">Sale #2 (0,441) para</text>
+<text x="670.0" y="204.0" font-size="10" fill="#7f1d1d" text-anchor="middle">«OAuth authentication</text>
+<text x="670.0" y="218.0" font-size="10" fill="#7f1d1d" text-anchor="middle">for fintech mobile app»</text>
+<text x="670.0" y="238.0" font-size="10" fill="#7f1d1d" text-anchor="middle" font-style="italic">sin saber que es un MVP</text>
+<rect x="20.0" y="354.0" width="720.0" height="32.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="380.0" y="375.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="700">En nuestro corpus: 78 chunks · p50 de 21 tokens · 34 huérfanos</text>
+</svg>

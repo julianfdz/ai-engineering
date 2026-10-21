@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+<text x="380.0" y="28.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="700">Propositional: un LLM reescribe el componente en frases atómicas</text>
+<text x="380.0" y="48.0" font-size="11.5" fill="#64748b" text-anchor="middle">Ejemplo real: AUTH-001 con gpt-4o-mini → 15 proposiciones</text>
+<rect x="24.0" y="70.0" width="196.0" height="210.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="122.0" y="92.0" font-size="12" fill="#1e3a8a" text-anchor="middle" font-weight="700">Chunk de AUTH-001</text>
+<text x="34.0" y="114.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">[Project…] [finance…]</text>
+<text x="34.0" y="133.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">Component: OAuth 2.0</text>
+<text x="34.0" y="152.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">authentication backend</text>
+<text x="34.0" y="171.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">Description: OAuth 2.0</text>
+<text x="34.0" y="190.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">flows, JWT sessions,</text>
+<text x="34.0" y="209.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">multi-tenant, rate</text>
+<text x="34.0" y="228.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">limiting…</text>
+<text x="34.0" y="247.0" font-size="10.5" fill="#1e3a8a" text-anchor="start" font-family="Consolas, Courier New, monospace">Stack · Complexity · Hours</text>
+<text x="122.0" y="272.0" font-size="11" fill="#1e3a8a" text-anchor="middle" font-weight="700">106 tokens</text>
+<line x1="224.0" y1="175.0" x2="256.0" y2="175.0" stroke="#475569" stroke-width="2.2"/>
+<polygon points="266.0,175.0 256.0,180.5 256.0,169.5" fill="#475569"/>
+<text x="245.0" y="169.0" font-size="10.5" fill="#475569" text-anchor="middle" font-weight="700">LLM</text>
+<rect x="272.0" y="62.0" width="228.0" height="23.0" rx="11" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.1"/>
+<text x="281.0" y="77.5" font-size="9.5" fill="#334155" text-anchor="start">0. The project focuses on a Mobile banking API.</text>
+<text x="494.0" y="77.5" font-size="9.5" fill="#334155" text-anchor="end" font-weight="700">9</text>
+<rect x="272.0" y="89.0" width="228.0" height="23.0" rx="11" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.1"/>
+<text x="281.0" y="104.5" font-size="9.5" fill="#334155" text-anchor="start">1. …will use OAuth 2.0 authentication.</text>
+<text x="494.0" y="104.5" font-size="9.5" fill="#334155" text-anchor="end" font-weight="700">13</text>
+<rect x="272.0" y="116.0" width="228.0" height="23.0" rx="11" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.1"/>
+<text x="281.0" y="131.5" font-size="9.5" fill="#334155" text-anchor="start">2. …will be compliant with PSD2 standards.</text>
+<text x="494.0" y="131.5" font-size="9.5" fill="#334155" text-anchor="end" font-weight="700">12</text>
+<rect x="272.0" y="143.0" width="228.0" height="23.0" rx="11" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.1"/>
+<text x="281.0" y="158.5" font-size="9.5" fill="#334155" text-anchor="start">3. The client sector is finance.</text>
+<text x="494.0" y="158.5" font-size="9.5" fill="#334155" text-anchor="end" font-weight="700">6</text>
+<rect x="272.0" y="170.0" width="228.0" height="23.0" rx="11" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.1"/>
+<text x="281.0" y="185.5" font-size="9.5" fill="#334155" text-anchor="start">4. The project is scheduled for the year 2024.</text>
+<text x="494.0" y="185.5" font-size="9.5" fill="#334155" text-anchor="end" font-weight="700">11</text>
+<rect x="272.0" y="197.0" width="228.0" height="23.0" rx="11" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.1"/>
+<text x="281.0" y="212.5" font-size="9.5" fill="#334155" text-anchor="start">5. The main technology … is Ruby on Rails.</text>
+<text x="494.0" y="212.5" font-size="9.5" fill="#334155" text-anchor="end" font-weight="700">12</text>
+<rect x="272.0" y="224.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="281.0" y="239.5" font-size="9.5" fill="#14532d" text-anchor="start">6. …is an OAuth 2.0 authentication backend.</text>
+<text x="494.0" y="239.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">14</text>
+<rect x="272.0" y="251.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="281.0" y="266.5" font-size="9.5" fill="#14532d" text-anchor="start">7. …will implement authorization code flows.</text>
+<text x="494.0" y="266.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">14</text>
+<rect x="508.0" y="62.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="517.0" y="77.5" font-size="9.5" fill="#14532d" text-anchor="start">8. …will implement refresh token flows.</text>
+<text x="730.0" y="77.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">14</text>
+<rect x="508.0" y="89.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="517.0" y="104.5" font-size="9.5" fill="#14532d" text-anchor="start">9. …will utilize JWT-based session management.</text>
+<text x="730.0" y="104.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">15</text>
+<rect x="508.0" y="116.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="517.0" y="131.5" font-size="9.5" fill="#14532d" text-anchor="start">10. …will provide multi-tenant token isolation.</text>
+<text x="730.0" y="131.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">16</text>
+<rect x="508.0" y="143.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="517.0" y="158.5" font-size="9.5" fill="#14532d" text-anchor="start">11. …will include rate limiting per client.</text>
+<text x="730.0" y="158.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">15</text>
+<rect x="508.0" y="170.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="517.0" y="185.5" font-size="9.5" fill="#14532d" text-anchor="start">12. …includes Ruby on Rails, PostgreSQL…</text>
+<text x="730.0" y="185.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">22</text>
+<rect x="508.0" y="197.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="517.0" y="212.5" font-size="9.5" fill="#14532d" text-anchor="start">13. The complexity … is high.</text>
+<text x="730.0" y="212.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">14</text>
+<rect x="508.0" y="224.0" width="228.0" height="23.0" rx="11" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.1"/>
+<text x="517.0" y="239.5" font-size="9.5" fill="#14532d" text-anchor="start">14. The estimated hours … is 120 hours.</text>
+<text x="730.0" y="239.5" font-size="9.5" fill="#14532d" text-anchor="end" font-weight="700">18</text>
+<text x="272.0" y="300.0" font-size="10.5" fill="#334155" text-anchor="start" font-weight="700">Grises: hablan del proyecto, no del componente → se repiten en cada componente</text>
+<text x="272.0" y="318.0" font-size="10.5" fill="#14532d" text-anchor="start" font-weight="700">15 chunks de 6 a 22 tokens: casi todos huérfanos (&lt; 20), pero cada uno se entiende solo</text>
+<rect x="20.0" y="354.0" width="720.0" height="32.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="380.0" y="375.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="700">En nuestro corpus: 778 chunks · 765 huérfanos · 0,00755 $ · 173 s de ingesta (una llamada por componente)</text>
+</svg>
