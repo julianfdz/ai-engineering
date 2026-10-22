@@ -486,9 +486,12 @@ cliente HTTP) solo envía el documento con su tipo.
 | Pieza | Fichero | Qué es |
 |---|---|---|
 | Plantilla base de LIDR | [`deck/plantilla-lidr-s07.pdf`](deck/plantilla-lidr-s07.pdf) | 12 páginas oficiales: portada, tres arquitecturas, cinco patrones de error, Matryoshka, cuatro familias, fixed vs recursive, sentence-window vs structural, Contextual Retrieval, hierarchical, cierre/S8, ROTI y gracias |
-| Versión de Julián | [`Sesion07-Julian-Fernandez.pdf`](Sesion07-Julian-Fernandez.pdf) | 44 diapos, un solo PDF para todos (sin versión mentor ni PPTX): las 12 de la plantilla + 32 propias con los números reales del corpus, incluidas las de vocabulario (chunk, token, vector), las columnas del Chunking Lab (p50, p95, huérfanos, obesos), por qué no se comparan vectores de distinta dimensión y **una diapo por cada una de las 8 estrategias del código** (diagrama con un ejemplo real + la idea, cuándo usarla y cuidado con) |
+| Versión de Julián | [`Sesion07-Julian-Fernandez.pdf`](Sesion07-Julian-Fernandez.pdf) | 30 diapos, un solo PDF para todos (sin versión mentor ni PPTX): las 12 de la plantilla + 18 propias. Apertura (pipeline, corpus y objetivos), sanity check, chunk/token/vector, métricas y límites, modelos, dimensiones, anatomía del chunk, cómo leer el Chunking Lab, una diapo por cada una de las 8 estrategias del código, late chunking y cuadro de mando |
 | Generador | [`deck/build_deck.py`](deck/build_deck.py) | `python build_deck.py` regenera el PDF; rasteriza los SVG con Edge headless |
 | Diagramas de estrategias | [`deck/diagramas_estrategias.py`](deck/diagramas_estrategias.py) | genera `assets/s07-est-*.svg` con ejemplos sacados de ejecutar las estrategias reales (semantic y propositional con OpenAI; el párrafo de Contextual Retrieval es ilustrativo, sin clave de Anthropic) |
+| Guion personal | [`guion-julian.md`](guion-julian.md) | el guion de Julián con los comandos de PowerShell verificados |
+| 10 puntos clave | `S07 - 10 puntos clave.xlsx` | resumen de la sesión con un desarrollo por punto (Búho Excel) |
+| Ejemplo de chunks | [`ejemplos/chunks-BUD-2024-001.json`](ejemplos/chunks-BUD-2024-001.json) | los 4 chunks reales de un presupuesto, con metadata y el inicio del vector |
 | Guion oficial | [`guion-directo.md`](guion-directo.md) | el guion de LIDR con la nota de cómo se lanza en local |
 
 Diagramas nuevos en `curso-master/assets/` (SVG fuente + PNG): `s07-pipeline-hoy`, `s07-anatomia-chunk`

@@ -1,0 +1,102 @@
+[
+  {
+    "chunk_id": "BUD-2024-001::AUTH-001",
+    "text": "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\n\nComponent: OAuth 2.0 authentication backend\nDescription: Implementation of OAuth 2.0 flows (authorization code, refresh token) with JWT-based session management, multi-tenant token isolation, and rate limiting per client.\nTech stack: ruby_on_rails, postgresql, redis\nComplexity: high\nEstimated hours: 120",
+    "metadata": {
+      "budget_id": "BUD-2024-001",
+      "component_id": "AUTH-001",
+      "client_sector": "finance",
+      "main_technology": "ruby_on_rails",
+      "year": 2024,
+      "complexity": "high",
+      "estimated_hours": 120
+    },
+    "token_count": 106,
+    "embedding": [
+      -0.0257,
+      0.0154,
+      0.052,
+      -0.0273,
+      -0.0114,
+      0.0117,
+      -0.0031,
+      0.0234,
+      "... 1528 números más (1536 en total)"
+    ]
+  },
+  {
+    "chunk_id": "BUD-2024-001::PSD2-002",
+    "text": "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\n\nComponent: PSD2 open banking connectors\nDescription: Account information and payment initiation endpoints compliant with PSD2/Berlin Group, including strong customer authentication (SCA) and consent management.\nTech stack: ruby_on_rails, postgresql\nComplexity: high\nEstimated hours: 160",
+    "metadata": {
+      "budget_id": "BUD-2024-001",
+      "component_id": "PSD2-002",
+      "client_sector": "finance",
+      "main_technology": "ruby_on_rails",
+      "year": 2024,
+      "complexity": "high",
+      "estimated_hours": 160
+    },
+    "token_count": 96,
+    "embedding": [
+      -0.0201,
+      0.019,
+      0.0515,
+      -0.018,
+      -0.0065,
+      0.0048,
+      0.0114,
+      0.0257,
+      "... 1528 números más (1536 en total)"
+    ]
+  },
+  {
+    "chunk_id": "BUD-2024-001::TXN-003",
+    "text": "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\n\nComponent: Transaction ledger service\nDescription: Double-entry transaction ledger with idempotent writes, daily reconciliation jobs and an audit trail of every balance change.\nTech stack: ruby_on_rails, postgresql, sidekiq\nComplexity: medium\nEstimated hours: 140",
+    "metadata": {
+      "budget_id": "BUD-2024-001",
+      "component_id": "TXN-003",
+      "client_sector": "finance",
+      "main_technology": "ruby_on_rails",
+      "year": 2024,
+      "complexity": "medium",
+      "estimated_hours": 140
+    },
+    "token_count": 93,
+    "embedding": [
+      -0.0095,
+      0.0192,
+      0.0573,
+      -0.0428,
+      -0.0215,
+      0.0185,
+      -0.0054,
+      0.009,
+      "... 1528 números más (1536 en total)"
+    ]
+  },
+  {
+    "chunk_id": "BUD-2024-001::NOTIF-004",
+    "text": "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\n\nComponent: Push and email notifications\nDescription: Event-driven notifications for transaction alerts and security events delivered via APNs/FCM and transactional email.\nTech stack: ruby_on_rails, redis\nComplexity: low\nEstimated hours: 60",
+    "metadata": {
+      "budget_id": "BUD-2024-001",
+      "component_id": "NOTIF-004",
+      "client_sector": "finance",
+      "main_technology": "ruby_on_rails",
+      "year": 2024,
+      "complexity": "low",
+      "estimated_hours": 60
+    },
+    "token_count": 88,
+    "embedding": [
+      -0.0197,
+      0.0166,
+      0.0247,
+      -0.0063,
+      -0.0032,
+      0.0074,
+      0.0044,
+      0.0128,
+      "... 1528 números más (1536 en total)"
+    ]
+  }
+]
