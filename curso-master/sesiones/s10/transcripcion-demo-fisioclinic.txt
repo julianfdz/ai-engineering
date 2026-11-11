@@ -1,0 +1,115 @@
+Reunión de descubrimiento — Proyecto "FisioClinic Connect"
+Cliente: Laura Benítez (directora de operaciones, Grupo FisioVida) y Sergio Ortega (responsable de sistemas)
+Consultor: equipo de estimación
+Fecha: primera reunión, por videollamada
+
+[00:00:08] Consultor: Buenos días a los dos. Gracias por sacar el hueco. Si os parece, empezamos por el
+contexto y luego bajamos a lo que queréis construir y en qué orden.
+
+[00:00:21] Laura: Perfecto. Somos el Grupo FisioVida, una red de catorce clínicas de fisioterapia y
+rehabilitación en Madrid, Valencia y Sevilla. Atendemos unas nueve mil sesiones al mes. Hoy todo va con
+un programa de escritorio antiguo, agendas en papel en dos clínicas y mucho WhatsApp. Queremos una
+plataforma propia: una app para el paciente y un panel para las clínicas.
+
+[00:01:02] Consultor: ¿Qué es lo que más os duele ahora mismo?
+
+[00:01:07] Laura: Las citas, sin duda. Los pacientes llaman para reservar, para cambiar y para anular, y
+las recepcionistas se pasan la mañana al teléfono. Tenemos un quince por ciento de pacientes que no se
+presentan. Queremos que el paciente reserve desde la app, vea los huecos libres de cada fisioterapeuta
+por clínica y especialidad, y pueda cambiar o anular hasta veinticuatro horas antes.
+
+[00:01:45] Consultor: ¿Y los recordatorios?
+
+[00:01:49] Laura: Eso es clave para bajar las ausencias. Un SMS o un aviso en el móvil el día antes y
+dos horas antes, con un botón para confirmar o anular. Y un correo con el justificante cuando se paga.
+
+[00:02:10] Sergio: Ojo, que el correo y el SMS tienen que salir con nuestra marca, y necesitamos saber
+qué se ha enviado a cada paciente, por si hay reclamaciones.
+
+[00:02:25] Consultor: Anotado. ¿Hacéis sesiones a distancia?
+
+[00:02:30] Laura: Desde la pandemia, sí, pero con enlaces de una herramienta externa y es un caos. Nos
+gustaría que la teleconsulta estuviera dentro de la app: el paciente entra a su cita, se abre la
+videollamada con su fisioterapeuta y, al terminar, el fisio deja la pauta de ejercicios en su ficha.
+Serán unas ochocientas sesiones al mes al principio.
+
+[00:03:05] Consultor: Hablas de ficha. ¿Qué información clínica guardáis?
+
+[00:03:10] Sergio: La historia clínica del paciente: valoración inicial, diagnóstico, evolución por
+sesión, escalas de dolor y documentos, como informes o pruebas de imagen. Hoy está repartida entre el
+programa antiguo y carpetas compartidas. Queremos una historia clínica electrónica única. Y hay una cosa
+importante: trabajamos con dos hospitales privados que nos derivan pacientes, y ellos ya hablan HL7 FHIR.
+Necesitamos recibir las derivaciones y devolverles el informe de alta por FHIR.
+
+[00:03:52] Consultor: ¿Cómo se paga hoy?
+
+[00:03:56] Laura: Hay tres casos. Pago por sesión, bonos de cinco y de diez sesiones, y pacientes de
+mutuas, que no pagan ellos sino la aseguradora. Queremos cobro con tarjeta y Bizum desde la app, los
+bonos con su saldo de sesiones, y una suscripción mensual para un programa de mantenimiento que vamos a
+lanzar, con cobro recurrente. Lo de las mutuas lo facturamos a final de mes; ahí basta con un informe.
+
+[00:04:40] Sergio: Y la conciliación. Contabilidad se vuelve loca cuadrando lo cobrado con lo que dice la
+pasarela. Si eso sale cuadrado cada día, nos ahorramos mucho.
+
+[00:04:55] Consultor: ¿Quién entra al panel de las clínicas?
+
+[00:05:00] Sergio: Recepción, fisioterapeutas, coordinadores de clínica y dirección. Cada uno ve cosas
+distintas: un fisio solo ve a sus pacientes, recepción ve agendas pero no la historia clínica, y dirección
+lo ve todo pero agregado. Queremos inicio de sesión único con nuestras cuentas de Microsoft 365 para el
+personal, y para los pacientes un acceso con correo y contraseña y verificación en dos pasos.
+
+[00:05:38] Consultor: Al tratar datos de salud, imagino que la seguridad os preocupa.
+
+[00:05:43] Sergio: Muchísimo. Son datos de categoría especial por el RGPD. Necesitamos cifrado de los
+datos en reposo y en tránsito, un registro de auditoría de quién consulta cada historia clínica, y antes
+de salir a producción queremos una auditoría de seguridad externa y corregir lo que salga.
+
+[00:06:10] Consultor: ¿Y la parte de dirección? ¿Qué queréis medir?
+
+[00:06:15] Laura: Ocupación de agendas por clínica y por fisio, tasa de ausencias, ingresos por tipo de
+pago, y cuántos pacientes terminan el tratamiento. Hoy lo saco a mano en hojas de cálculo cada mes.
+Queremos un cuadro de mando con gráficas que se actualice solo.
+
+[00:06:40] Consultor: ¿Hay algo más que tengáis en la cabeza aunque no sea para la primera fase?
+
+[00:06:46] Laura: Sí, una idea que nos encanta. Que el paciente se grabe haciendo los ejercicios en casa
+con la cámara del móvil y que la app le diga, en tiempo real, si está doblando bien la rodilla o el
+hombro, midiendo los grados de movimiento con visión artificial. Y que avise al fisio si algo va mal.
+
+[00:07:15] Sergio: Eso lo veo complicado, pero nos gustaría que estuviera en la estimación aunque sea
+aparte, para saber de qué orden hablamos.
+
+[00:07:25] Consultor: Lo separamos como un módulo propio. ¿Cómo vais a tener la plataforma? ¿Tenéis
+equipo técnico?
+
+[00:07:33] Sergio: Somos dos personas en sistemas. No queremos servidores propios: todo en la nube, con
+despliegue automático, entornos de pruebas y producción, y monitorización con alertas. Nos da igual el
+lenguaje, pero que lo podamos mantener con un proveedor después.
+
+[00:08:00] Consultor: ¿Hay que migrar datos del programa antiguo?
+
+[00:08:04] Sergio: Sí. Unos sesenta mil pacientes y el histórico de citas de los últimos tres años. El
+programa antiguo exporta a CSV. Habría que importarlo una vez y luego tener una exportación masiva para
+cuando nos lo pidan los auditores.
+
+[00:08:25] Consultor: ¿La app tiene que estar en varios idiomas?
+
+[00:08:29] Laura: Castellano y valenciano para empezar, e inglés porque en la costa tenemos bastante
+paciente extranjero. Y tiene que ser accesible: tenemos muchos pacientes mayores y con movilidad reducida.
+
+[00:08:45] Consultor: Para cerrar, ¿plazos y prioridades?
+
+[00:08:50] Laura: Nos gustaría tener reservas, recordatorios y pagos en seis meses, que es lo que más
+dinero nos cuesta. La historia clínica y FHIR después. La teleconsulta puede ir en paralelo si da tiempo.
+Lo de la cámara, ya veremos.
+
+[00:09:10] Consultor: Perfecto. Resumo: app de paciente con reservas, recordatorios, pagos, bonos y
+suscripción; teleconsulta; historia clínica electrónica con integración FHIR con dos hospitales; panel
+de clínicas con roles y acceso con Microsoft 365; cifrado, auditoría y pentest; cuadro de mando;
+migración desde el programa antiguo; tres idiomas y accesibilidad; nube con despliegue automático y
+monitorización. Y aparte, el análisis de ejercicios por cámara.
+
+[00:09:45] Sergio: Eso es. Y que haya pruebas automáticas, que la última vez que nos hicieron algo cada
+cambio rompía otra cosa.
+
+[00:09:55] Laura: Mandadnos la estimación por módulos y con horas, y lo vemos con dirección. Gracias.

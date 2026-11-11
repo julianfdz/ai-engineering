@@ -212,6 +212,13 @@ $body = '{"modules":[{"name":"Payments & Billing","tasks":[{"name":"Payment gate
   (reformulación → estructura → revisión → horas → verificación).
 - ⚠️ El paso de estructura llama a gpt-5 y **tarda unos 2 minutos**. Lánzalo al empezar el Bloque 3 y sigue hablando, o
   ten uno ya hecho en <http://localhost:3000/rag/estimation_runs>.
+- 📄 Transcripción para pegar: [`transcripcion-demo-fisioclinic.txt`](transcripcion-demo-fisioclinic.txt) (red de
+  clínicas de fisioterapia, ~10 min de reunión). Ya hay una ejecución hecha: **run #1**
+  (<http://localhost:3000/rag/estimation_runs/1?step=hours>). Tiempos: reformulación 21 s, estructura 161 s, horas 8 s.
+  Resultado: 13 módulos, 124 tareas, 2560 h con fiabilidad 0,4–0,6; **43 tareas en rojo** (sin precedente en el
+  histórico: DPIA, IVA, reembolsos, lista de espera…). Esas son las que el humano estima a mano: es el mensaje del
+  human-in-the-loop. La idea de la cámara con visión artificial la redujo a «Future CV module hooks»: buen momento
+  para preguntar a la clase si eso está bien.
 - 💻 `app/generation/rag/prompt_builder.py` → `build_system_prompt(include_hours=False)` (línea 14): el prompt que dice
   "no pongas horas".
 - 💻 Lado Rails: `estimator-web/app/controllers/rag/estimation_runs_controller.rb` → `generate` (línea 57),
