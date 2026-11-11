@@ -1,0 +1,36 @@
+<% content_for :title, "Histórico" %>
+<% colors = { "search" => "bg-sky-500/20 text-sky-300", "estimation" => "bg-emerald-500/20 text-emerald-300",
+              "chunking" => "bg-amber-500/20 text-amber-300" } %>
+
+<div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold tracking-tighter text-white">Histórico</h1>
+    <p class="text-sm text-white/60 mt-1">Todo lo que se ha lanzado desde la web: búsquedas avanzadas, estimaciones del wizard y comparativas del Chunking Lab.</p>
+  </div>
+
+  <div class="flex flex-wrap gap-2 text-sm">
+    <% [ [ nil, "Todo" ], [ "search", "Búsquedas" ], [ "estimation", "Estimaciones" ], [ "chunking", "Chunking Lab" ] ].each do |kind, label| %>
+      <%= link_to label, history_path(kind: kind),
+            class: "px-3 py-1 rounded font-bold #{@kind == kind ? 'bg-brand text-ink-dark' : 'bg-ink/40 text-white/80 hover:text-white'}" %>
+    <% end %>
+  </div>
+
+  <% if @items.empty? %>
+    <div class="p-6 rounded-md bg-ink/30 border border-white/10 text-white/60 text-sm">
+      Aún no hay nada. Lanza una búsqueda desde «Búsqueda» o una estimación desde «RAG Wizard».
+    </div>
+  <% else %>
+    <div class="rounded-md border border-white/10 divide-y divide-white/10">
+      <% @items.each do |item| %>
+        <%= link_to item.path, class: "flex items-start gap-3 p-4 hover:bg-white/5" do %>
+          <span class="px-2 py-0.5 rounded text-xs font-bold whitespace-nowrap <%= colors[item.kind] %>"><%= item.label %></span>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm text-white font-bold truncate"><%= item.title %></div>
+            <div class="text-xs text-white/60 mt-0.5"><%= item.detail %></div>
+          </div>
+          <span class="text-xs text-white/50 whitespace-nowrap"><%= l item.created_at, format: :short %></span>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

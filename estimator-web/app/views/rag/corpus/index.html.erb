@@ -1,0 +1,72 @@
+<% content_for :title, "Corpus" %>
+
+<div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+  <div>
+    <h1 class="text-2xl font-bold tracking-tighter text-white">Corpus indexado</h1>
+    <p class="text-sm text-white/60 mt-1">Lo que hay de verdad en las tres colecciones del servicio IA (tablas *_chunks de pgvector).</p>
+  </div>
+
+  <% if @error %>
+    <div class="p-4 rounded-md bg-red-500/10 border border-red-500/30 text-red-300 text-sm"><%= @error %></div>
+  <% end %>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+    <% Rag::CorpusController::COLLECTIONS.each do |key, label| %>
+      <% s = @summary[key] || {} %>
+      <%= link_to rag_corpus_path(collection: key),
+            class: "block rounded-md border p-4 #{key == @collection ? 'border-brand bg-brand/10' : 'border-white/10 bg-ink/30 hover:border-white/30'}" do %>
+        <div class="text-xs uppercase tracking-tight text-white/50 font-bold"><%= s["table"] || key %></div>
+        <div class="mt-1 font-bold text-white"><%= label %></div>
+        <div class="mt-1 text-2xl font-bold tabular-nums text-brand"><%= s["total_chunks"] || 0 %> <span class="text-sm text-white/50">chunks</span></div>
+        <div class="mt-1 text-xs text-white/60">
+          <% (s["by_chunk_type"] || {}).each do |type, n| %><span class="mr-2"><%= type %>: <b><%= n %></b></span><% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%= form_with url: rag_corpus_path, method: :get, local: true, class: "flex flex-wrap items-end gap-3" do %>
+    <%= hidden_field_tag :collection, @collection %>
+    <label class="text-sm text-white/90">
+      <span class="block font-bold mb-1">Tipo de chunk</span>
+      <%= select_tag :chunk_type,
+            options_for_select([ [ "Todos", "" ] ] + ((@summary.dig(@collection, "by_chunk_type") || {}).keys.map { |t| [ t, t ] }), @chunk_type),
+            class: "border border-white/20 rounded-md p-1.5 text-sm text-white bg-ink/40" %>
+    </label>
+    <label class="text-sm text-white/90 flex-1">
+      <span class="block font-bold mb-1">Contiene</span>
+      <%= text_field_tag :q, @q, placeholder: "Stripe, SAP, OAuth…",
+            class: "w-full border border-white/20 rounded-md p-1.5 text-sm text-white bg-ink/40" %>
+    </label>
+    <%= submit_tag "Filtrar", class: "px-4 py-2 bg-brand text-ink-dark font-bold rounded-md text-sm cursor-pointer" %>
+  <% end %>
+
+  <div class="text-sm text-white/60"><%= @result["total"] %> chunks · página <%= @page %> de <%= @total_pages %></div>
+
+  <div class="space-y-3">
+    <% @result["chunks"].each do |c| %>
+      <% md = c["metadata"] || {} %>
+      <div class="rounded-md border border-white/10 bg-ink/30 p-4">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="font-mono text-white/40">#<%= c["id"] %></span>
+          <span class="px-2 py-0.5 rounded bg-brand/20 text-brand font-bold"><%= c["chunk_type"] %></span>
+          <% %w[budget_id component_id transcript_id doc_id client_sector sector year meeting_date version estimated_hours module].each do |k| %>
+            <% next if md[k].blank? %>
+            <span class="text-white/60"><%= k %>: <b class="text-white/90"><%= md[k] %></b></span>
+          <% end %>
+          <span class="ml-auto text-white/30 font-mono"><%= c["source_path"] %></span>
+        </div>
+        <p class="mt-2 text-sm text-white/80 whitespace-pre-line"><%= c["content"].to_s.truncate(700) %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex justify-between text-sm">
+    <% if @page > 1 %>
+      <%= link_to "← Anterior", rag_corpus_path(collection: @collection, chunk_type: @chunk_type, q: @q, page: @page - 1), class: "font-bold text-brand" %>
+    <% else %><span></span><% end %>
+    <% if @page < @total_pages %>
+      <%= link_to "Siguiente →", rag_corpus_path(collection: @collection, chunk_type: @chunk_type, q: @q, page: @page + 1), class: "font-bold text-brand" %>
+    <% end %>
+  </div>
+</div>

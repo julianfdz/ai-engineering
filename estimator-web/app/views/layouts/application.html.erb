@@ -37,6 +37,12 @@
                 class: "font-bold tracking-tight hover:text-white #{controller_name == 'chunking_comparisons' ? 'text-brand' : 'text-white/80'}" %>
           <%= link_to "RAG Wizard", new_rag_estimation_run_path,
                 class: "font-bold tracking-tight hover:text-white #{controller_name == 'estimation_runs' ? 'text-brand' : 'text-white/80'}" %>
+          <%= link_to "Búsqueda", new_rag_advanced_search_path,
+                class: "font-bold tracking-tight hover:text-white #{controller_name == 'advanced_searches' ? 'text-brand' : 'text-white/80'}" %>
+          <%= link_to "Corpus", rag_corpus_path,
+                class: "font-bold tracking-tight hover:text-white #{controller_name == 'corpus' ? 'text-brand' : 'text-white/80'}" %>
+          <%= link_to "Histórico", history_path,
+                class: "font-bold tracking-tight hover:text-white #{controller_name == 'history' ? 'text-brand' : 'text-white/80'}" %>
           <%= link_to "Ajustes", ai_settings_path,
                 class: "font-bold tracking-tight hover:text-white #{controller_name == 'ai_settings' ? 'text-brand' : 'text-white/80'}" %>
           <%# Active primary model, always visible during live sessions. Hidden when the service is down. %>

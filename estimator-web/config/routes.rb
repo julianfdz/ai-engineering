@@ -26,6 +26,9 @@ Rails.application.routes.draw do
   # plus the human-verification PATCH.
   namespace :rag do
     resources :chunking_comparisons, only: [ :index, :new, :create, :show ]
+    # Local (fork): búsqueda avanzada desde la web + vista del corpus indexado.
+    resources :advanced_searches, only: [ :index, :new, :create, :show ]
+    get "corpus", to: "corpus#index", as: :corpus
 
     resources :estimation_runs, only: [ :index, :new, :create, :show ] do
       member do
@@ -39,6 +42,7 @@ Rails.application.routes.draw do
 
   # Runtime model configuration of the AI service (Ajustes).
   resource :ai_settings, only: [ :show, :update ]
+  get "history", to: "history#index", as: :history  # local (fork): histórico unificado
 
   # Landing dashboard: one card per context of the Master's journey.
   root "home#index"

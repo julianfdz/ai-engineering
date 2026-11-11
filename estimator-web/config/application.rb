@@ -22,6 +22,7 @@ module EstimatorWeb
     # in config/environments, which are processed later.
     #
     # config.time_zone = "Central Time (US & Canada)"
+    config.time_zone = "Madrid"  # local (fork): horas del histórico en hora de España
     # config.eager_load_paths << Rails.root.join("extras")
   end
 end

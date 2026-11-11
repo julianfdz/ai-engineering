@@ -17,6 +17,7 @@ from app.api.routers.estimate_stages import router as estimate_stages_router
 from app.api.routers.estimate_tasks import router as estimate_tasks_router
 from app.api.routers.retrieval import router as retrieval_router
 from app.api.routers.retrieval_advanced import router as retrieval_advanced_router
+from app.api.routers.corpus import router as corpus_router  # local: vista de corpus en la web
 
 
 def configure_logging() -> None:
@@ -124,6 +125,8 @@ app.include_router(estimate_router)
 app.include_router(estimate_stages_router)
 # Session 10 — per-task hours estimation by vector search (structure → hours).
 app.include_router(estimate_tasks_router)
+# Local (fork): read-only corpus listing for the Rails «Corpus» view.
+app.include_router(corpus_router)
 
 
 @app.get("/health")

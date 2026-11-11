@@ -1,0 +1,82 @@
+<% content_for :title, "Búsqueda avanzada" %>
+
+<div class="max-w-5xl mx-auto px-4 py-8 space-y-6">
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold tracking-tighter text-white">Búsqueda avanzada</h1>
+      <p class="text-sm text-white/60 mt-1">
+        POST /v1/retrieval/advanced-search · routing, expansión/descomposición, filtros, reranking y decaimiento.
+        Cada búsqueda se guarda en el histórico.
+      </p>
+    </div>
+    <%= link_to "Histórico →", rag_advanced_searches_path,
+          class: "font-bold tracking-tight text-brand hover:text-brand-soft text-sm" %>
+  </div>
+
+  <div>
+    <div class="text-xs uppercase tracking-tight text-white/50 font-bold mb-2">Demos del guion</div>
+    <div class="flex flex-wrap gap-2">
+      <% Rag::AdvancedSearchesController::PRESETS.each do |key, preset| %>
+        <%= link_to "+ #{preset[:label]}", new_rag_advanced_search_path(preset: key),
+              class: "text-xs font-bold tracking-tight px-2 py-1 rounded bg-brand/20 text-brand hover:bg-brand/30" %>
+      <% end %>
+    </div>
+  </div>
+
+  <%= form_with url: rag_advanced_searches_path, method: :post, local: true, class: "space-y-5" do %>
+    <div>
+      <label for="query_text" class="text-sm font-bold text-white/90">Consulta</label>
+      <%= text_area_tag :query_text, @form[:query_text], rows: 3,
+            class: "mt-1 w-full border border-white/20 rounded-md p-2.5 text-sm text-white bg-ink/40 focus:outline-none focus:border-brand" %>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <fieldset class="border border-white/10 rounded-md p-4">
+        <legend class="text-xs uppercase tracking-tight text-white/50 font-bold px-2">Colecciones (vacío = decide el router)</legend>
+        <% { "budget" => "Presupuestos", "transcript" => "Transcripciones", "technical_doc" => "Documentación técnica" }.each do |value, label| %>
+          <label class="flex items-center gap-2 text-sm text-white/90 py-0.5">
+            <%= check_box_tag "collections[]", value, @form[:collections].include?(value), id: "collection_#{value}", class: "accent-brand" %>
+            <%= label %> <span class="text-white/40 font-mono text-xs"><%= value %></span>
+          </label>
+        <% end %>
+      </fieldset>
+
+      <fieldset class="border border-white/10 rounded-md p-4 space-y-2">
+        <legend class="text-xs uppercase tracking-tight text-white/50 font-bold px-2">Filtros duros</legend>
+        <div class="flex items-center gap-3">
+          <label for="min_date" class="text-sm text-white/90 w-24">Desde</label>
+          <%= date_field_tag :min_date, @form[:min_date], class: "border border-white/20 rounded-md p-1.5 text-sm text-white bg-ink/40" %>
+        </div>
+        <div class="flex items-center gap-3">
+          <label for="sectors" class="text-sm text-white/90 w-24">Sectores</label>
+          <%= text_field_tag :sectors, @form[:sectors], placeholder: "healthcare, finance",
+                class: "flex-1 border border-white/20 rounded-md p-1.5 text-sm text-white bg-ink/40" %>
+        </div>
+        <div class="flex items-center gap-3">
+          <label for="top_k" class="text-sm text-white/90 w-24">top_k</label>
+          <%= number_field_tag :top_k, @form[:top_k], min: 1, max: 30,
+                class: "w-20 border border-white/20 rounded-md p-1.5 text-sm text-white bg-ink/40" %>
+        </div>
+      </fieldset>
+    </div>
+
+    <fieldset class="border border-white/10 rounded-md p-4">
+      <legend class="text-xs uppercase tracking-tight text-white/50 font-bold px-2">Etapas (por defecto = lo que diga el servicio)</legend>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <% { "routing_enabled" => "Routing", "query_transform_enabled" => "Expansión / descomp.",
+             "rerank" => "Reranking", "temporal_decay_enabled" => "Decaimiento" }.each do |toggle, label| %>
+          <label class="text-sm text-white/90">
+            <span class="block font-bold mb-1"><%= label %></span>
+            <%= select_tag "toggles[#{toggle}]",
+                  options_for_select([ [ "Por defecto", "" ], [ "Sí", "true" ], [ "No", "false" ] ], @form[:toggles][toggle].to_s),
+                  class: "w-full border border-white/20 rounded-md p-1.5 text-sm text-white bg-ink/40" %>
+          </label>
+        <% end %>
+      </div>
+    </fieldset>
+
+    <%= submit_tag "Buscar",
+          class: "inline-flex items-center px-5 py-2.5 bg-brand text-ink-dark font-bold tracking-tight rounded-md hover:bg-brand-strong cursor-pointer",
+          data: { disable_with: "Buscando… (con LLM puede tardar unos segundos)" } %>
+  <% end %>
+</div>

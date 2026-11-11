@@ -1,0 +1,36 @@
+<% content_for :title, "Búsquedas" %>
+
+<div class="max-w-5xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold tracking-tighter text-white">Búsquedas avanzadas</h1>
+    <%= link_to "Nueva búsqueda", new_rag_advanced_search_path,
+          class: "inline-flex items-center px-4 py-2 bg-brand text-ink-dark font-bold tracking-tight rounded-md hover:bg-brand-strong text-sm" %>
+  </div>
+  <% if @searches.empty? %>
+    <div class="p-6 rounded-md bg-ink/30 border border-white/10 text-white/60 text-sm">Aún no hay búsquedas.</div>
+  <% else %>
+    <div class="rounded-md border border-white/10 overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-ink/40 text-white/70">
+          <tr>
+            <th class="text-left p-3">Fecha</th><th class="text-left p-3">Consulta</th>
+            <th class="text-left p-3">Routing</th><th class="text-left p-3">Técnica</th>
+            <th class="text-right p-3">Resultados</th><th class="p-3"></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-white/10">
+          <% @searches.each do |s| %>
+            <tr>
+              <td class="p-3 text-white/70 whitespace-nowrap"><%= l s.created_at, format: :short %></td>
+              <td class="p-3 text-white/90"><%= s.query_text.truncate(80) %></td>
+              <td class="p-3 text-white/80"><%= s.routing["level"] %> → <%= Array(s.routing["targets"]).join(", ") %></td>
+              <td class="p-3 text-white/80"><%= s.technique %></td>
+              <td class="p-3 text-right tabular-nums"><%= s.chunks.size %></td>
+              <td class="p-3 text-right"><%= link_to "Ver →", rag_advanced_search_path(s), class: "font-bold text-brand hover:text-brand-soft" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

@@ -10,9 +10,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_06_25_120000) do
+ActiveRecord::Schema[8.0].define(version: 2026_11_11_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "advanced_searches", force: :cascade do |t|
+    t.text "query_text", null: false
+    t.jsonb "request_params", default: {}, null: false
+    t.jsonb "response_payload", default: {}, null: false
+    t.integer "duration_ms"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_advanced_searches_on_created_at"
+  end
 
   create_table "chat_sessions", force: :cascade do |t|
     t.string "remote_session_id", null: false
