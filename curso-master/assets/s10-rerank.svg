@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+<text x="380.0" y="28.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="700">Recall-then-rerank: bi-encoder para buscar, cross-encoder para ordenar</text>
+<text x="380.0" y="48.0" font-size="11.5" fill="#64748b" text-anchor="middle">El reranking del ejercicio previo: hoy no se reprograma, se compone y se mide</text>
+<rect x="24.0" y="66.0" width="340.0" height="150.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="194.0" y="88.0" font-size="13" fill="#1e3a8a" text-anchor="middle" font-weight="700">Bi-encoder (embeddings)</text>
+<rect x="40.0" y="100.0" width="130.0" height="36.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="105.0" y="121.4" font-size="10.5" fill="#334155" text-anchor="middle">consulta → vector</text>
+<rect x="218.0" y="100.0" width="130.0" height="36.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="283.0" y="121.4" font-size="10.5" fill="#334155" text-anchor="middle">doc → vector</text>
+<text x="194.0" y="156.0" font-size="10.5" fill="#1e3a8a" text-anchor="middle">por separado · se compara con coseno</text>
+<text x="194.0" y="176.0" font-size="10.5" fill="#1e3a8a" text-anchor="middle" font-weight="700">barato: sirve para miles de chunks</text>
+<text x="194.0" y="196.0" font-size="10" fill="#1e3a8a" text-anchor="middle" font-style="italic">pero confunde «mismo tema» con «misma cosa»</text>
+<rect x="396.0" y="66.0" width="340.0" height="150.0" rx="8" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="566.0" y="88.0" font-size="13" fill="#4c1d95" text-anchor="middle" font-weight="700">Cross-encoder (reranker)</text>
+<rect x="470.0" y="100.0" width="192.0" height="36.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1.5"/>
+<text x="566.0" y="121.4" font-size="10.5" fill="#334155" text-anchor="middle">(consulta, doc) → score</text>
+<text x="566.0" y="156.0" font-size="10.5" fill="#4c1d95" text-anchor="middle">los lee JUNTOS en una pasada del modelo</text>
+<text x="566.0" y="176.0" font-size="10.5" fill="#4c1d95" text-anchor="middle" font-weight="700">preciso, pero una inferencia por par</text>
+<text x="566.0" y="196.0" font-size="10" fill="#4c1d95" text-anchor="middle" font-style="italic">imposible sobre todo el corpus</text>
+<rect x="24.0" y="236.0" width="160.0" height="50.0" rx="8" fill="#e2e8f0" fill-opacity="1.0" stroke="#64748b" stroke-width="1.5"/>
+<text x="104.0" y="257.1" font-size="11" fill="#0f172a" text-anchor="middle" font-weight="700">Corpus</text>
+<text x="104.0" y="272.0" font-size="11" fill="#0f172a" text-anchor="middle">miles de chunks</text>
+<line x1="186.0" y1="261.0" x2="196.0" y2="261.0" stroke="#475569" stroke-width="2.2"/>
+<polygon points="206.0,261.0 196.0,266.5 196.0,255.5" fill="#475569"/>
+<rect x="208.0" y="236.0" width="160.0" height="50.0" rx="8" fill="#dbeafe" fill-opacity="1.0" stroke="#2563eb" stroke-width="1.5"/>
+<text x="288.0" y="257.1" font-size="11" fill="#1e3a8a" text-anchor="middle" font-weight="700">Recall</text>
+<text x="288.0" y="272.0" font-size="11" fill="#1e3a8a" text-anchor="middle">top 50 (bi-encoder)</text>
+<line x1="370.0" y1="261.0" x2="380.0" y2="261.0" stroke="#475569" stroke-width="2.2"/>
+<polygon points="390.0,261.0 380.0,266.5 380.0,255.5" fill="#475569"/>
+<rect x="392.0" y="236.0" width="160.0" height="50.0" rx="8" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="472.0" y="257.1" font-size="11" fill="#4c1d95" text-anchor="middle" font-weight="700">Rerank</text>
+<text x="472.0" y="272.0" font-size="11" fill="#4c1d95" text-anchor="middle">cross-encoder sobre 50</text>
+<line x1="554.0" y1="261.0" x2="564.0" y2="261.0" stroke="#475569" stroke-width="2.2"/>
+<polygon points="574.0,261.0 564.0,266.5 564.0,255.5" fill="#475569"/>
+<rect x="576.0" y="236.0" width="160.0" height="50.0" rx="8" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.5"/>
+<text x="656.0" y="257.1" font-size="11" fill="#14532d" text-anchor="middle" font-weight="700">Top-N</text>
+<text x="656.0" y="272.0" font-size="11" fill="#14532d" text-anchor="middle">los 5 mejores</text>
+<rect x="24.0" y="298.0" width="712.0" height="50.0" rx="8" fill="#fef3c7" fill-opacity="1.0" stroke="#d97706" stroke-width="1.5"/>
+<text x="380.0" y="318.0" font-size="10.5" fill="#78350f" text-anchor="middle" font-weight="700">Coste: ~80 s la primera vez (carga del modelo) y luego cientos de ms. Calentar antes de clase.</text>
+<text x="380.0" y="336.0" font-size="10.5" fill="#78350f" text-anchor="middle">En el arnés: +2,6 s sobre el vectorial. En las horas por tarea: menos filas rojas.</text>
+<rect x="20.0" y="354.0" width="720.0" height="32.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="380.0" y="375.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="700">cross-encoder/mmarco-mMiniLMv2-L12-H384-v1 · multilingüe · CPU · off por defecto</text>
+</svg>

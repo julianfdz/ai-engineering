@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="760" height="400" fill="#ffffff"/>
+<text x="380.0" y="28.0" font-size="18" fill="#0f172a" text-anchor="middle" font-weight="700">Decaimiento temporal: preferir lo reciente sin descartar lo antiguo</text>
+<text x="380.0" y="48.0" font-size="11.5" fill="#64748b" text-anchor="middle">weight = 0,5 ^ (edad_días / 900)  ·  semivida de 900 días (≈ 2,5 años)</text>
+<line x1="70.0" y1="300.0" x2="470.0" y2="300.0" stroke="#334155" stroke-width="1.5"/>
+<line x1="70.0" y1="300.0" x2="70.0" y2="74.0" stroke="#334155" stroke-width="1.5"/>
+<line x1="66.0" y1="300.0" x2="470.0" y2="300.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62.0" y="304.0" font-size="10" fill="#475569" text-anchor="end">0</text>
+<line x1="66.0" y1="245.0" x2="470.0" y2="245.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62.0" y="249.0" font-size="10" fill="#475569" text-anchor="end">0,25</text>
+<line x1="66.0" y1="190.0" x2="470.0" y2="190.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62.0" y="194.0" font-size="10" fill="#475569" text-anchor="end">0,5</text>
+<line x1="66.0" y1="135.0" x2="470.0" y2="135.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62.0" y="139.0" font-size="10" fill="#475569" text-anchor="end">0,75</text>
+<line x1="66.0" y1="80.0" x2="470.0" y2="80.0" stroke="#e2e8f0" stroke-width="1"/>
+<text x="62.0" y="84.0" font-size="10" fill="#475569" text-anchor="end">1</text>
+<line x1="70.0" y1="300.0" x2="70.0" y2="305.0" stroke="#334155" stroke-width="1.2"/>
+<line x1="143.0" y1="300.0" x2="143.0" y2="305.0" stroke="#334155" stroke-width="1.2"/>
+<line x1="250.0" y1="300.0" x2="250.0" y2="305.0" stroke="#334155" stroke-width="1.2"/>
+<line x1="435.0" y1="300.0" x2="435.0" y2="305.0" stroke="#334155" stroke-width="1.2"/>
+<text x="70.0" y="318.0" font-size="10" fill="#475569" text-anchor="middle">hoy</text>
+<text x="143.0" y="318.0" font-size="10" fill="#475569" text-anchor="middle">1 año</text>
+<text x="250.0" y="318.0" font-size="10" fill="#475569" text-anchor="middle">2,5 años</text>
+<text x="435.0" y="318.0" font-size="10" fill="#475569" text-anchor="middle">5 años</text>
+<polyline points="70.0,80.0 75.0,84.2 80.0,88.3 85.0,92.3 90.0,96.3 95.0,100.2 100.0,104.0 105.0,107.7 110.0,111.4 115.0,115.0 120.0,118.5 125.0,122.0 130.0,125.4 135.0,128.7 140.0,132.0 145.0,135.2 150.0,138.3 155.0,141.4 160.0,144.4 165.0,147.4 170.0,150.3 175.0,153.2 180.0,156.0 185.0,158.7 190.0,161.4 195.0,164.1 200.0,166.6 205.0,169.2 210.0,171.7 215.0,174.1 220.0,176.5 225.0,178.9 230.0,181.2 235.0,183.5 240.0,185.7 245.0,187.9 250.0,190.0 255.0,192.1 260.0,194.2 265.0,196.2 270.0,198.2 275.0,200.1 280.0,202.0 285.0,203.9 290.0,205.7 295.0,207.5 300.0,209.3 305.0,211.0 310.0,212.7 315.0,214.4 320.0,216.0 325.0,217.6 330.0,219.2 335.0,220.7 340.0,222.2 345.0,223.7 350.0,225.2 355.0,226.6 360.0,228.0 365.0,229.4 370.0,230.7 375.0,232.0 380.0,233.3 385.0,234.6 390.0,235.8 395.0,237.1 400.0,238.3 405.0,239.4 410.0,240.6 415.0,241.7 420.0,242.8 425.0,243.9 430.0,245.0 435.0,246.0 440.0,247.1 445.0,248.1 450.0,249.1 455.0,250.0 460.0,251.0 465.0,251.9 470.0,252.9" fill="none" stroke="#d97706" stroke-width="3"/>
+<circle cx="143.0" cy="133.9" r="5" fill="#d97706"/>
+<text x="151.0" y="125.9" font-size="11" fill="#78350f" text-anchor="start" font-weight="700">0,75</text>
+<circle cx="250.0" cy="190.0" r="5" fill="#d97706"/>
+<text x="258.0" y="182.0" font-size="11" fill="#78350f" text-anchor="start" font-weight="700">0,50</text>
+<circle cx="435.0" cy="246.0" r="5" fill="#d97706"/>
+<text x="443.0" y="238.0" font-size="11" fill="#78350f" text-anchor="start" font-weight="700">0,25</text>
+<text x="270.0" y="336.0" font-size="10.5" fill="#475569" text-anchor="middle">edad del presupuesto</text>
+<rect x="500.0" y="70.0" width="236.0" height="104.0" rx="8" fill="#dcfce7" fill-opacity="1.0" stroke="#16a34a" stroke-width="1.5"/>
+<text x="512.0" y="92.0" font-size="12" fill="#14532d" text-anchor="start" font-weight="700">Por qué al cierre</text>
+<text x="512.0" y="112.0" font-size="10.5" fill="#14532d" text-anchor="start">Es ponderación BLANDA: solo</text>
+<text x="512.0" y="128.0" font-size="10.5" fill="#14532d" text-anchor="start">desempata entre finalistas ya</text>
+<text x="512.0" y="144.0" font-size="10.5" fill="#14532d" text-anchor="start">relevantes. Antes del rerank</text>
+<text x="512.0" y="160.0" font-size="10.5" fill="#14532d" text-anchor="start">penalizaría lo que no sabes si sirve.</text>
+<rect x="500.0" y="184.0" width="236.0" height="104.0" rx="8" fill="#ede9fe" fill-opacity="1.0" stroke="#7c3aed" stroke-width="1.5"/>
+<text x="512.0" y="206.0" font-size="12" fill="#4c1d95" text-anchor="start" font-weight="700">Por qué sigmoid antes</text>
+<text x="512.0" y="226.0" font-size="10.5" fill="#4c1d95" text-anchor="start">El logit del cross-encoder puede</text>
+<text x="512.0" y="242.0" font-size="10.5" fill="#4c1d95" text-anchor="start">ser negativo: × 0,5 lo «sube».</text>
+<text x="512.0" y="258.0" font-size="10.5" fill="#4c1d95" text-anchor="start">sigmoid lo lleva a (0, 1) y el</text>
+<text x="512.0" y="274.0" font-size="10.5" fill="#4c1d95" text-anchor="start">decaimiento solo atenúa.</text>
+<rect x="20.0" y="354.0" width="720.0" height="32.0" rx="8" fill="#f1f5f9" fill-opacity="1.0" stroke="#94a3b8" stroke-width="1"/>
+<text x="380.0" y="375.0" font-size="11.5" fill="#475569" text-anchor="middle" font-weight="700">Off por defecto (TEMPORAL_DECAY_ENABLED=false): encenderlo solo con evidencia</text>
+</svg>
