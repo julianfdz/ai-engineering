@@ -1,6 +1,9 @@
 require "active_support/core_ext/integer/time"
 
 Rails.application.configure do
+  # YJIT off in development: Ruby 3.4.4 can crash under YJIT (assertion in codegen.rs).
+  config.yjit = false
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Make code changes take effect immediately without server restart.
