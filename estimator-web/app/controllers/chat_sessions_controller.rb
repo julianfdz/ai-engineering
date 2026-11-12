@@ -71,7 +71,7 @@ class ChatSessionsController < ApplicationController
     # the NDA turn is evicted into the anchors and the summary appears.
     "conv_m" => { label: "Memory · 8 turns", mode: "actor", turns: [
       { shows: "Turno 1: el NDA va en inglés porque las reglas de anclas son en inglés",
-        transcript: "Turn 1: we signed the NDA before this call. Estimate a CRM for the sales team, team of 3." },
+        transcript: "Turn 1: we signed the NDA before this call. Estimate a CRM in React and Postgres for the sales team: accounts, deals and a basic dashboard. Team of 3." },
       { shows: "La ventana se llena de dos en dos: 4/12 mensajes",
         detail_level: "summary",
         transcript: "Turno 2: añadimos gestión de contactos y empresas, con importación desde CSV." },
