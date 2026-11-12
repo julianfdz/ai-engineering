@@ -71,18 +71,18 @@ docker compose -p aieng-s05live up -d --force-recreate estimator
 
 ### Diapo 3 · Lo que traéis del ejercicio previo
 
-- 💻 **`app/sessions/models.py`**: `Message` (l. 33), `ConversationHistory` (l. 43), `ProjectMetadata` (l. 117) y su
-  `merge_with()` (l. 138): lo escalar se pisa, las listas se suman sin duplicar.
-- 💻 **`app/sessions/metadata_extractor.py`** → `update_metadata()` (l. 32): si el LLM falla, devuelve la metadata
+- 💻 **`app/sessions/models.py`**: `Message` (l. 38), `ConversationHistory` (l. 48), `ProjectMetadata` (l. 122) y su
+  `merge_with()` (l. 143): lo escalar se pisa, las listas se suman sin duplicar.
+- 💻 **`app/sessions/metadata_extractor.py`** → `update_metadata()` (l. 37): si el LLM falla, devuelve la metadata
   anterior y la conversación sigue.
-- 💻 **`app/routers/sessions.py`**: `create_session` (l. 75), `get_session` (l. 84), `_resolve_session_and_enrich`
-  (l. 104, el prólogo compartido por los dos endpoints), `estimate_in_session` (l. 180).
-- 💻 **`app/attachments/extractor.py`**: `_SUPPORTED_EXTS` (l. 38), `_extract_pdf` (l. 45), `_extract_docx` (l. 61),
-  `extract_text` (l. 69, trunca), `enrich_transcript` (l. 113, las marcas `--- attachment ---`).
+- 💻 **`app/routers/sessions.py`**: `create_session` (l. 80), `get_session` (l. 89), `_resolve_session_and_enrich`
+  (l. 109, el prólogo compartido por los dos endpoints), `estimate_in_session` (l. 185).
+- 💻 **`app/attachments/extractor.py`**: `_SUPPORTED_EXTS` (l. 43), `_extract_pdf` (l. 50), `_extract_docx` (l. 66),
+  `extract_text` (l. 74, trunca), `enrich_transcript` (l. 118, las marcas `--- attachment ---`).
 
 ### Diapo 4 · El orden de los mensajes
 
-- 💻 **`app/services/estimation.py`** líneas 227-229: `[system] + historial + user`. El system no se guarda porque
+- 💻 **`app/services/estimation.py`** líneas 232-234: `[system] + historial + user`. El system no se guarda porque
   se re-renderiza con la metadata del turno.
 - Repasa los cinco errores frecuentes de la diapo; pregunta quién se topó con cuál.
 
@@ -98,20 +98,20 @@ docker compose -p aieng-s05live up -d --force-recreate estimator
 ### Diapo 6 · Estrategias de historial
 
 - Ventana, resumen, anclas, híbrida. El fallo de la ventana: en el turno 7 se pierde el «firmamos NDA» del turno 1.
-- 💻 `app/config.py` → `MAX_CONVERSATION_TURNS = 6` (l. 49): cuenta **pares**, así que caben 12 mensajes.
+- 💻 `app/config.py` → `MAX_CONVERSATION_TURNS = 6` (l. 54): cuenta **pares**, así que caben 12 mensajes.
 
 ### Diapo 7 · Compresión híbrida
 
-- 💻 **`app/sessions/models.py`** → `to_messages()` (l. 79): resumen como mensaje `user` sintético + anclas + ventana.
-- 💻 **`app/sessions/models.py`** → `append()` (l. 65): **ya no recorta**. Lee el docstring en voz alta.
-- 💻 **`app/sessions/compression/policy.py`** → `apply()` (l. 50): el bucle que saca pares de dos en dos; y
-  `apply_compression()` (l. 96), la fachada que usa el servicio (`estimation.py` l. 260).
+- 💻 **`app/sessions/models.py`** → `to_messages()` (l. 84): resumen como mensaje `user` sintético + anclas + ventana.
+- 💻 **`app/sessions/models.py`** → `append()` (l. 70): **ya no recorta**. Lee el docstring en voz alta.
+- 💻 **`app/sessions/compression/policy.py`** → `apply()` (l. 55): el bucle que saca pares de dos en dos; y
+  `apply_compression()` (l. 101), la fachada que usa el servicio (`estimation.py` l. 265).
 - 💻 `app/prompts/conversation_summary/v1/system.j2`: la regla «INTEGRATE»: se rehace el resumen entero, no se encadena.
 
 ### Diapo 8 · Anclas
 
-- 💻 **`app/sessions/compression/anchors.py`** → `_HEURISTIC_PATTERNS` (l. 41): las 8 reglas; `detect()` (l. 94);
-  modo LLM opcional `_detect_llm()` (l. 116).
+- 💻 **`app/sessions/compression/anchors.py`** → `_HEURISTIC_PATTERNS` (l. 46): las 8 reglas; `detect()` (l. 99);
+  modo LLM opcional `_detect_llm()` (l. 121).
 
 ### Diapo 9 · Demo: ocho turnos
 
@@ -138,15 +138,15 @@ Pregunta abierta: ¿debería?
 
 ### Diapo 10 · Tiers
 
-- 💻 **`app/prompts/estimation/v3/system.j2`** → bloque `<audience>` (l. 23-45): un único prompt con Jinja por tier.
-- 💻 **`app/sessions/tier_resolver.py`** → `class Tier` (l. 36): hereda de `str`, por eso viaja en formularios y JSON.
+- 💻 **`app/prompts/estimation/v3/system.j2`** → bloque `<audience>` (l. 28-50): un único prompt con Jinja por tier.
+- 💻 **`app/sessions/tier_resolver.py`** → `class Tier` (l. 41): hereda de `str`, por eso viaja en formularios y JSON.
 
 ### Diapo 11 · El resolver
 
-- 💻 **`app/sessions/tier_resolver.py`**: regex (l. 59-69; NDA incluye `confidential`), `_has_nda` (l. 72),
-  `_technical_audience` (l. 98: exige **2 palabras técnicas distintas**), `_RULES` (l. 107: el orden manda),
-  `resolve_tier()` (l. 115: override primero, try/except por regla).
-- 💻 `app/services/estimation.py` l. 205: la llamada y el cacheo en `session.last_resolved_tier`.
+- 💻 **`app/sessions/tier_resolver.py`**: regex (l. 64-74; NDA incluye `confidential`), `_has_nda` (l. 77),
+  `_technical_audience` (l. 103: exige **2 palabras técnicas distintas**), `_RULES` (l. 112: el orden manda),
+  `resolve_tier()` (l. 120: override primero, try/except por regla).
+- 💻 `app/services/estimation.py` l. 210: la llamada y el cacheo en `session.last_resolved_tier`.
 
 ⌨️ Terminal:
 
@@ -178,13 +178,13 @@ a la metadata después de resolver el tier.
 ### Diapo 12 · El dataset
 
 - 💻 **`evals/golden_dataset.json`**: abre el caso 001 y uno adversarial (006, inyección).
-- 💻 **`evals/dataset.py`** → `GoldenCase` (l. 24): casi todo son rangos.
+- 💻 **`evals/dataset.py`** → `GoldenCase` (l. 29): casi todo son rangos.
 
 ### Diapo 13 · Las métricas y lo que dijeron
 
-- 💻 **`evals/metrics.py`**: `SchemaAdherenceMetric` (l. 32), `CostBoundsMetric` (l. 71), `ContentRecallMetric`
-  (l. 109). Binarias a propósito: el `details` dice qué arreglar.
-- 💻 `evals/run.py` → `_run_case_in_process` (l. 107): sesión nueva por caso, para que no se contaminen.
+- 💻 **`evals/metrics.py`**: `SchemaAdherenceMetric` (l. 37), `CostBoundsMetric` (l. 76), `ContentRecallMetric`
+  (l. 114). Binarias a propósito: el `details` dice qué arreglar.
+- 💻 `evals/run.py` → `_run_case_in_process` (l. 112): sesión nueva por caso, para que no se contaminen.
 
 ⌨️ Terminal (8 casos ≈ 1 min 30 s; lánzalo al empezar el bloque y sigue hablando):
 
@@ -202,7 +202,7 @@ rango). El JSON queda en `estimator/evals/actor.json` para enseñar los `details
 ### Diapo 14 · Tres roles
 
 - Dibuja el bucle. Los dos fallos que evita: bucle infinito (sin Boss) y sesgo de confirmación (crítica en texto libre).
-- 💻 `app/routers/sessions.py` l. 209: `POST /sessions/{id}/estimate-acb`.
+- 💻 `app/routers/sessions.py` l. 214: `POST /sessions/{id}/estimate-acb`.
 
 ---
 
@@ -210,11 +210,11 @@ rango). El JSON queda en `estimator/evals/actor.json` para enseñar los `details
 
 ### Diapo 15 · El actor
 
-- 💻 **`app/services/estimation.py`** → `estimate_conversational()` (l. 177): recorre los 8 pasos. El orden
-  guardrail de salida (l. 254) → append + `apply_compression` (l. 260) → `update_metadata` (l. 269).
-- 💻 **`app/services/estimation.py`** → `estimate_with_acb()` (l. 283) y el closure `_actor()` (l. 326).
-- 💻 **`app/prompts/estimation/v3/user.j2`** l. 13: el `{% if critic_feedback %}`. Cero ramas en Python.
-- En la sesión solo se guarda la respuesta final (l. 372-381); los borradores no.
+- 💻 **`app/services/estimation.py`** → `estimate_conversational()` (l. 182): recorre los 8 pasos. El orden
+  guardrail de salida (l. 259) → append + `apply_compression` (l. 265) → `update_metadata` (l. 274).
+- 💻 **`app/services/estimation.py`** → `estimate_with_acb()` (l. 288) y el closure `_actor()` (l. 331).
+- 💻 **`app/prompts/estimation/v3/user.j2`** l. 18: el `{% if critic_feedback %}`. Cero ramas en Python.
+- En la sesión solo se guarda la respuesta final (l. 377-386); los borradores no.
 
 ---
 
@@ -222,10 +222,10 @@ rango). El JSON queda en `estimator/evals/actor.json` para enseñar los `details
 
 ### Diapo 16 · El crítico
 
-- 💻 **`app/schemas/critic.py`**: las 7 categorías (l. 23), `CriticVerdict` (l. 37), `CriticIssue` con
-  `field_path` (l. 40), `CriticFeedback` y su validador `iteration_requires_blocking_issue` (l. 69).
+- 💻 **`app/schemas/critic.py`**: las 7 categorías (l. 28), `CriticVerdict` (l. 42), `CriticIssue` con
+  `field_path` (l. 45), `CriticFeedback` y su validador `iteration_requires_blocking_issue` (l. 74).
 - 💻 **`app/prompts/critic/v1/system.j2`**: lee los bloques `<heuristics>`, `<verdict_rules>` y `<rules>`.
-- 💻 **`app/services/critic.py`** → `review()` (l. 39) y el fallback `critic_failed_fallback_accept` (l. 67).
+- 💻 **`app/services/critic.py`** → `review()` (l. 44) y el fallback `critic_failed_fallback_accept` (l. 72).
 
 💬 Lo que vimos al probar: el crítico devolvió `accept` **con** un issue `critical` en la lista. El validador impide
 iterar sin problemas graves, pero no impide aceptar con ellos. Buena pregunta: ¿añadiríais esa regla?
@@ -236,9 +236,9 @@ iterar sin problemas graves, pero no impide aceptar con ellos. Buena pregunta: �
 
 ### Diapo 17 · El Boss
 
-- 💻 **`app/services/boss.py`**: `ActorCallable` (l. 44), `run()` (l. 56), `_decide()` (l. 112, nueve líneas),
-  `_synthesize_fallback()` (l. 123: avisos delante, confianza a la mitad con suelo de 30).
-- 💻 `app/config.py` → `BOSS_MAX_ITERATIONS = 3` (l. 72).
+- 💻 **`app/services/boss.py`**: `ActorCallable` (l. 49), `run()` (l. 61), `_decide()` (l. 117, nueve líneas),
+  `_synthesize_fallback()` (l. 128: avisos delante, confianza a la mitad con suelo de 30).
+- 💻 `app/config.py` → `BOSS_MAX_ITERATIONS = 3` (l. 77).
 
 ### Diapo 18 · Demo ACB
 
