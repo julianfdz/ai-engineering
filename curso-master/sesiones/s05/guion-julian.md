@@ -126,8 +126,10 @@ estima $S "Turn1: we signed the NDA before this call. Estimate a CRM for the sal
 Sale: mensajes hasta 12 y se quedan ahí; en el turno 7 `anchors_count` pasa a 2 (el NDA); en el 8 aparece el resumen
 (908 caracteres en nuestra prueba).
 
-🖥️ **Interfaz:** cualquier conversación de varios turnos en <http://localhost:3000>: el panel lateral enseña
-**Window**, **Anchors kept** y **Summary of evicted turns**.
+🖥️ **Interfaz:** la misma demo ya lanzada en <http://localhost:3000/chat_sessions/22>. En el historial, la línea
+gris de cada respuesta va de `window 2/12` a `12/12`; en el turno 7 sale `anchors 2` y en el 8 `summary 741 chars`.
+Para repetirla en directo: **New conversation** y pulsar 8 veces el botón **Memory · 8 turns** (cada clic rellena el
+turno siguiente; luego Send). Va en modo actor, unos 15 s por turno.
 
 💬 El remate: el tier solo es executive en el turno 1. El resolver mira el texto del turno y la metadata, no las anclas.
 Pregunta abierta: ¿debería?
