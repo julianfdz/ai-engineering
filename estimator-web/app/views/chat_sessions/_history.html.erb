@@ -1,0 +1,89 @@
+<%# ── Julián · Sesión 5 · Historial de la conversación ────────────────────────── %>
+<%# %>
+<%#   Todos los turnos de la sesión, del más antiguo al más reciente, como un chat. %>
+<%#   Sale de las estimaciones que Rails guarda en cada turno; no pide nada a la API. %>
+<%# %>
+<%#   · A la derecha, lo que escribió la persona; a la izquierda, la respuesta. %>
+<%#   · Cada respuesta enseña el tier resuelto y la regla que lo decidió. %>
+<%#   · En modo ACB, la cadena veredicto del crítico → decisión del Boss por vuelta. %>
+<%#   · Ventana, anclas y resumen tal como quedaron después de ese turno. %>
+<%# ────────────────────────────────────────────────────────────────────────────── %>
+
+<%# Conversation history: every turn of this session, oldest first. %>
+<% turns = chat_session.estimations.order(:created_at).to_a %>
+<% if turns.any? %>
+  <section class="rounded-md border border-white/10 bg-ink/30 p-4">
+    <h2 class="text-xs uppercase tracking-tight text-white/60 font-bold">
+      Conversation history <span class="text-white/40">· <%= turns.size %> turn(s)</span>
+    </h2>
+    <ol class="mt-4 space-y-5">
+      <% turns.each_with_index do |est, i| %>
+        <% payload = est.response_payload.is_a?(Hash) ? est.response_payload : {} %>
+        <% result = payload["result"].is_a?(Hash) ? payload["result"] : {} %>
+        <% snap = payload["session_snapshot"].is_a?(Hash) ? payload["session_snapshot"] : {} %>
+        <% acb = payload["acb"].is_a?(Hash) ? payload["acb"] : nil %>
+        <% out_of_scope = result["summary"].to_s.start_with?("Out of scope") %>
+        <li class="space-y-2">
+          <div class="flex justify-end">
+            <div class="max-w-[85%] rounded-lg bg-brand/15 border border-brand/40 px-3 py-2">
+              <div class="text-[11px] uppercase tracking-tight font-bold text-brand mb-1">You · turn <%= i + 1 %></div>
+              <p class="text-sm text-white/90 whitespace-pre-line"><%= est.description %></p>
+            </div>
+          </div>
+          <div class="flex justify-start">
+            <div class="max-w-[85%] rounded-lg bg-ink/50 border border-white/10 px-3 py-2 space-y-2">
+              <div class="flex flex-wrap items-center gap-1.5 text-[11px] font-bold uppercase tracking-tight">
+                <span class="text-white/70">Estimator</span>
+                <span class="px-1.5 py-0.5 rounded bg-white/10 text-white/80"><%= payload["turn_mode"] == "acb" || acb ? "ACB" : "actor" %></span>
+                <% if snap["last_resolved_tier"].present? %>
+                  <span class="px-1.5 py-0.5 rounded bg-brand text-ink-dark">tier <%= snap["last_resolved_tier"] %></span>
+                  <span class="normal-case font-mono font-normal text-white/50"><%= snap["last_tier_rule"] %></span>
+                <% end %>
+              </div>
+              <% if out_of_scope %>
+                <p class="text-sm font-bold text-brand">Out of scope</p>
+              <% elsif result.present? %>
+                <p class="text-sm text-white tabular-nums">
+                  <span class="font-bold"><%= number_with_delimiter(result["total_cost_eur"]) %> €</span> ·
+                  <%= result["total_duration_weeks"] %> wk ·
+                  <%= Array(result["phases"]).size %> phases ·
+                  confidence <%= result["confidence_pct"] %>%
+                </p>
+              <% end %>
+              <% if acb && acb["iterations"].is_a?(Array) %>
+                <div class="text-xs text-white/70">
+                  <span class="font-bold text-white/80">Critic → Boss:</span>
+                  <% acb["iterations"].each_with_index do |it, n| %>
+                    <% if n > 0 %><span class="text-white/40"> ▸ </span><% end %>
+                    <span class="font-mono"><%= it["critic_verdict"] %> → <%= it["decision_after"] %></span>
+                  <% end %>
+                  <span class="text-white/50">· final <span class="font-bold text-brand"><%= acb["final_decision"] %></span></span>
+                </div>
+              <% end %>
+              <% if snap.present? %>
+                <div class="text-[11px] text-white/50 tabular-nums">
+                  window <%= snap["message_count"] %>/<%= snap["max_turns"].to_i * 2 %> msgs ·
+                  anchors <%= snap["anchors_count"] || 0 %> ·
+                  summary <%= snap["summary_chars"] || 0 %> chars
+                </div>
+              <% end %>
+              <% if result["summary"].present? %>
+                <details class="text-xs">
+                  <summary class="cursor-pointer text-white/60 hover:text-white">Show answer</summary>
+                  <p class="mt-2 text-white/80 whitespace-pre-line leading-relaxed"><%= result["summary"] %></p>
+                  <% if acb && acb["iterations"].is_a?(Array) %>
+                    <% acb["iterations"].each do |it| %>
+                      <% Array(it["issue_summary"]).each do |line| %>
+                        <div class="mt-1 font-mono text-white/60">#<%= it["iteration"] %> <%= line %></div>
+                      <% end %>
+                    <% end %>
+                  <% end %>
+                </details>
+              <% end %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ol>
+  </section>
+<% end %>

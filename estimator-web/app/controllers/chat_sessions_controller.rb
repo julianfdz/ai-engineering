@@ -39,6 +39,35 @@ class ChatSessionsController < ApplicationController
       project_type: "web_saas", detail_level: "detailed", mode: "acb" }
   }.freeze
 
+  # Simulated conversations: five turns of the same project, all in ACB mode.
+  # Each click fills the next turn; `shows` says what to look at in that turn.
+  CONVERSATIONS = {
+    "conv_a" => { label: "Simulated conversation A · clínicas", turns: [
+      { shows: "Primer turno: tier default y metadata inicial en el panel",
+        transcript: "Hola. Somos una cadena de 12 clínicas de fisioterapia y queremos una plataforma web para que los pacientes reserven cita online: calendario por fisioterapeuta, cancelaciones y recordatorios por email. Somos un equipo de 3 personas y trabajamos con React y Node." },
+      { shows: "Refinamiento: la metadata suma Stripe sin perder lo anterior",
+        transcript: "Añadimos pagos: la primera sesión se cobra por adelantado con Stripe y queremos vender bonos de 5 y 10 sesiones. También necesitamos un panel para recepción con la agenda del día de cada clínica." },
+      { shows: "NDA y GDPR: el tier pasa a executive (regla nda_detected)",
+        transcript: "Un aviso importante: ya firmamos NDA con el cliente. Vamos a tratar datos de salud, así que todo tiene que cumplir GDPR y el historial clínico no puede salir de la UE. Esta estimación la va a leer la dirección." },
+      { shows: "Audiencia técnica: ¿developer o sigue executive? El orden de las reglas manda",
+        transcript: "Detalle para el equipo técnico: backend en Node con PostgreSQL, todo en contenedores Docker sobre AWS, infraestructura con Terraform y una cola en Redis para los recordatorios." },
+      { shows: "Petición imposible: el crítico la marca y el Boss itera o sintetiza",
+        transcript: "Última petición de dirección: además de todo lo anterior, quieren apps nativas para iOS y Android con videoconsulta, y lo quieren en producción en 6 semanas con un equipo de solo 2 personas." }
+    ] },
+    "conv_b" => { label: "Simulated conversation B · panaderías", turns: [
+      { shows: "Primer turno: tier default y metadata inicial en el panel",
+        transcript: "Somos una cadena de 8 panaderías en Madrid y queremos una web de pedidos para recoger en tienda: catálogo, carrito, franja horaria de recogida y aviso por email cuando el pedido está listo. Somos un equipo de 4 personas y trabajamos con Vue y Python." },
+      { shows: "Refinamiento: reparto, Stripe y puntos se suman a la metadata",
+        transcript: "Queremos añadir reparto a domicilio en un radio de 5 km, pago con tarjeta mediante Stripe y un programa de puntos para los clientes habituales." },
+      { shows: "Audiencia técnica: Kubernetes + Kafka + Terraform dan tier developer",
+        transcript: "Para el equipo técnico: lo desplegamos en Kubernetes, los pedidos entran por Kafka y la infraestructura va con Terraform." },
+      { shows: "El equipo baja a 2: el tier aún no cambia (la metadata se actualiza después)",
+        transcript: "Cambio de planes: el equipo se queda en 2 personas, porque los otros dos pasan a otro proyecto." },
+      { shows: "Plazo imposible con equipo de 2: tier pm y el crítico entra en acción",
+        transcript: "Y el cliente quiere todo, reparto y puntos incluidos, en producción en 4 semanas y con un presupuesto máximo de 20.000 euros." }
+    ] }
+  }.freeze
+
   def new
     @chat_session = current_chat_session || begin
       remote = EstimatorAi::Client.new.create_session
@@ -94,6 +123,13 @@ class ChatSessionsController < ApplicationController
     # Refresh the metadata snapshot from FastAPI for the side panel.
     refresh_metadata_snapshot(@chat_session)
 
+    # Keep what the session looked like after this turn, for the history view.
+    @estimation.update!(response_payload: payload.merge(
+      "turn_mode" => mode,
+      "turn_tier_override" => tier,
+      "session_snapshot" => @chat_session.remote_session_snapshot
+    ))
+
     redirect_to chat_session_path(@chat_session)
   rescue EstimatorAi::Client::GuardrailViolation => e
     flash.now[:alert] = e.message
@@ -147,13 +183,25 @@ class ChatSessionsController < ApplicationController
 
   # Builds the form object, pre-filled from ?preset=… when present.
   def request_from_preset
-    preset = PRESETS[params[:preset]]
+    preset = CONVERSATIONS.key?(params[:preset]) ? conversation_turn(params[:preset]) : PRESETS[params[:preset]]
     @form_mode = preset&.dig(:mode) || "actor"
     @form_tier = preset&.dig(:tier) || "auto"
     return SessionEstimationRequest.new unless preset
 
     SessionEstimationRequest.new(preset.slice(:transcript, :project_type, :detail_level, :output_format))
   end
+
+  # Next turn of the simulated conversation, based on how many turns exist.
+  def conversation_turn(key)
+    turns = CONVERSATIONS[key][:turns]
+    turn = turns[[ next_turn_index, turns.size - 1 ].min]
+    turn.merge(project_type: "web_saas", mode: "acb")
+  end
+
+  def next_turn_index
+    @chat_session&.persisted? ? @chat_session.estimations.count : 0
+  end
+  helper_method :next_turn_index
 
   def session_estimation_request_params
     params.require(:session_estimation_request).permit(

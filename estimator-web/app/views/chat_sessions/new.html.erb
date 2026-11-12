@@ -29,6 +29,22 @@
                   class: "px-2.5 py-1 rounded text-xs font-bold #{params[:preset] == key ? 'bg-brand text-ink-dark' : 'bg-ink/40 text-white/80 hover:text-white border border-white/10'}" %>
           <% end %>
         </div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span class="text-xs uppercase tracking-tight text-white/50 font-bold mr-1">Conversation</span>
+          <% ChatSessionsController::CONVERSATIONS.each do |key, conv| %>
+            <% step = [ next_turn_index, conv[:turns].size - 1 ].min + 1 %>
+            <%= link_to "#{conv[:label]} · turn #{step}/#{conv[:turns].size}", chat_session_path(@chat_session, preset: key),
+                  class: "px-2.5 py-1 rounded text-xs font-bold #{params[:preset] == key ? 'bg-brand text-ink-dark' : 'bg-ink/40 text-white/80 hover:text-white border border-white/10'}" %>
+          <% end %>
+        </div>
+        <% conv = ChatSessionsController::CONVERSATIONS[params[:preset]] %>
+        <% if conv %>
+          <p class="text-xs text-white/60 -mt-4">
+            <span class="font-bold text-brand">What to look at:</span>
+            <%= conv[:turns][[ next_turn_index, conv[:turns].size - 1 ].min][:shows] %>
+          </p>
+        <% end %>
+        <%= render "history", chat_session: @chat_session %>
       <% end %>
       <%= render "form", request: @request, chat_session: @chat_session %>
 
