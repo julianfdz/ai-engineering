@@ -1,3 +1,9 @@
+<%# ── Julián · Sesión 5 ───────────────────────────────────────────── %>
+<%# Formulario de cada turno: transcripción, adjuntos, tipo de proyecto y nivel de detalle. %>
+<%# Audience tier: automático (lo decide el resolver) o forzado por la persona. %>
+<%# Estimation mode: solo actor o Actor-Critic-Boss. %>
+<%# ────────────────────────────────────────────────────────────────── %>
+
 <%# Conversational form: transcript + multiple attachments. Posts as multipart. %>
 <%= form_with model: request, scope: :session_estimation_request,
       url: chat_session_path(chat_session), method: :post, local: true,

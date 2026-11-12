@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Adjuntos PDF y DOCX: el texto se extrae en local (pypdf, python-docx), sin pasar el fichero al modelo.
+# Se trunca a MAX_ATTACHMENT_CHARS, y una página rota no tumba el PDF entero.
+# enrich_transcript envuelve cada adjunto entre marcas para que el modelo sepa de dónde sale cada texto.
+# ──────────────────────────────────────────────────────────────────
+
 """Extract plain text from uploaded PDF / DOCX attachments.
 
 Dispatch by extension. The caller is the session router, which holds the

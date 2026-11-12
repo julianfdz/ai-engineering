@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Esquema de la respuesta del crítico: siempre estructurada, nunca texto libre.
+# Cada problema lleva categoría, gravedad y field_path, el campo exacto que hay que corregir.
+# Validador: pedir otra iteración exige al menos un problema critical o major.
+# ──────────────────────────────────────────────────────────────────
+
 """Structured feedback schema produced by the Critic.
 
 The schema is **the** contract between Critic and Boss. The Boss reads each

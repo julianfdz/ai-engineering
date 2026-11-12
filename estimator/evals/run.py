@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Runner de la evaluación: lanza los casos contra /estimate (modo actor) o /estimate-acb.
+# Cada caso usa una sesión nueva para que no se contaminen entre sí.
+# Uso: python -m evals.run --mode actor --limit 8 --output evals/actor.json
+# ──────────────────────────────────────────────────────────────────
+
 """CLI runner: feed the golden dataset against the live FastAPI app.
 
 Default transport is the in-process ``TestClient`` — no need to start an

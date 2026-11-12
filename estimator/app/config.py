@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Configuración por variables de entorno (.env). Las nuevas de esta sesión:
+# MAX_CONVERSATION_TURNS, ANCHOR_DETECTION_MODE, COMPRESSION_MODEL, CONVERSATIONAL_PROMPT_VERSION,
+# CRITIC_MODEL y BOSS_MAX_ITERATIONS. Cambiar el .env exige recrear el contenedor.
+# ──────────────────────────────────────────────────────────────────
+
 from functools import lru_cache
 from typing import Literal
 

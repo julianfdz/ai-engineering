@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Detector de anclas: turnos que no se olvidan nunca (NDA, contrato firmado, alcance cerrado, normativa…).
+# Por defecto son 8 expresiones regulares, sin LLM; ANCHOR_DETECTION_MODE=llm activa el modo con modelo.
+# Mejor quedarse corto: un falso positivo se queda literal en el prompt para siempre.
+# ──────────────────────────────────────────────────────────────────
+
 """Anchor detection — which turns must survive eviction.
 
 A turn becomes an anchor when it carries a durable commitment that the

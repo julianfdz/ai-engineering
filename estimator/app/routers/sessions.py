@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Endpoints de la conversación: crear sesión, consultarla y estimar (multipart: texto + adjuntos).
+# /estimate devuelve la respuesta del actor; /estimate-acb pasa por Actor-Critic-Boss.
+# SessionInfoResponse expone el tier resuelto, las anclas y el tamaño del resumen: es lo que pinta el panel web.
+# ──────────────────────────────────────────────────────────────────
+
 """Conversational endpoints for Session 5.
 
 Three endpoints:

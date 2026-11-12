@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Memoria de la conversación: Message, ConversationHistory y ProjectMetadata.
+# La historia guarda tres cosas: la ventana (messages), las anclas (anchors) y el resumen (summary).
+# append() solo añade; recortar y resumir es cosa de la política de compresión. to_messages() monta el prompt.
+# ──────────────────────────────────────────────────────────────────
+
 """In-process data structures for the conversational estimator.
 
 Design notes

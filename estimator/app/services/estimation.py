@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# El servicio que orquesta cada turno: guardrail → tier → prompt v3 → LLM → guardrail → memoria → metadata.
+# estimate_conversational es el Actor; estimate_with_acb lo envuelve con el Critic y el Boss.
+# El orden importa: primero se valida la salida, luego se guarda en la historia y se comprime.
+# ──────────────────────────────────────────────────────────────────
+
 """Pipeline orchestrator. Glue between guardrails, caches, prompt rendering and
 the LLM wrapper. The router holds none of this logic — its only job is to
 translate HTTP errors.

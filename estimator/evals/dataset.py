@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Golden dataset: cada caso es una transcripción con lo que esperamos de la respuesta.
+# Casi todo son rangos (coste, semanas, número de fases): el modelo varía de forma legítima entre ejecuciones.
+# Los 16 casos viven en golden_dataset.json, versionados junto al código.
+# ──────────────────────────────────────────────────────────────────
+
 """Typed golden cases + JSON loader."""
 
 from __future__ import annotations

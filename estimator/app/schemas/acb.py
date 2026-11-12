@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# La traza de Actor-Critic-Boss que viaja en la respuesta: una entrada por iteración.
+# Cada iteración guarda el veredicto del crítico, su confianza, los problemas y la decisión del Boss.
+# Es lo que la web pinta debajo del resultado.
+# ──────────────────────────────────────────────────────────────────
+
 """DTOs for the Actor-Critic-Boss audit trail.
 
 Lives in ``schemas`` (not ``services``) so it can be referenced from both

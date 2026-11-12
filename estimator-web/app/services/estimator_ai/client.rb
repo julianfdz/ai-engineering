@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Cliente HTTP hacia el servicio IA: la web nunca habla con OpenAI directamente.
+# estimate_in_session y estimate_in_session_acb envían multipart: texto, adjuntos y tier opcional.
+# build_estimate_body es común a los dos modos.
+# ──────────────────────────────────────────────────────────────────
+
 require "faraday"
 require "faraday/multipart"
 

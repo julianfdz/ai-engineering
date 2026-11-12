@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# El Boss: orquesta actor y crítico con un máximo de iteraciones (BOSS_MAX_ITERATIONS).
+# accept → devuelve el borrador; needs_iteration → vuelve al actor con el feedback; reject o sin rondas → synthesize.
+# synthesize no tira el trabajo: devuelve el último borrador con los avisos del crítico y menos confianza.
+# ──────────────────────────────────────────────────────────────────
+
 """Boss orchestrator — coordinates Actor and Critic.
 
 The Boss is a tiny state machine:

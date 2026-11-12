@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Las tres métricas del golden dataset, binarias y deterministas (sin LLM):
+# schema_adherence (fases que suman el total), cost_bounds (coste y semanas en rango)
+# y content_recall (aparecen los términos y alguna tecnología). Cada resultado trae details.
+# ──────────────────────────────────────────────────────────────────
+
 """Deterministic metrics over a ``(GoldenCase, EstimationResult)`` pair.
 
 The point of keeping these in-tree (rather than offloading to DeepEval LLM

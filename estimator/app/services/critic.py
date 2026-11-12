@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# El crítico: revisa una estimación con un LLM y devuelve un CriticFeedback.
+# Si la llamada falla, devuelve accept con confianza 0: el usuario recibe el borrador y el log lo deja claro.
+# No guarda estado entre revisiones.
+# ──────────────────────────────────────────────────────────────────
+
 """Critic service — independent audit of an EstimationResult.
 
 The Critic is a stateless function: input (transcript, metadata, tier,

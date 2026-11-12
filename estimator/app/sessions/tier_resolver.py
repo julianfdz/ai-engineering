@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Resolver de tier: deduce la audiencia en cada turno a partir del texto y de la metadata.
+# Reglas en orden (NDA, normativa, audiencia técnica, equipo pequeño): la primera que acierta gana.
+# Si la persona fuerza un tier, manda siempre. Devuelve también la regla, para poder explicar la decisión.
+# ──────────────────────────────────────────────────────────────────
+
 """Derive the audience tier at runtime from the conversation context.
 
 Tiers shape the prompt's framing (executive bullets vs PM milestones vs

@@ -1,3 +1,9 @@
+# ── Julián · Sesión 5 ─────────────────────────────────────────────
+# Controlador de la estimación conversacional en la web.
+# PRESETS son las demos de la sesión: un clic rellena el formulario.
+# Según el modo llama a /estimate o /estimate-acb y guarda el estado de la sesión (tier, anclas, resumen) para el panel.
+# ──────────────────────────────────────────────────────────────────
+
 # Conversational estimator UI (Session 5).
 #
 # A Rails ChatSession mirrors the FastAPI session_id. The full message
