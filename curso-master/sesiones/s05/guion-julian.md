@@ -260,6 +260,48 @@ imposible» (sale `reject → synthesize` o `needs_iteration → accept`, depend
 
 Tiempos reales: 6-12 s con el crítico gpt-4o; 20-30 s con gpt-4o-mini (tres rondas y `synthesize`).
 
+### Conversación completa en la interfaz (modo ACB)
+
+La web enseña ahora el **Conversation history**: cada turno como un chat, con el tier y su regla, el coste, la
+cadena crítico → Boss y el estado de la memoria (ventana, anclas, resumen) después de ese turno.
+
+**Ya lanzada para enseñar: conversación A (clínicas)** → <http://localhost:3000/chat_sessions/14>
+
+| Turno | Qué dice | Tier | Resultado | Crítico → Boss |
+|---|---|---|---|---|
+| 1 | 12 clínicas, reservas online, equipo de 3, React y Node | `default` | 26.000 €, 9 sem. | accept |
+| 2 | + Stripe, bonos y panel de recepción | `default` | 40.000 €, 14 sem. | accept (3 avisos minor) |
+| 3 | NDA firmado, datos de salud, GDPR | `executive` (`nda_detected`) | 49.000 €, 17 sem. | accept |
+| 4 | Docker, Terraform, AWS, Redis | `executive` (`regulatory_context`) | 55.000 €, 19 sem. | accept |
+| 5 | Apps nativas y videoconsulta en 6 semanas con 2 personas | `executive` | Out of scope | accept |
+
+Qué contar: en el turno 4 hay dos palabras técnicas, pero gana `regulatory_context` porque GDPR ya está en la
+metadata y esa regla va antes. En el 5 es el propio actor el que dice «Out of scope» y el crítico lo acepta.
+
+**Para lanzar en directo: conversación B (panaderías).** Botón «Simulated conversation B · panaderías» (rellena el
+siguiente turno y marca Actor-Critic-Boss) y **Send**; o pega los textos a mano con Project type `web_saas`:
+
+1. `Somos una cadena de 8 panaderías en Madrid y queremos una web de pedidos para recoger en tienda: catálogo, carrito, franja horaria de recogida y aviso por email cuando el pedido está listo. Somos un equipo de 4 personas y trabajamos con Vue y Python.`
+2. `Queremos añadir reparto a domicilio en un radio de 5 km, pago con tarjeta mediante Stripe y un programa de puntos para los clientes habituales.`
+3. `Para el equipo técnico: lo desplegamos en Kubernetes, los pedidos entran por Kafka y la infraestructura va con Terraform.`
+4. `Cambio de planes: el equipo se queda en 2 personas, porque los otros dos pasan a otro proyecto.`
+5. `Y el cliente quiere todo, reparto y puntos incluidos, en producción en 4 semanas y con un presupuesto máximo de 20.000 euros.`
+
+Ensayo del 12/11 (por si en directo sale distinto: <http://localhost:3000/chat_sessions/15>):
+
+| Turno | Tier | Resultado | Crítico → Boss |
+|---|---|---|---|
+| 1 | `default` | 36.500 €, 10 sem. | accept |
+| 2 | `default` | 58.000 €, 16 sem. | accept |
+| 3 | `developer` (`technical_audience`) | 73.000 €, 20 sem. | accept |
+| 4 | `default`: el equipo de 2 aún no cuenta, la metadata se actualiza después del tier | 75.250 €, 23 sem. | accept |
+| 5 | `pm` (`low_budget_pm`) | sobre vacío (0 €, 1 sem.) con los avisos delante | needs_iteration → iterate ×2 → **synthesize** |
+
+En el turno 5, el crítico marca `math_error` **critical** y varios `scope_mismatch` / `unrealistic_estimate`
+**major**: «Show answer» enseña la lista. Cada turno tarda 10-25 s.
+
+Para empezar una conversación limpia: botón **New conversation** al final del formulario.
+
 ---
 
 ## Bloque 8 · Trade-offs y cierre · 10 min
