@@ -63,9 +63,11 @@ def cover(d: Deck) -> None:
     d.doc.insert_pdf(d.tpl, from_page=0, to_page=0)
     page = d.doc[-1]
     page.add_redact_annot(fitz.Rect(48, 158, 470, 242), fill=False)
+    page.add_redact_annot(fitz.Rect(48, 124, 330, 147), fill=False)   # línea del módulo de la plantilla
     page.apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE, graphics=fitz.PDF_REDACT_LINE_ART_NONE)
     for y, line in ((191, "Sesión 10: Técnicas"), (232, "avanzadas de recuperación")):
         page.insert_text((51, y), line, fontname="hebo", fontsize=34.5, color=(1, 1, 1))
+    page.insert_text((51, 141), "MÓDULO 4: Arquitectura RAG", fontname="hebo", fontsize=15, color=(1, 1, 1))
 
 
 # ===========================================================================
