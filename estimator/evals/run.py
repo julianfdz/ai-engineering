@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Runner de la evaluación: lanza los casos contra /estimate (modo actor) o /estimate-acb.
-# Cada caso usa una sesión nueva para que no se contaminen entre sí.
-# Uso: python -m evals.run --mode actor --limit 8 --output evals/actor.json
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Runner de la evaluación ───────────────────────────────
+#
+#   Lanza los casos del golden dataset contra /estimate (modo actor) o /estimate-acb
+#   (modo acb) y saca una fila por caso con la latencia y las tres métricas.
+#
+#   · Cada caso usa una sesión nueva, para que la memoria de uno no contamine al siguiente.
+#   · Por defecto va en proceso (TestClient), sin levantar servidor; --http usa uno real.
+#   · --limit acota el número de casos y --output guarda los resultados en JSON.
+#   · Uso: python -m evals.run --mode actor --limit 8 --output evals/actor.json
+# ──────────────────────────────────────────────────────────────────────────────
 
 """CLI runner: feed the golden dataset against the live FastAPI app.
 

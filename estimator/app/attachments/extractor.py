@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Adjuntos PDF y DOCX: el texto se extrae en local (pypdf, python-docx), sin pasar el fichero al modelo.
-# Se trunca a MAX_ATTACHMENT_CHARS, y una página rota no tumba el PDF entero.
-# enrich_transcript envuelve cada adjunto entre marcas para que el modelo sepa de dónde sale cada texto.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Adjuntos PDF y DOCX ───────────────────────────────────
+#
+#   El texto de los adjuntos se extrae aquí, en local, con pypdf y python-docx. Al modelo
+#   solo le llega texto, así que el wrapper del LLM no depende de ningún proveedor.
+#
+#   · Solo se aceptan .pdf y .docx; cualquier otra extensión se rechaza antes de llegar al LLM.
+#   · Una página rota no tumba el PDF entero: se registra en el log y se sigue con las demás.
+#   · El texto se recorta a MAX_ATTACHMENT_CHARS (60.000) para no desbordar el contexto.
+#   · enrich_transcript envuelve cada adjunto entre marcas «--- attachment: x.pdf ---».
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Extract plain text from uploaded PDF / DOCX attachments.
 

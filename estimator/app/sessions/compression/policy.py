@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Política de compresión: cuando la ventana pasa del límite, saca los turnos más antiguos de dos en dos.
-# Si el turno es ancla se queda literal; si no, va al resumen acumulado (una llamada al LLM por pasada).
-# apply_compression es la fachada que llama el servicio justo después de append().
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Política de compresión ────────────────────────────────
+#
+#   Decide qué pasa con los turnos que ya no caben en la ventana. Se ejecuta justo después
+#   de append() y es lo que permite que una conversación larga no pierda lo importante.
+#
+#   · Mientras la ventana pase de max_turns × 2 mensajes, saca el par más antiguo.
+#   · Si el mensaje del usuario es ancla, el par se guarda literal en anchors para siempre.
+#   · Si no, va al resumen acumulado: una sola llamada al LLM por pasada, no una por turno.
+#   · apply_compression() es la fachada que usa el servicio: monta detector y resumidor.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """When to compress, what to compress, and what to keep verbatim.
 

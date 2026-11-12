@@ -1,8 +1,13 @@
-{# ── Julián · Sesión 5 ─────────────────────────────────────────────
-   Prompt del resumidor: integra los turnos que salen de la ventana en el resumen que ya había.
-   Rehace el resumen entero cada vez (nada de resumir resúmenes).
-   Conserva los hechos duros: equipo, alcance, tecnologías, plazos y presupuesto.
-   ────────────────────────────────────────────────────────────────── -#}
+{# ── Julián · Sesión 5 · Prompt del resumidor ──────────────────────────────────
+
+     Instrucciones para el modelo que resume los turnos que salen de la ventana. El resumen
+     entra en el contexto como un mensaje más, delante de las anclas y de la ventana.
+
+     · Recibe el resumen anterior y los turnos expulsados, y devuelve el resumen completo.
+     · Se rehace entero cada vez: nada de resumir resúmenes, que es como se pierde información.
+     · Conserva los hechos duros: equipo, alcance, tecnologías, plazos y presupuesto.
+     · Texto plano, en tercera persona y en pasado, con un máximo de 12 frases cortas.
+   ────────────────────────────────────────────────────────────────────────────── -#}
 
 You are a conversation summarizer for a software estimation session.
 

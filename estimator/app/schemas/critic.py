@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Esquema de la respuesta del crítico: siempre estructurada, nunca texto libre.
-# Cada problema lleva categoría, gravedad y field_path, el campo exacto que hay que corregir.
-# Validador: pedir otra iteración exige al menos un problema critical o major.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Esquema del crítico ───────────────────────────────────
+#
+#   La forma de la respuesta del crítico: siempre estructurada, nunca texto libre.
+#   El Boss decide leyendo campos, no interpretando prosa.
+#
+#   · Veredicto: accept, needs_iteration o reject. Gravedad: critical, major o minor.
+#   · 7 categorías de problema, de math_error y hallucination a tier_mismatch.
+#   · Cada problema lleva field_path, el campo exacto que hay que corregir.
+#   · Validadores: iterar exige un problema critical o major; rechazar, al menos uno.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Structured feedback schema produced by the Critic.
 

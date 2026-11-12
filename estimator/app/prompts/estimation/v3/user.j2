@@ -1,8 +1,13 @@
-{# ── Julián · Sesión 5 ─────────────────────────────────────────────
-   Mensaje de usuario del prompt v3.
-   Si llega feedback del crítico, se añade el bloque <critic_feedback> con cada problema y su campo.
-   Así el mismo actor sirve en los dos modos sin ninguna rama en Python.
-   ────────────────────────────────────────────────────────────────── -#}
+{# ── Julián · Sesión 5 · Mensaje de usuario del prompt v3 ──────────────────────
+
+     El mensaje de usuario de cada turno: la descripción del proyecto y su tipo. Lo dicho
+     en turnos anteriores ya va en la historia; aquí solo entra el turno actual.
+
+     · Si llega feedback del crítico, se añade el bloque <critic_feedback>.
+     · Cada problema va con gravedad, categoría, campo exacto (field_path) y arreglo sugerido.
+     · Así el mismo actor sirve en los dos modos, solo actor o ACB, sin ramas en Python.
+     · La última línea pide integrar la metadata y la historia de la conversación.
+   ────────────────────────────────────────────────────────────────────────────── -#}
 
 <project_description>
 {{ description }}

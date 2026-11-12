@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Detector de anclas: turnos que no se olvidan nunca (NDA, contrato firmado, alcance cerrado, normativa…).
-# Por defecto son 8 expresiones regulares, sin LLM; ANCHOR_DETECTION_MODE=llm activa el modo con modelo.
-# Mejor quedarse corto: un falso positivo se queda literal en el prompt para siempre.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Detector de anclas ────────────────────────────────────
+#
+#   Un ancla es un turno que la conversación no puede olvidar: NDA, contrato firmado, alcance
+#   cerrado, presupuesto bloqueado, normativa… Solo se mira el mensaje del usuario.
+#
+#   · Por defecto son 8 expresiones regulares (_HEURISTIC_PATTERNS), sin coste de LLM.
+#   · ANCHOR_DETECTION_MODE=llm activa un detector con modelo, para paráfrasis.
+#   · detect() devuelve si es ancla y qué reglas han saltado, para poder explicarlo.
+#   · Mejor quedarse corto: un falso positivo se queda literal en el prompt para siempre.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Anchor detection — which turns must survive eviction.
 

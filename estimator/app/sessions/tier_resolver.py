@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Resolver de tier: deduce la audiencia en cada turno a partir del texto y de la metadata.
-# Reglas en orden (NDA, normativa, audiencia técnica, equipo pequeño): la primera que acierta gana.
-# Si la persona fuerza un tier, manda siempre. Devuelve también la regla, para poder explicar la decisión.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Resolver de tier ──────────────────────────────────────
+#
+#   Deduce en cada turno a quién va dirigida la respuesta (executive, pm, developer o
+#   default) a partir del texto y de la metadata acumulada. Sin LLM: reglas deterministas.
+#
+#   · Reglas en orden: NDA → normativa → audiencia técnica → equipo pequeño. Gana la primera.
+#   · La audiencia técnica exige dos términos técnicos distintos; uno solo es ruido.
+#   · Si la persona fuerza un tier (override), manda siempre por encima de las reglas.
+#   · Devuelve el tier y el nombre de la regla, para que el panel pueda explicar la decisión.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Derive the audience tier at runtime from the conversation context.
 

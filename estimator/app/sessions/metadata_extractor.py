@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Extractor de metadata: tras cada turno, un LLM barato saca nombre, equipo, tecnologías y alcance.
-# Se fusiona con lo anterior (merge_with): lo escalar se sobrescribe y las listas se suman.
-# Si la llamada falla, devuelve la metadata anterior y la conversación sigue.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Extractor de metadata ─────────────────────────────────
+#
+#   Después de cada respuesta, un modelo barato (METADATA_EXTRACTOR_MODEL) lee el turno y
+#   devuelve un ProjectMetadata parcial: nombre, equipo, tecnologías y alcance acordado.
+#
+#   · Llamada estructurada con Instructor: response_model=ProjectMetadata y 2 reintentos.
+#   · Se fusiona con lo anterior (merge_with): lo escalar se sobrescribe y las listas se suman.
+#   · LLM y no regex: «somos pocos, tres a media jornada» no lo pilla ninguna expresión regular.
+#   · Si la llamada falla, devuelve la metadata anterior y la conversación sigue.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Second-pass LLM call that extracts ``ProjectMetadata`` from each turn.
 

@@ -1,8 +1,13 @@
-{# ── Julián · Sesión 5 ─────────────────────────────────────────────
-   Prompt del crítico: un auditor independiente que no reescribe la estimación, solo señala defectos.
-   Define las 7 categorías y cuándo aceptar, iterar o rechazar.
-   Ante la duda, aceptar: cada falso positivo cuesta otra llamada al actor.
-   ────────────────────────────────────────────────────────────────── -#}
+{# ── Julián · Sesión 5 · Prompt del crítico ────────────────────────────────────
+
+     Instrucciones para el crítico: un auditor independiente que revisa la estimación del
+     actor. No la reescribe; solo señala defectos, uno por problema, con campo y gravedad.
+
+     · Define las 7 categorías con criterios concretos (p. ej. una fase > 75% sin justificar).
+     · accept si no hay problemas critical o major; needs_iteration si el actor puede arreglarlos.
+     · reject solo si la estimación está mal de raíz; se usa poco.
+     · Ante la duda, aceptar: cada falso positivo cuesta otra llamada al actor.
+   ────────────────────────────────────────────────────────────────────────────── -#}
 
 You are an independent auditor of software estimations. You did NOT produce the estimation under review; your job is to find defects in it.
 

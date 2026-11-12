@@ -1,8 +1,13 @@
-<%# ── Julián · Sesión 5 ───────────────────────────────────────────── %>
-<%# Formulario de cada turno: transcripción, adjuntos, tipo de proyecto y nivel de detalle. %>
-<%# Audience tier: automático (lo decide el resolver) o forzado por la persona. %>
-<%# Estimation mode: solo actor o Actor-Critic-Boss. %>
-<%# ────────────────────────────────────────────────────────────────── %>
+<%# ── Julián · Sesión 5 · Formulario de cada turno ────────────────────────────── %>
+<%# %>
+<%#   El formulario con el que se envía cada turno de la conversación desde la web. %>
+<%#   Lo que se rellena aquí es lo que el cliente manda en multipart al servicio IA. %>
+<%# %>
+<%#   · Transcripción y adjuntos (PDF o DOCX), tipo de proyecto y nivel de detalle. %>
+<%#   · Audience tier: automático (lo decide el resolver) o forzado por la persona. %>
+<%#   · Estimation mode: solo actor o Actor-Critic-Boss. %>
+<%#   · Los Demo presets de arriba rellenan estos campos con las demos de la sesión. %>
+<%# ────────────────────────────────────────────────────────────────────────────── %>
 
 <%# Conversational form: transcript + multiple attachments. Posts as multipart. %>
 <%= form_with model: request, scope: :session_estimation_request,

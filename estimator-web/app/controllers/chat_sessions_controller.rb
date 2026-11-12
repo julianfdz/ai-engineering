@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Controlador de la estimación conversacional en la web.
-# PRESETS son las demos de la sesión: un clic rellena el formulario.
-# Según el modo llama a /estimate o /estimate-acb y guarda el estado de la sesión (tier, anclas, resumen) para el panel.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Controlador de la conversación ────────────────────────
+#
+#   La parte web de la estimación conversacional: crea la sesión en el servicio IA,
+#   envía cada turno y guarda el resultado. La web nunca habla con OpenAI directamente.
+#
+#   · PRESETS son las demos de la sesión: un clic en «Demo presets» rellena el formulario.
+#   · Según el modo llama a /estimate (solo actor) o a /estimate-acb (Actor-Critic-Boss).
+#   · El tier puede ir en automático o forzado desde el formulario.
+#   · Tras cada turno guarda tier, anclas y resumen para pintarlos en el panel lateral.
+# ──────────────────────────────────────────────────────────────────────────────
 
 # Conversational estimator UI (Session 5).
 #

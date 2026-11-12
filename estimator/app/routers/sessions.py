@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Endpoints de la conversación: crear sesión, consultarla y estimar (multipart: texto + adjuntos).
-# /estimate devuelve la respuesta del actor; /estimate-acb pasa por Actor-Critic-Boss.
-# SessionInfoResponse expone el tier resuelto, las anclas y el tamaño del resumen: es lo que pinta el panel web.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Endpoints de la conversación ──────────────────────────
+#
+#   La capa HTTP de las sesiones. No tiene lógica de negocio: valida la entrada, llama al
+#   servicio y traduce los errores a códigos HTTP (404, 415, 422…).
+#
+#   · POST /sessions crea la sesión y GET /sessions/{id} devuelve su estado.
+#   · POST /sessions/{id}/estimate va en multipart: texto, adjuntos y tier opcional.
+#   · POST /sessions/{id}/estimate-acb hace lo mismo, pero pasando por Actor-Critic-Boss.
+#   · SessionInfoResponse expone tier, regla, anclas y resumen: lo que pinta el panel web.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Conversational endpoints for Session 5.
 

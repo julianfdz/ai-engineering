@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Configuración por variables de entorno (.env). Las nuevas de esta sesión:
-# MAX_CONVERSATION_TURNS, ANCHOR_DETECTION_MODE, COMPRESSION_MODEL, CONVERSATIONAL_PROMPT_VERSION,
-# CRITIC_MODEL y BOSS_MAX_ITERATIONS. Cambiar el .env exige recrear el contenedor.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Configuración ─────────────────────────────────────────
+#
+#   Todos los ajustes del servicio, leídos del entorno o del .env con pydantic-settings.
+#   get_settings() se cachea al arrancar: cambiar el .env exige recrear el contenedor.
+#
+#   · MAX_CONVERSATION_TURNS (6): pares user/assistant de la ventana, es decir, 12 mensajes.
+#   · ANCHOR_DETECTION_MODE (heuristic | llm) y COMPRESSION_MODEL: la compresión con anclas.
+#   · CONVERSATIONAL_PROMPT_VERSION (v3): el prompt con el bloque <audience> por tier.
+#   · CRITIC_MODEL y BOSS_MAX_ITERATIONS (3): el crítico y el tope de vueltas del Boss.
+# ──────────────────────────────────────────────────────────────────────────────
 
 from functools import lru_cache
 from typing import Literal

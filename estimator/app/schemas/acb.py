@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# La traza de Actor-Critic-Boss que viaja en la respuesta: una entrada por iteración.
-# Cada iteración guarda el veredicto del crítico, su confianza, los problemas y la decisión del Boss.
-# Es lo que la web pinta debajo del resultado.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Traza de Actor-Critic-Boss ────────────────────────────
+#
+#   La traza que viaja en la respuesta de /estimate-acb, con una entrada por vuelta del
+#   bucle. Permite auditar por qué el sistema ha devuelto lo que ha devuelto.
+#
+#   · ACBIteration: nº de vuelta, veredicto y confianza del crítico, y decisión del Boss.
+#   · issue_summary resume hasta 5 problemas con la forma «[gravedad] categoría @ campo».
+#   · BossTrace: la lista de vueltas, la decisión final y cuántas vueltas se han hecho.
+#   · La web la pinta debajo del resultado, en el desplegable de la traza ACB.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """DTOs for the Actor-Critic-Boss audit trail.
 

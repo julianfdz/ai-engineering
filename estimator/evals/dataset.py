@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Golden dataset: cada caso es una transcripción con lo que esperamos de la respuesta.
-# Casi todo son rangos (coste, semanas, número de fases): el modelo varía de forma legítima entre ejecuciones.
-# Los 16 casos viven en golden_dataset.json, versionados junto al código.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Golden dataset ────────────────────────────────────────
+#
+#   Cada caso es una transcripción con lo que esperamos de la respuesta. Sirve para
+#   comparar versiones del sistema con números, no con impresiones.
+#
+#   · Casi todo son rangos (coste, semanas, nº de fases): el modelo varía entre ejecuciones.
+#   · También fija qué términos y tecnologías deben salir, y si el caso es «Out of scope».
+#   · expected_tier permite comprobar qué audiencia ha resuelto el sistema en ese caso.
+#   · Los 16 casos viven en golden_dataset.json, versionados junto al código.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Typed golden cases + JSON loader."""
 

@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# El crítico: revisa una estimación con un LLM y devuelve un CriticFeedback.
-# Si la llamada falla, devuelve accept con confianza 0: el usuario recibe el borrador y el log lo deja claro.
-# No guarda estado entre revisiones.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Servicio del crítico ──────────────────────────────────
+#
+#   Llama al LLM con el prompt del crítico (CRITIC_MODEL) y devuelve un CriticFeedback
+#   validado con Instructor. No guarda estado entre revisiones.
+#
+#   · Hasta 3 reintentos si la respuesta no cumple el esquema (p. ej. iterar sin motivo).
+#   · Si la llamada falla, devuelve accept con confianza 0 y lo deja escrito en el log.
+#   · Así el usuario recibe el borrador del actor en vez de un error: el crítico no bloquea.
+#   · El modelo importa: con gpt-4o-mini de crítico vimos math_error que no eran tales.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Critic service — independent audit of an EstimationResult.
 

@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Cliente HTTP hacia el servicio IA: la web nunca habla con OpenAI directamente.
-# estimate_in_session y estimate_in_session_acb envían multipart: texto, adjuntos y tier opcional.
-# build_estimate_body es común a los dos modos.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Cliente del servicio IA ───────────────────────────────
+#
+#   El cliente HTTP de la web hacia el servicio IA (FastAPI). Es la única pieza de Rails
+#   que habla con él; los controladores no montan peticiones a mano.
+#
+#   · estimate_in_session llama a /estimate; estimate_in_session_acb, a /estimate-acb.
+#   · Las dos envían multipart (Faraday): transcripción, adjuntos, opciones y tier opcional.
+#   · build_estimate_body monta ese cuerpo y es común a los dos modos.
+#   · Si el servicio rechaza la entrada (guardrail), se lanza una excepción propia.
+# ──────────────────────────────────────────────────────────────────────────────
 
 require "faraday"
 require "faraday/multipart"

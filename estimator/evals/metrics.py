@@ -1,8 +1,13 @@
-# ── Julián · Sesión 5 ─────────────────────────────────────────────
-# Las tres métricas del golden dataset, binarias y deterministas (sin LLM):
-# schema_adherence (fases que suman el total), cost_bounds (coste y semanas en rango)
-# y content_recall (aparecen los términos y alguna tecnología). Cada resultado trae details.
-# ──────────────────────────────────────────────────────────────────
+# ── Julián · Sesión 5 · Métricas del golden dataset ───────────────────────────
+#
+#   Las tres métricas de la evaluación. Son binarias (pasa o no pasa) y deterministas:
+#   no usan LLM, así que la misma respuesta da siempre el mismo resultado.
+#
+#   · schema_adherence: fases que suman el total, prefijo «Out of scope:» y nº de fases.
+#   · cost_bounds: coste y semanas en rango (o 0 € y 1 semana si es fuera de alcance).
+#   · content_recall: aparecen los términos esperados y al menos una de las tecnologías.
+#   · Cada resultado trae details con el motivo: dice exactamente qué hay que arreglar.
+# ──────────────────────────────────────────────────────────────────────────────
 
 """Deterministic metrics over a ``(GoldenCase, EstimationResult)`` pair.
 
