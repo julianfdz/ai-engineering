@@ -39,7 +39,8 @@ class ChatSessionsController < ApplicationController
       project_type: "web_saas", detail_level: "detailed", mode: "acb" }
   }.freeze
 
-  # Simulated conversations: five turns of the same project, all in ACB mode.
+  # Simulated conversations: several turns of the same project (ACB unless the
+  # conversation says otherwise).
   # Each click fills the next turn; `shows` says what to look at in that turn.
   CONVERSATIONS = {
     "conv_a" => { label: "Simulated conversation A · clínicas", turns: [
@@ -65,6 +66,33 @@ class ChatSessionsController < ApplicationController
         transcript: "Cambio de planes: el equipo se queda en 2 personas, porque los otros dos pasan a otro proyecto." },
       { shows: "Plazo imposible con equipo de 2: tier pm y el crítico entra en acción",
         transcript: "Y el cliente quiere todo, reparto y puntos incluidos, en producción en 4 semanas y con un presupuesto máximo de 20.000 euros." }
+    ] },
+    # Memory demo: eight short actor turns so the window fills up (6 pairs),
+    # the NDA turn is evicted into the anchors and the summary appears.
+    "conv_m" => { label: "Memory · 8 turns", mode: "actor", turns: [
+      { shows: "Turno 1: el NDA va en inglés porque las reglas de anclas son en inglés",
+        transcript: "Turn 1: we signed the NDA before this call. Estimate a CRM for the sales team, team of 3." },
+      { shows: "La ventana se llena de dos en dos: 4/12 mensajes",
+        detail_level: "summary",
+        transcript: "Turno 2: añadimos gestión de contactos y empresas, con importación desde CSV." },
+      { shows: "6/12 mensajes; ni anclas ni resumen todavía",
+        detail_level: "summary",
+        transcript: "Turno 3: queremos un pipeline de oportunidades por fases, con arrastrar y soltar." },
+      { shows: "8/12 mensajes",
+        detail_level: "summary",
+        transcript: "Turno 4: añadimos tareas y recordatorios para cada comercial." },
+      { shows: "10/12 mensajes",
+        detail_level: "summary",
+        transcript: "Turno 5: necesitamos informes de ventas por comercial y por mes." },
+      { shows: "12/12: la ventana está llena",
+        detail_level: "summary",
+        transcript: "Turno 6: integración con el correo para registrar los emails enviados a cada cliente." },
+      { shows: "Sale el turno 1 de la ventana: el NDA pasa a las anclas (anchors 2)",
+        detail_level: "summary",
+        transcript: "Turno 7: permisos por rol, para que cada comercial vea solo sus clientes." },
+      { shows: "Sale el turno 2, sin nada especial: aparece el resumen",
+        detail_level: "summary",
+        transcript: "Turno 8: una app móvil sencilla para consultar clientes en visitas." }
     ] }
   }.freeze
 
@@ -195,7 +223,7 @@ class ChatSessionsController < ApplicationController
   def conversation_turn(key)
     turns = CONVERSATIONS[key][:turns]
     turn = turns[[ next_turn_index, turns.size - 1 ].min]
-    turn.merge(project_type: "web_saas", mode: "acb")
+    { project_type: "web_saas", mode: CONVERSATIONS[key][:mode] || "acb" }.merge(turn)
   end
 
   def next_turn_index
