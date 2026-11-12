@@ -22,7 +22,7 @@
       <p class="text-sm text-white/90"><%= result.summary %></p>
     </div>
   <% else %>
-    <p class="text-white/90 leading-relaxed text-sm"><%= result.summary %></p>
+    <p class="text-white/90 leading-relaxed text-sm whitespace-pre-line"><%= result.summary %></p>
 
     <div class="grid grid-cols-3 gap-3">
       <div class="p-3 rounded-md bg-ink/30 border border-white/10">
@@ -66,5 +66,29 @@
         </tbody>
       </table>
     </div>
+  <% end %>
+
+  <% acb = estimation.response_payload.is_a?(Hash) ? estimation.response_payload["acb"] : nil %>
+  <% if acb.is_a?(Hash) && acb["iterations"].is_a?(Array) %>
+    <details open class="rounded-md border border-white/10 bg-ink/30 p-3">
+      <summary class="cursor-pointer text-xs uppercase tracking-tight text-white/70 font-bold">
+        Actor-Critic-Boss trace — final: <span class="text-brand"><%= acb["final_decision"] %></span>,
+        <%= acb["iterations_run"] %> iteration(s)
+      </summary>
+      <ol class="mt-3 space-y-2 text-xs text-white/80">
+        <% acb["iterations"].each do |it| %>
+          <li class="rounded bg-ink/40 p-2">
+            <div class="font-bold text-white">
+              Iteration <%= it["iteration"] %> — critic verdict: <%= it["critic_verdict"] %>
+              <span class="text-white/50">(confidence <%= it["critic_confidence"] %>)</span>
+            </div>
+            <% Array(it["issue_summary"]).each do |issue_line| %>
+              <div class="mt-1 text-white/70 font-mono"><%= issue_line %></div>
+            <% end %>
+            <div class="mt-1 text-white/50">Boss decision: <span class="font-bold text-white/80"><%= it["decision_after"] %></span></div>
+          </li>
+        <% end %>
+      </ol>
+    </details>
   <% end %>
 </div>

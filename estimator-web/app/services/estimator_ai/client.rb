@@ -46,17 +46,38 @@ module EstimatorAi
 
     # ``request`` is a SessionEstimationRequest; ``attachments`` is an array of
     # ActionDispatch::Http::UploadedFile (or anything responding to
-    # tempfile/original_filename/content_type).
-    def estimate_in_session(session_id, request, attachments: [])
+    # tempfile/original_filename/content_type). ``tier`` is optional: omitting it
+    # (or passing "auto") lets FastAPI derive the audience tier from context.
+    def estimate_in_session(session_id, request, attachments: [], tier: nil)
       raise ArgumentError, "request must be valid" unless request.valid?
 
+      response = multipart_conn.post("/sessions/#{session_id}/estimate",
+                                     build_estimate_body(request, attachments, tier))
+      handle_response(response)
+    end
+
+    # Actor-Critic-Boss variant: same contract; the response carries an ``acb``
+    # field with the iteration trail (verdict + issues per iteration).
+    def estimate_in_session_acb(session_id, request, attachments: [], tier: nil)
+      raise ArgumentError, "request must be valid" unless request.valid?
+
+      response = multipart_conn.post("/sessions/#{session_id}/estimate-acb",
+                                     build_estimate_body(request, attachments, tier))
+      handle_response(response)
+    end
+
+    private
+
+    def build_estimate_body(request, attachments, tier)
       body = {
         "transcript"    => request.transcript,
         "project_type"  => request.project_type,
         "detail_level"  => request.detail_level,
         "output_format" => request.output_format
       }
-      attachments.compact.each do |file|
+      body["tier"] = tier if tier.present? && tier != "auto"
+
+      Array(attachments).compact.each do |file|
         body["attachments"] = [] unless body["attachments"].is_a?(Array)
         body["attachments"] << Faraday::Multipart::FilePart.new(
           file.tempfile,
@@ -64,12 +85,8 @@ module EstimatorAi
           file.original_filename
         )
       end
-
-      response = multipart_conn.post("/sessions/#{session_id}/estimate", body)
-      handle_response(response)
+      body
     end
-
-    private
 
     def json_conn
       @json_conn ||= Faraday.new(url: @base_url) do |f|

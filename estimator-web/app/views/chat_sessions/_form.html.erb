@@ -79,6 +79,38 @@
           class: "w-full border border-white/20 rounded-md p-3 text-white bg-ink/40 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand [&>option]:bg-ink-dark [&>option]:text-white" %>
   </div>
 
+  <% selected_tier = params[:tier].presence || @form_tier || "auto" %>
+  <% selected_mode = params[:mode].presence || @form_mode || "actor" %>
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+    <div>
+      <%= label_tag :tier, "Audience tier", class: "block text-sm font-bold mb-1 text-white/90" %>
+      <%= select_tag :tier,
+            options_for_select([
+              [ "Auto (resolve from context)", "auto" ],
+              [ "Executive", "executive" ],
+              [ "Project Manager", "pm" ],
+              [ "Developer", "developer" ],
+              [ "Default", "default" ]
+            ], selected_tier),
+            class: "w-full border border-white/20 rounded-md p-3 text-white bg-ink/40 focus:outline-none focus:border-brand focus:ring-2 focus:ring-brand [&>option]:bg-ink-dark [&>option]:text-white" %>
+      <p class="text-xs text-white/50 mt-1">Auto detects NDA / compliance / team size / tech stack and adapts the prompt.</p>
+    </div>
+
+    <fieldset class="border border-white/10 rounded-md p-4">
+      <legend class="text-xs uppercase tracking-tight text-white/50 font-bold px-2">Estimation mode</legend>
+      <div class="flex flex-col gap-2 mt-1">
+        <label class="flex items-center gap-2 text-sm text-white/90 cursor-pointer">
+          <%= radio_button_tag :mode, "actor", selected_mode == "actor", class: "accent-brand" %>
+          Actor only <span class="text-xs text-white/50">(1 LLM call)</span>
+        </label>
+        <label class="flex items-center gap-2 text-sm text-white/90 cursor-pointer">
+          <%= radio_button_tag :mode, "acb", selected_mode == "acb", class: "accent-brand" %>
+          Actor-Critic-Boss <span class="text-xs text-white/50">(2–7 LLM calls, audited)</span>
+        </label>
+      </div>
+    </fieldset>
+  </div>
+
   <div class="pt-2 flex items-center gap-4">
     <button type="submit"
             data-form-loading-target="submit"

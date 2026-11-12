@@ -5,6 +5,28 @@
     <% if chat_session.persisted? %>
       <p class="text-xs text-white/70 font-mono break-all"><%= chat_session.remote_session_id %></p>
       <p class="text-xs text-white/50 mt-1">Turns: <%= chat_session.turn_count %></p>
+      <% snapshot = chat_session.remote_session_snapshot %>
+      <% if snapshot.present? %>
+        <dl class="mt-3 grid grid-cols-2 gap-2 text-xs">
+          <div class="col-span-2 p-2 rounded bg-ink/40">
+            <dt class="uppercase text-white/40 font-bold">Resolved tier</dt>
+            <dd class="mt-0.5"><span class="font-bold text-brand text-sm"><%= snapshot["last_resolved_tier"] || "—" %></span>
+              <% if snapshot["last_tier_rule"].present? %><span class="text-white/50 font-mono"> (<%= snapshot["last_tier_rule"] %>)</span><% end %></dd>
+          </div>
+          <div class="p-2 rounded bg-ink/40">
+            <dt class="uppercase text-white/40 font-bold">Window</dt>
+            <dd class="mt-0.5 text-white font-bold tabular-nums"><%= snapshot["message_count"] || 0 %> / <%= (snapshot["max_turns"] || 0) * 2 %> msgs</dd>
+          </div>
+          <div class="p-2 rounded bg-ink/40">
+            <dt class="uppercase text-white/40 font-bold">Anchors kept</dt>
+            <dd class="mt-0.5 text-white font-bold tabular-nums"><%= snapshot["anchors_count"] || 0 %></dd>
+          </div>
+          <div class="col-span-2 p-2 rounded bg-ink/40">
+            <dt class="uppercase text-white/40 font-bold">Summary of evicted turns</dt>
+            <dd class="mt-0.5 text-white font-bold tabular-nums"><%= snapshot["summary_chars"] || 0 %> chars</dd>
+          </div>
+        </dl>
+      <% end %>
     <% else %>
       <p class="text-xs text-white/50">No active session</p>
     <% end %>

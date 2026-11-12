@@ -1,0 +1,14 @@
+# Override LOCAL de Julián: nombres de contenedor propios para no chocar con los
+# de otras sesiones. Los nombres de SERVICIO no cambian: los comandos funcionan
+# igual añadiendo -p aieng-s05live.
+services:
+  estimator:
+    container_name: s05-estimator
+    volumes:
+      - ./estimator/evals:/app/evals
+  redis:
+    container_name: s05-redis
+  estimator-web:
+    container_name: s05-estimator-web
+  postgres:
+    container_name: s05-web-postgres

@@ -5,13 +5,36 @@
 # (so the user can refresh /chat_sessions/:id and re-read the result) and the
 # latest project_metadata snapshot for the side panel.
 class ChatSessionsController < ApplicationController
+  # The live demos of the session guide, one click away: each preset fills the
+  # form (transcript + options + tier + mode); the user still presses Send.
+  PRESETS = {
+    "crm" => { label: "Baseline · CRM",
+      transcript: "Estimar un CRM en React y Postgres para el equipo de ventas, equipo de 3 personas.",
+      project_type: "web_saas" },
+    "no_nda" => { label: "Tier · sin NDA",
+      transcript: "Estimar plataforma de e-commerce con catálogo de 5000 productos, buscador, carrito y checkout con Stripe, panel de administración y emails transaccionales. Equipo de 4 personas con React y Node.",
+      project_type: "web_saas" },
+    "nda" => { label: "Tier · con NDA",
+      transcript: "Heads-up, firmamos NDA antes de la llamada. Estimar plataforma de e-commerce con catálogo de 5000 productos, buscador, carrito y checkout con Stripe, panel de administración y emails transaccionales. Equipo de 4 personas con React y Node.",
+      project_type: "web_saas" },
+    "devs" => { label: "Tier · developer",
+      transcript: "Estimar una plataforma de pedidos con microservicios en Kubernetes, eventos en Kafka y despliegue con Terraform. Equipo de 5 personas.",
+      project_type: "web_saas" },
+    "acb_ok" => { label: "ACB · CRM + Stripe",
+      transcript: "Estimar un CRM en React y Postgres para el equipo de ventas, equipo de 3 personas. Refinar: añadir módulo de facturación con Stripe.",
+      project_type: "web_saas", detail_level: "detailed", mode: "acb" },
+    "acb_hard" => { label: "ACB · marketplace imposible",
+      transcript: "Estimar plataforma compleja: marketplace de servicios con pagos, KYC, chat, app móvil, panel admin, multi-idioma. Equipo de 2 personas en 6 semanas.",
+      project_type: "web_saas", detail_level: "detailed", mode: "acb" }
+  }.freeze
+
   def new
     @chat_session = current_chat_session || begin
       remote = EstimatorAi::Client.new.create_session
       ChatSession.create!(remote_session_id: remote["session_id"])
     end
     session[:current_chat_session_id] = @chat_session.id
-    @request = SessionEstimationRequest.new
+    @request = request_from_preset
     @latest_estimation = @chat_session.estimations.order(created_at: :desc).first
     @latest_metadata = @chat_session.latest_metadata_hash
   rescue EstimatorAi::Client::ServerError, Faraday::ConnectionFailed, Faraday::TimeoutError => e
@@ -35,11 +58,17 @@ class ChatSessionsController < ApplicationController
     end
 
     attachments = Array(params[:attachments]).compact_blank
-    payload = EstimatorAi::Client.new.estimate_in_session(
-      @chat_session.remote_session_id,
-      @request,
-      attachments: attachments
-    )
+    tier = params[:tier].presence
+    mode = params[:mode].to_s == "acb" ? "acb" : "actor"
+    client = EstimatorAi::Client.new
+    payload =
+      if mode == "acb"
+        client.estimate_in_session_acb(@chat_session.remote_session_id, @request,
+                                       attachments: attachments, tier: tier)
+      else
+        client.estimate_in_session(@chat_session.remote_session_id, @request,
+                                   attachments: attachments, tier: tier)
+      end
 
     @estimation = @chat_session.estimations.create!(
       description:      @request.transcript,
@@ -84,7 +113,7 @@ class ChatSessionsController < ApplicationController
 
   def show
     @chat_session = ChatSession.find(params[:id])
-    @request = SessionEstimationRequest.new
+    @request = request_from_preset
     @latest_estimation = @chat_session.estimations.order(created_at: :desc).first
     @latest_metadata = @chat_session.latest_metadata_hash
     session[:current_chat_session_id] = @chat_session.id
@@ -105,6 +134,16 @@ class ChatSessionsController < ApplicationController
     ChatSession.find_by(id: id)
   end
 
+  # Builds the form object, pre-filled from ?preset=… when present.
+  def request_from_preset
+    preset = PRESETS[params[:preset]]
+    @form_mode = preset&.dig(:mode) || "actor"
+    @form_tier = preset&.dig(:tier) || "auto"
+    return SessionEstimationRequest.new unless preset
+
+    SessionEstimationRequest.new(preset.slice(:transcript, :project_type, :detail_level, :output_format))
+  end
+
   def session_estimation_request_params
     params.require(:session_estimation_request).permit(
       :transcript, :project_type, :detail_level, :output_format
@@ -115,6 +154,7 @@ class ChatSessionsController < ApplicationController
     info = EstimatorAi::Client.new.get_session(chat_session.remote_session_id)
     chat_session.update!(
       latest_metadata: info["metadata"] || {},
+      runtime_snapshot: info.except("metadata") || {},
       turn_count: (info["message_count"] || 0) / 2
     )
   rescue StandardError => e
