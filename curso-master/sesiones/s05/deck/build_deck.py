@@ -106,8 +106,8 @@ def slide_hoy(d: Deck) -> None:
 
 def slide_ejercicio(d: Deck) -> None:
     p = d.new("Lo que traéis del ejercicio previo", "Cuatro piezas sobre las que se monta toda la sesión", "Bloque 0")
-    d.codigo(p, "app/sessions/<b>models.py</b> (l. 27-99) · sessions/<b>metadata_extractor.py</b> (l. 26) · "
-                "routers/<b>sessions.py</b> (l. 69-204) · attachments/<b>extractor.py</b> (l. 32-123)")
+    d.codigo(p, "app/sessions/<b>models.py</b> (l. 33-105) · sessions/<b>metadata_extractor.py</b> (l. 32) · "
+                "routers/<b>sessions.py</b> (l. 75-210) · attachments/<b>extractor.py</b> (l. 38-129)")
     cards = [
         ("A · Memoria conversacional", "<code>ConversationHistory</code>: ventana de <b>6 pares</b> user/assistant. "
          "El system prompt <b>no</b> se guarda: se regenera cada turno.", "mint"),
@@ -127,8 +127,8 @@ def slide_ejercicio(d: Deck) -> None:
 def slide_orden(d: Deck) -> None:
     p = d.new("El orden de los mensajes no es negociable", "Y los cinco errores que más salieron en las correcciones",
               "Bloque 0")
-    d.codigo(p, "app/services/<b>estimation.py</b> · <code>estimate_conversational()</code> (l. 171) · "
-                "mensajes en l. 221-223 · tests: <code>tests/test_sessions_window.py</code>")
+    d.codigo(p, "app/services/<b>estimation.py</b> · <code>estimate_conversational()</code> (l. 177) · "
+                "mensajes en l. 227-229 · tests: <code>tests/test_sessions_window.py</code>")
     d.code(p, (24, 68, 380, 190), """messages = [{"role": "system",
              "content": system_prompt}]
 messages.extend(session.history.to_messages())
@@ -150,8 +150,8 @@ messages.append({"role": "user",
 
 def slide_adjuntos(d: Deck) -> None:
     p = d.new("Adjuntos: multimodal directo o extracción local", "El proyecto se queda con el camino B", "Bloque 0")
-    d.codigo(p, "app/attachments/<b>extractor.py</b> · <code>_extract_pdf()</code> (l. 39), <code>_extract_docx()</code> "
-                "(l. 55), <code>extract_text()</code> (l. 63), <code>enrich_transcript()</code> (l. 107)")
+    d.codigo(p, "app/attachments/<b>extractor.py</b> · <code>_extract_pdf()</code> (l. 45), <code>_extract_docx()</code> "
+                "(l. 61), <code>extract_text()</code> (l. 69), <code>enrich_transcript()</code> (l. 113)")
     d.box(p, (24, 68, 352, 210),
           '<div class="t">A · PDF directo al modelo</div>Cómodo, pero <b>acopla al proveedor</b>: el multimodal de '
           "OpenAI y el de Anthropic no son iguales. Cambias de proveedor y reescribes la integración.",
@@ -171,8 +171,8 @@ def slide_adjuntos(d: Deck) -> None:
 
 def slide_estrategias(d: Deck) -> None:
     p = d.new("Estrategias de historial", "Qué hacer cuando la conversación no cabe", "Bloque 1")
-    d.codigo(p, "app/sessions/<b>models.py</b> · <code>ConversationHistory</code> (l. 37): <code>messages</code>, "
-                "<code>anchors</code>, <code>summary</code> · app/config.py · <code>MAX_CONVERSATION_TURNS = 6</code> (l. 43)")
+    d.codigo(p, "app/sessions/<b>models.py</b> · <code>ConversationHistory</code> (l. 43): <code>messages</code>, "
+                "<code>anchors</code>, <code>summary</code> · app/config.py · <code>MAX_CONVERSATION_TURNS = 6</code> (l. 49)")
     rows = [("Ventana deslizante", "los últimos N turnos", "olvida lo que se pactó al principio", "el ejercicio"),
             ("Resumen acumulado", "lo antiguo, condensado", "pierde la letra exacta de lo crítico", "LLM barato"),
             ("Anclas", "turnos críticos, literales", "si se ancla de más, el prompt crece", "8 reglas, sin LLM"),
@@ -194,8 +194,8 @@ def slide_estrategias(d: Deck) -> None:
 def slide_compresion(d: Deck) -> None:
     p = d.new("Compresión híbrida: cómo se compone el prompt", "Turno 8 con max_turns = 6 y un NDA en el turno 1",
               "Bloque 1")
-    d.codigo(p, "sessions/<b>models.py</b> · <code>to_messages()</code> (l. 73) · <code>append()</code> (l. 59) · "
-                "compression/<b>policy.py</b> · <code>apply()</code> (l. 44), <code>apply_compression()</code> (l. 90)")
+    d.codigo(p, "sessions/<b>models.py</b> · <code>to_messages()</code> (l. 79) · <code>append()</code> (l. 65) · "
+                "compression/<b>policy.py</b> · <code>apply()</code> (l. 50), <code>apply_compression()</code> (l. 96)")
     d.code(p, (24, 68, 420, 230), """to_messages() → [
   {user: "[Earlier conversation summary]
           El cliente describió un CRM…"},   ← resumen
@@ -216,8 +216,8 @@ def slide_compresion(d: Deck) -> None:
 
 def slide_anclas(d: Deck) -> None:
     p = d.new("Anclas: ocho reglas, cero LLM", "Mejor quedarse corto que anclar de más", "Bloque 1")
-    d.codigo(p, "app/sessions/compression/<b>anchors.py</b> · <code>_HEURISTIC_PATTERNS</code> (l. 35), "
-                "<code>detect()</code> (l. 88), modo LLM opcional <code>_detect_llm()</code> (l. 110)")
+    d.codigo(p, "app/sessions/compression/<b>anchors.py</b> · <code>_HEURISTIC_PATTERNS</code> (l. 41), "
+                "<code>detect()</code> (l. 94), modo LLM opcional <code>_detect_llm()</code> (l. 116)")
     d.code(p, (24, 68, 452, 330), """nda                  nda | non-disclosure | under embargo
 signed_contract      signed the contract | sow | msa
 scope_frozen         scope is frozen | locked | final
@@ -241,7 +241,7 @@ def slide_demo_compresion(d: Deck) -> None:
     p = d.new("Demo: ocho turnos en la misma sesión", "Turno 1 en inglés con «we signed the NDA»; turnos 2-8, refinamientos",
               "Bloque 1")
     d.codigo(p, "<b>Interfaz:</b> panel lateral (Window, Anchors kept, Summary) · <code>GET /sessions/{id}</code> · "
-                "routers/<b>sessions.py</b> · <code>SessionInfoResponse</code> (l. 57)")
+                "routers/<b>sessions.py</b> · <code>SessionInfoResponse</code> (l. 63)")
     rows = [("1-6", "2 → 12", "0", "0", "la ventana se llena"),
             ("7", "12", "<b>2</b>", "0", "sale el turno 1: es ancla (<code>nda</code>)"),
             ("8", "12", "2", "<b>908</b>", "sale el turno 2: va al resumen")]
@@ -268,8 +268,8 @@ def slide_demo_compresion(d: Deck) -> None:
 def slide_tiers(d: Deck) -> None:
     p = d.new("Tiers: la misma estimación para audiencias distintas", "Un solo prompt, un bloque &lt;audience&gt; que cambia",
               "Bloque 2")
-    d.codigo(p, "app/prompts/estimation/v3/<b>system.j2</b> · bloque <code>&lt;audience&gt;</code> (l. 17-39) · "
-                "app/sessions/<b>tier_resolver.py</b> · <code>class Tier</code> (l. 30)")
+    d.codigo(p, "app/prompts/estimation/v3/<b>system.j2</b> · bloque <code>&lt;audience&gt;</code> (l. 23-45) · "
+                "app/sessions/<b>tier_resolver.py</b> · <code>class Tier</code> (l. 36)")
     rows = [("executive", "sponsor, dirección", "cifra defendible, riesgos primero, 3-4 fases, sin jerga"),
             ("pm", "jefe de proyecto", "hitos, quién y qué entrega, máx. 4 fases, confianza prudente"),
             ("developer", "tech lead", "stack, integraciones, riesgo técnico por fase, hasta 6-8 fases"),
@@ -291,8 +291,8 @@ def slide_tiers(d: Deck) -> None:
 def slide_resolver(d: Deck) -> None:
     p = d.new("El resolver: reglas en orden, la primera que acierta gana", "Y un override humano que siempre manda",
               "Bloque 2")
-    d.codigo(p, "app/sessions/<b>tier_resolver.py</b> · regex (l. 53-63) · <code>_RULES</code> (l. 101) · "
-                "<code>resolve_tier()</code> (l. 109) · llamada en services/estimation.py (l. 199)")
+    d.codigo(p, "app/sessions/<b>tier_resolver.py</b> · regex (l. 59-69) · <code>_RULES</code> (l. 107) · "
+                "<code>resolve_tier()</code> (l. 115) · llamada en services/estimation.py (l. 205)")
     d.code(p, (24, 68, 400, 186), """_RULES = (
   TierRule("nda_detected",       EXECUTIVE),
   TierRule("regulatory_context", EXECUTIVE),
@@ -326,7 +326,7 @@ def slide_golden(d: Deck) -> None:
     p = d.new("Golden dataset: evaluar como una suite de tests", "16 casos comiteados en el repo, con rangos y no igualdades",
               "Bloque 3")
     d.codigo(p, "estimator/evals/<b>golden_dataset.json</b> (16 casos) · evals/<b>dataset.py</b> · "
-                "<code>GoldenCase</code> (l. 18), <code>load_dataset()</code> (l. 46)")
+                "<code>GoldenCase</code> (l. 24), <code>load_dataset()</code> (l. 52)")
     d.code(p, (24, 68, 420, 330), """{
   "id": "case-001-web-saas-crm",
   "transcript": "We want a B2B CRM called Nimbus
@@ -353,7 +353,7 @@ def slide_golden(d: Deck) -> None:
 
 def slide_metricas(d: Deck) -> None:
     p = d.new("Tres métricas binarias y lo que dijeron", "Ocho casos contra el modo actor, con gpt-4o", "Bloque 3")
-    d.codigo(p, "evals/<b>metrics.py</b> · Schema (l. 26), CostBounds (l. 65), ContentRecall (l. 103) · "
+    d.codigo(p, "evals/<b>metrics.py</b> · Schema (l. 32), CostBounds (l. 71), ContentRecall (l. 109) · "
                 "<code>docker compose -p aieng-s05live exec estimator python -m evals.run --mode actor --limit 8</code>")
     d.box(p, (24, 66, 300, 230),
           '<div class="t">Las métricas</div><ul>'
@@ -386,8 +386,8 @@ def slide_metricas(d: Deck) -> None:
 def slide_acb(d: Deck) -> None:
     p = d.new("Actor-Critic-Boss: tres roles, separación estricta", "Del artículo «Building Effective Agents» (Anthropic)",
               "Bloque 4")
-    d.codigo(p, "<code>POST /sessions/{id}/estimate-acb</code> · routers/<b>sessions.py</b> (l. 203) · "
-                "services/<b>estimation.py</b> · <code>estimate_with_acb()</code> (l. 277)")
+    d.codigo(p, "<code>POST /sessions/{id}/estimate-acb</code> · routers/<b>sessions.py</b> (l. 209) · "
+                "services/<b>estimation.py</b> · <code>estimate_with_acb()</code> (l. 283)")
     d.box(p, (24, 80, 200, 170), '<div class="t center">Actor</div><div class="center">produce un candidato<br/>'
           "no decide si vale</div>", kind="mint", pad=6)
     d.box(p, (272, 80, 448, 170), '<div class="t center">Critic</div><div class="center">audita y señala defectos<br/>'
@@ -412,8 +412,8 @@ def slide_acb(d: Deck) -> None:
 def slide_actor(d: Deck) -> None:
     p = d.new("Actor: la pieza que ya teníamos, con otro contrato", "No hay código nuevo de actor; cambia qué hace con su salida",
               "Bloque 5")
-    d.codigo(p, "services/<b>estimation.py</b> · <code>estimate_conversational()</code> (l. 171) · closure "
-                "<code>_actor()</code> (l. 320) · prompts/estimation/v3/<b>user.j2</b> · <code>&lt;critic_feedback&gt;</code> (l. 7)")
+    d.codigo(p, "services/<b>estimation.py</b> · <code>estimate_conversational()</code> (l. 177) · closure "
+                "<code>_actor()</code> (l. 326) · prompts/estimation/v3/<b>user.j2</b> · <code>&lt;critic_feedback&gt;</code> (l. 13)")
     steps = [("1", "Guardrail de entrada"), ("2", "Resolver tier"), ("3", "Prompt v3"), ("4", "[system] + historial + user"),
              ("5", "LLM estructurado"), ("6", "Guardrail de salida"), ("7", "append + comprimir"), ("8", "Actualizar metadata")]
     for i, (n, t) in enumerate(steps):
@@ -434,8 +434,8 @@ def slide_actor(d: Deck) -> None:
 def slide_critic(d: Deck) -> None:
     p = d.new("Critic: feedback estructurado, nunca texto libre", "Instructor valida el formato; el prompt lleva el criterio",
               "Bloque 6")
-    d.codigo(p, "app/schemas/<b>critic.py</b> · categorías (l. 17), <code>CriticFeedback</code> (l. 50) · "
-                "services/<b>critic.py</b> · <code>review()</code> (l. 33) · prompts/critic/v1/<b>system.j2</b>")
+    d.codigo(p, "app/schemas/<b>critic.py</b> · categorías (l. 23), <code>CriticFeedback</code> (l. 56) · "
+                "services/<b>critic.py</b> · <code>review()</code> (l. 39) · prompts/critic/v1/<b>system.j2</b>")
     d.code(p, (24, 68, 420, 230), """class CriticIssue(BaseModel):
     category: Literal["math_error", "hallucination",
         "scope_mismatch", "phase_imbalance",
@@ -462,8 +462,8 @@ def slide_critic(d: Deck) -> None:
 def slide_boss(d: Deck) -> None:
     p = d.new("Boss: tres salidas en nueve líneas", "Un autómata sobre el veredicto y el presupuesto de iteraciones",
               "Bloque 7")
-    d.codigo(p, "services/<b>boss.py</b> · <code>run()</code> (l. 50), <code>_decide()</code> (l. 106), "
-                "<code>_synthesize_fallback()</code> (l. 117) · config.py · <code>BOSS_MAX_ITERATIONS = 3</code> (l. 66)")
+    d.codigo(p, "services/<b>boss.py</b> · <code>run()</code> (l. 56), <code>_decide()</code> (l. 112), "
+                "<code>_synthesize_fallback()</code> (l. 123) · config.py · <code>BOSS_MAX_ITERATIONS = 3</code> (l. 72)")
     rows = [("accept", "—", "<b>accept</b>", "devuelve el borrador"),
             ("reject", "—", "<b>synthesize</b>", "no tiene arreglo con este actor"),
             ("needs_iteration", "quedan", "<b>iterate</b>", "vuelve al actor con el feedback"),

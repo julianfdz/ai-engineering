@@ -42,7 +42,7 @@ Memoria conversacional con ventana deslizante (6 pares), `ProjectMetadata` extra
 - **El tier executive tiende a «Out of scope»**: el caso 007 del golden set falla en los dos modos.
 - **La web oficial de la rama no tiene el Anexo D** (selector de tier, modo ACB, panel con tier/anclas/resumen, traza
   ACB). Está implementado en nuestra rama, con 6 **Demo presets** (uno por demo).
-- `evals/run.py`: `main()` está en la l. 152 y `_run_case_in_process` en la 101 (el guion dice 97 y 52).
+- `evals/run.py`: `main()` está en la l. 158 y `_run_case_in_process` en la 107 (el guion dice 97 y 52). Todas las líneas de nuestro guion y de las diapos ya cuentan la cabecera de 6 líneas que lleva cada fichero.
 
 ## 5. Resultados verificados (12/11/2026, gpt-4o)
 
