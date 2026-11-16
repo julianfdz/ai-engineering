@@ -102,10 +102,9 @@ clave); ya está quitado.
 
 ## 5. Pendiente antes de clase (Julián)
 
-- **Clave de Anthropic con saldo**: no hay ninguna configurada. Sin ella, las celdas 3.7, 4.1 (Anthropic), 4.2
-  (Tu turno), 5.2 (segundo modelo) y el Extra muestran un aviso controlado en vez de la respuesta. Pegarla en
-  `notebook/.env` (`ANTHROPIC_API_KEY=sk-ant-…`).
-- **Web search habilitado en la Claude Console** de esa organización, para la demo 3.7.
+- ~~Clave de Anthropic~~ **Resuelto el 16/11**: copiada a `notebook/.env` desde los secretos de Búho. Probada con el
+  notebook entero: las cinco celdas de Anthropic responden, incluida la búsqueda web de la 3.7 (0,012 $).
+  En Colab hay que añadirla también a Secrets.
 - Las diapositivas de Google de LIDR (enlace en el Notion) no se pueden abrir desde esta cuenta. Nuestro deck es
   `Sesion01-Julian-Fernandez.pdf`.
 
