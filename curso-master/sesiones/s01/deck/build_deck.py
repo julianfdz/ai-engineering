@@ -261,7 +261,8 @@ def slide_resumen_parametros(d: Deck) -> None:
           kind="lav")
     d.box(p, (368, 240, 696, 330),
           '<div class="t">Modelos de razonamiento</div>No aceptan la mayoría de estos parámetros. Ojo: '
-          "<code>gpt-5.4</code> <b>sí</b> acepta <code>temperature</code> si no activas el razonamiento (probado hoy).",
+          "<code>gpt-5.4</code> <b>sí</b> acepta <code>temperature</code> si no activas el razonamiento. "
+          "Y el SDK actual de Anthropic ya <b>no</b> la admite en <code>messages.create</code>.",
           kind="note")
 
 
