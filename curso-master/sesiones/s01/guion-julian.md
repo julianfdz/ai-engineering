@@ -1,7 +1,7 @@
 # Línea de formación · Sesión 1 · LLMs y setup de entorno de trabajo
 
 > Diapo a diapo: **qué contar**, **qué celda ejecutar** y **qué preguntar**. Todo pasa en un notebook:
-> `notebook/sesion-01-en-vivo.ipynb`. Cada celda de código empieza con un rótulo (`# 2.2 · Iteración 4 …`), que es
+> `notebook/sesion-01-version-julian.ipynb`. Cada celda de código empieza con un rótulo (`# 2.2 · Iteración 4 …`), que es
 > lo mismo que pone la franja «En el código» de cada diapo. Para saltar a una celda en Jupyter, Ctrl+F con el rótulo.
 >
 > Primera sesión de un grupo nuevo (edición 11): mucha pregunta al grupo y poca prisa en el Bloque 1.
@@ -17,7 +17,7 @@ cd "C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-for
 ```
 
 ```powershell
-uv run jupyter lab sesion-01-en-vivo.ipynb
+uv run jupyter lab sesion-01-version-julian.ipynb
 ```
 
 Se abre en el navegador (<http://localhost:8888>). Ejecuta las tres celdas de **Configuración inicial** y comprueba
@@ -25,7 +25,7 @@ que dicen `OpenAI: OK` y `Anthropic: OK`.
 
 - Si Anthropic dice «falta ANTHROPIC_API_KEY», pega la clave en `notebook\.env`, línea `ANTHROPIC_API_KEY=sk-ant-…`,
   y en Jupyter **Kernel → Restart Kernel** (el `.env` se lee al arrancar).
-- Respaldo: `sesion-01-en-vivo-ejecutado.ipynb` tiene todas las salidas de la prueba del 16/11. Si una celda falla
+- Respaldo: `sesion-01-version-julian-ejecutado.ipynb` tiene todas las salidas de la prueba del 16/11. Si una celda falla
   en directo, se enseña esa.
 - Los alumnos trabajan con **su copia en Colab** del notebook de LIDR. El nuestro sigue la misma estructura y además
   funciona en Colab (lee los Secrets 🔑).
@@ -241,7 +241,7 @@ Coste de ejecutar el notebook entero: **unos 0,07 $**, casi todo de la búsqueda
 
 | Síntoma | Qué hacer |
 |---|---|
-| Una celda de OpenAI tarda o da error | Enseñar la salida en `sesion-01-en-vivo-ejecutado.ipynb` |
+| Una celda de OpenAI tarda o da error | Enseñar la salida en `sesion-01-version-julian-ejecutado.ipynb` |
 | `AuthenticationError` de Anthropic | Clave sin saldo o mal pegada: seguir con OpenAI y comentar la celda de respaldo |
 | 3.7 dice que web search no está habilitado | Es parte de la lección: es una decisión de gobernanza del admin |
 | `RateLimitError` | Esperar 20 s; en el 4.2, quitar `gpt-5.4` de `openai_models` |

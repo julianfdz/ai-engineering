@@ -4,7 +4,7 @@ Sigue los siete bloques de la guía de la sesión. Cada celda de código empieza
 («# 2.2 · Iteración 4 …») para poder citarla desde las diapositivas y el guion.
 
     uv run python build_notebook.py
-    # → sesion-01-en-vivo.ipynb
+    # → sesion-01-version-julian.ipynb
 """
 
 from __future__ import annotations
@@ -14,7 +14,7 @@ from pathlib import Path
 import nbformat as nbf
 
 HERE = Path(__file__).resolve().parent
-OUT = HERE / "sesion-01-en-vivo.ipynb"
+OUT = HERE / "sesion-01-version-julian.ipynb"
 
 CELLS: list[tuple[str, str]] = []
 
@@ -653,7 +653,7 @@ try:
         system=COMPARISON_SYSTEM_PROMPT,           # en Anthropic el system va aparte
         messages=[{"role": "user", "content": SCENARIO}],
         max_tokens=600,                            # obligatorio
-        temperature=0.2,
+        # el SDK actual de Anthropic ya no acepta temperature en messages.create
     )
     texto = r_an.content[0].text
     resultados["anthropic · claude-haiku-4-5"] = ("claude-haiku-4-5", r_an.usage.input_tokens,

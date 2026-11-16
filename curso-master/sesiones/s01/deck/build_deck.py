@@ -2,9 +2,9 @@
 
 Reutiliza el motor del deck de la Sesión 7 y su plantilla de LIDR (portada, ROTI y cierre). Cada diapo de
 contenido lleva al pie la franja «En el código» con la celda del notebook que se ejecuta: las celdas de
-`notebook/sesion-01-en-vivo.ipynb` empiezan con un rótulo («# 2.2 · Iteración 4 …») que es lo que se cita.
+`notebook/sesion-01-version-julian.ipynb` empiezan con un rótulo («# 2.2 · Iteración 4 …») que es lo que se cita.
 
-Las cifras salen de la ejecución completa del notebook del 16/11/2026 (`sesion-01-en-vivo-ejecutado.ipynb`).
+Las cifras salen de la ejecución completa del notebook del 16/11/2026 (`sesion-01-version-julian-ejecutado.ipynb`).
 
     python build_deck.py
     # → ../Sesion01-Julian-Fernandez.pdf
@@ -27,7 +27,7 @@ base.SVGS = []
 H, W = base.H, base.W
 base.Y1_REAL = 340   # deja sitio a la franja «En el código», grande, encima del pie
 CODIGO = fitz.Rect(10, 344, W - 10, 386)
-NB = "<b>sesion-01-en-vivo.ipynb</b>"
+NB = "<b>sesion-01-version-julian.ipynb</b>"
 
 
 class Deck(base.Deck):

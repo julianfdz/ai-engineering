@@ -41,21 +41,20 @@ experiencia previa con APIs de LLMs.
 
 ## 3. En local
 
-- Notebook: `curso-master/sesiones/s01/notebook/sesion-01-en-vivo.ipynb`. Lo genera `build_notebook.py` y sigue
+- Notebook: `curso-master/sesiones/s01/notebook/sesion-01-version-julian.ipynb`. Lo genera `build_notebook.py` y sigue
   los siete bloques de la guía. Cada celda de código empieza con un rótulo (`# 2.2 · Iteración 4 …`), que es lo
   que citan las diapositivas.
 - **Sin Docker**: la S1 no tiene código del proyecto. Entorno `uv` en la misma carpeta (`.venv` de 410 MB, ya
   instalado) con openai 3.51, anthropic 2.8, tiktoken 0.14 y litellm 1.109.
 - Claves en `notebook/.env` (no se sube; plantilla en `.env.example`). Hoy solo tiene la de OpenAI.
 - El mismo notebook funciona en **Colab**: allí lee las claves de Secrets (🔑) e instala las dependencias solo.
-- Ejecución completa guardada en `sesion-01-en-vivo-ejecutado.ipynb`, como respaldo si algo falla en directo.
+- Ejecución completa guardada en `sesion-01-version-julian-ejecutado.ipynb`, como respaldo si algo falla en directo.
 
 ## 4. Diferencias con la guía de LIDR
 
-- **No tenemos el notebook oficial** (`sesion-01-notebook-sesion-en-vivo.ipynb`): no está en el repo ni en Drive.
-  El nuestro reproduce bloque a bloque lo que describe la guía, con los mismos nombres (`USER_QUESTION`,
-  `PRODUCTION_SYSTEM_PROMPT`, `review_pull_request_naive()`, `review_pull_request()`, `COMPARISON_SYSTEM_PROMPT`,
-  `openai_models`, `evaluate_technical_decision()`). Si los alumnos reciben el de LIDR, la estructura coincide.
+- **Hay dos notebooks en `notebook/`**: el oficial de LIDR (`sesion-01-notebook-sesion-en-vivo.ipynb`, recibido el
+  16/11, sin tocar) y el nuestro (`sesion-01-version-julian.ipynb`), que se hizo antes de tenerlo, a partir de la
+  guía. La comparación está en la sección 4 bis.
 - **Español frente a inglés**: la guía dice «~30 % más tokens en español». Con el tokenizador actual de OpenAI
   (`o200k_base`) la diferencia casi desaparece: +3 %, frente a +33 % con el de 2023. La celda 6.1 compara con el de 2023 (`cl100k_base`) para que se
   vea de dónde viene la cifra.
@@ -69,6 +68,38 @@ experiencia previa con APIs de LLMs.
 - **`seed` no garantiza nada**: con `seed=42` y temperature 1.0, las tres respuestas salieron distintas con el
   mismo `system_fingerprint`. Es un buen ejemplo de «best effort».
 
+## 4 bis. Notebook oficial frente al nuestro
+
+Probado el 16/11/2026 ejecutando el oficial entero en local con los mismos SDK que instala Colab hoy
+(openai 3.51, anthropic 2.8, litellm 1.109) y un sustituto de Colab Secrets.
+
+**Igual en los dos:** los siete bloques y el Extra, en el mismo orden, con las mismas variables y funciones
+(`USER_QUESTION`, `PRODUCTION_SYSTEM_PROMPT`, `review_pull_request_naive()`, `review_pull_request()`,
+`COMPARISON_SYSTEM_PROMPT`, `openai_models`, `evaluate_technical_decision()`) y los mismos modelos.
+
+**Distinto en el contenido:** los ejemplos concretos no coinciden (el diff del revisor de PR, los escenarios del 4.1
+y del 5, los textos de la 6.1, la conversación de la 6.3). El oficial trae más teoría en markdown (tabla de
+configuraciones del 3.4, tabla de herramientas del 3.5, el 3.8 con `file_search`, `code_interpreter`,
+`computer_use` y MCP). El nuestro añade tiempos y coste por llamada, `gpt-5.4-mini` y `gpt-5.4` activados en el
+4.2, la comparación o200k/cl100k y la tabla de multiplicadores de precio.
+
+**Lo que falla en el oficial hoy** (le pasaría igual a un alumno en Colab):
+
+| Celda | Qué pasa |
+|---|---|
+| Carga de claves | Si falta el secreto `ANTHROPIC_API_KEY`, `userdata.get` lanza `SecretNotFoundError`, no se crea `openai_client` y **fallan todas las celdas siguientes** |
+| 3.3 `stop` | `TypeError`: la Responses API no tiene `stop` (hay que usar Chat Completions) |
+| 3.3 `seed` | `TypeError`: la Responses API no tiene `seed` |
+| 4.1 Anthropic, Tu turno de Anthropic, Extra | `TypeError`: el SDK 2.x de Anthropic ya no acepta `temperature` en `messages.create` |
+| 4.1 Lado a lado | Depende de la celda Anthropic; además usa una f-string que solo es válida en Python ≥ 3.12 (Colab sí lo es) |
+| 4.2 | `gpt-5.4-mini` y `gpt-5.4` vienen comentados: solo se ejecuta `gpt-4o-mini` |
+
+El resto funciona. En la ejecución del oficial: temperature 0.0 dio «TimeTrack Pro» las tres veces; la proyección
+de la 6.2 sale 213 $/mes con gpt-4o-mini frente a 5.062 $ con gpt-5.4 (23,7×).
+
+Nuestro notebook tenía el mismo problema de `temperature` en la 4.1 de Anthropic (no se había visto porque no hay
+clave); ya está quitado.
+
 ## 5. Pendiente antes de clase (Julián)
 
 - **Clave de Anthropic con saldo**: no hay ninguna configurada. Sin ella, las celdas 3.7, 4.1 (Anthropic), 4.2
@@ -78,7 +109,7 @@ experiencia previa con APIs de LLMs.
 - Las diapositivas de Google de LIDR (enlace en el Notion) no se pueden abrir desde esta cuenta. Nuestro deck es
   `Sesion01-Julian-Fernandez.pdf`.
 
-## 6. Resultados verificados (16/11/2026, la ejecución guardada en `sesion-01-en-vivo-ejecutado.ipynb`)
+## 6. Resultados verificados (16/11/2026, la ejecución guardada en `sesion-01-version-julian-ejecutado.ipynb`)
 
 | Demo | Resultado |
 |---|---|
