@@ -49,6 +49,14 @@ experiencia previa con APIs de LLMs.
 - Claves en `notebook/.env` (no se sube; plantilla en `.env.example`). Hoy solo tiene la de OpenAI.
 - El mismo notebook funciona en **Colab**: allí lee las claves de Secrets (🔑) e instala las dependencias solo.
 - Ejecución completa guardada en `sesion-01-version-julian-ejecutado.ipynb`, como respaldo si algo falla en directo.
+- **Versión con los prompts en español** (17/11): `sesion-01-version-julian_español.ipynb` y su ejecución
+  `sesion-01-version-julian-ejecutado_español.ipynb`. La genera `build_notebook_es.py` a partir de las mismas celdas:
+  traduce system prompts, preguntas, mensajes impresos y algún texto del Markdown; el código, las variables y los
+  rótulos de celda no cambian. Solo queda en inglés, a propósito, la frase de muestra de la celda 6.1. Las cifras y
+  nombres de su ejecución no son los de las diapositivas, que salen de la versión en inglés.
+- **Rango de `temperature`** (comprobado contra la API el 17/11): OpenAI acepta 0–2 (2.1 u 8 devuelven un 400,
+  «Expected a value <= 2.0»); Anthropic acepta 0–1 (1.5 devuelve «temperature: range: 0..1»). No hay módulo ni
+  recorte: fuera de rango, error.
 
 ## 4. Diferencias con la guía de LIDR
 
