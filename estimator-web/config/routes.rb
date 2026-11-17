@@ -29,6 +29,14 @@ Rails.application.routes.draw do
 
     # Corpus / Índice (Session 11): add new information to the vector DB and poll
     # the async indexing job until the corpus grows.
+    # Session 11 (local): Calidad — gate, conflicts, augmentation and the S11 toggles.
+    resource :quality, only: [ :show ], controller: "quality" do
+      # GET too, so each demo has a direct link (guion) and a headless screenshot.
+      match :verify,  via: %i[get post]
+      match :hours,   via: %i[get post]
+      match :augment, via: %i[get post]
+      patch :toggles
+    end
     resources :index_runs, only: [ :index, :new, :create, :show ] do
       member { get :status }
     end

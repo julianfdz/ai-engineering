@@ -1,0 +1,240 @@
+<% content_for :title, "Calidad de generación" %>
+<%
+  status_badge = lambda do |status|
+    cls = { "grounded" => "bg-success/15 text-success-light", "degraded" => "bg-danger/20 text-danger",
+            "insufficient" => "bg-brand/15 text-brand-soft" }[status] || "bg-ink/50 text-white/60"
+    content_tag(:span, status, class: "px-2 py-0.5 rounded text-xs font-bold #{cls}")
+  end
+  tabs = { "gate" => "Gate de alucinaciones", "conflict" => "Fuentes en conflicto",
+           "augment" => "Augmentation", "toggles" => "Interruptores" }
+%>
+
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <div class="text-xs uppercase tracking-tight text-white/50 font-bold">Módulo 4 · Sesión 11</div>
+  <h1 class="text-2xl font-bold tracking-tighter text-white mb-1">Calidad de generación</h1>
+  <p class="text-white/50 text-sm mb-5">
+    Cada pestaña es una técnica de la sesión, lanzada contra el servicio IA real. Nada se guarda: el gate sin juez y
+    la síntesis son deterministas y gratis; el juez es una sola llamada a gpt-5-mini.
+  </p>
+
+  <nav class="flex flex-wrap gap-2 mb-6 border-b border-white/10 pb-3">
+    <% tabs.each do |key, label| %>
+      <%= link_to label, rag_quality_path(tab: key),
+            class: "px-3 py-1.5 rounded-md text-sm font-bold tracking-tight #{@tab == key ? 'bg-brand text-ink-dark' : 'bg-ink/40 text-white/70 hover:text-white'}" %>
+    <% end %>
+  </nav>
+
+  <% if flash[:alert] %>
+    <div class="p-3 rounded-md bg-danger/15 border border-danger/40 text-danger text-sm mb-5"><%= flash[:alert] %></div>
+  <% end %>
+  <% if flash[:notice] %>
+    <div class="p-3 rounded-md bg-success/15 border border-success/40 text-success-light text-sm mb-5"><%= flash[:notice] %></div>
+  <% end %>
+
+  <% case @tab %>
+  <% when "gate" %>
+    <div class="grid md:grid-cols-5 gap-6">
+      <div class="md:col-span-2">
+        <p class="text-sm text-white/70 mb-4">
+          Todas las líneas citan el mismo chunk histórico: <code class="text-brand-soft">AUTH-001 :: OAuth backend — 120 h</code>
+          (≈15 días). El ancla compara lo que la línea reclama con lo que la cita sostiene; solo el <b>exceso</b> por encima
+          del 50 % degrada.
+        </p>
+        <%= form_with url: verify_rag_quality_path, method: :post, local: true do %>
+          <div class="space-y-2 mb-4">
+            <% Rag::QualityController::GATE_PRESETS.each do |key, preset| %>
+              <label class="flex gap-2 items-start p-2 rounded-md bg-ink/30 border border-white/10 cursor-pointer">
+                <input type="radio" name="preset" value="<%= key %>" <%= "checked" if @gate_preset == key %> class="mt-1">
+                <span><span class="text-sm font-bold text-white"><%= preset[:label] %></span>
+                  <span class="block text-xs text-white/50"><%= preset[:hint] %></span></span>
+              </label>
+            <% end %>
+          </div>
+          <label class="flex gap-2 items-center text-sm text-white/80 mb-2">
+            <input type="checkbox" name="use_judge" value="1" <%= "checked" if @use_judge %>>
+            Con juez (gpt-5-mini, una llamada para todas las líneas)
+          </label>
+          <div class="text-xs text-white/60 mb-4 space-y-1">
+            <div class="font-bold uppercase text-white/50">Evidencia que copia cada línea</div>
+            <label class="flex gap-2 items-center"><input type="radio" name="evidence" value="full" <%= "checked" if @evidence_mode == "full" %>>
+              la línea entera: <code>AUTH-001 :: OAuth backend — 120 h</code></label>
+            <label class="flex gap-2 items-center"><input type="radio" name="evidence" value="short" <%= "checked" if @evidence_mode == "short" %>>
+              solo la cifra: <code>120 h</code> (el ejemplo del guion)</label>
+          </div>
+          <button type="submit" class="px-5 py-2.5 bg-brand text-ink-dark font-bold tracking-tight rounded-md hover:bg-brand-strong text-sm cursor-pointer">
+            Pasar el gate →
+          </button>
+        <% end %>
+      </div>
+      <div class="md:col-span-3">
+        <% if (r = @gate_result) %>
+          <div class="flex flex-wrap gap-2 text-xs mb-3">
+            <span class="px-2 py-1 rounded bg-ink/50 text-white/70 font-bold"><%= r["total_lines"] %> líneas</span>
+            <span class="px-2 py-1 rounded bg-success/15 text-success-light font-bold"><%= r["grounded_lines"] %> grounded</span>
+            <span class="px-2 py-1 rounded bg-danger/20 text-danger font-bold"><%= r["degraded_lines"] %> degradadas</span>
+            <span class="px-2 py-1 rounded bg-brand/15 text-brand-soft font-bold"><%= r["insufficient_lines"] %> sin datos</span>
+            <span class="px-2 py-1 rounded bg-ink/50 text-white/50"><%= @use_judge ? "ancla + juez" : "solo ancla (sin LLM)" %></span>
+          </div>
+          <table class="w-full text-sm rounded-md overflow-hidden border border-white/10">
+            <thead class="bg-ink/40 text-white/50 text-xs uppercase">
+              <tr><th class="text-left px-3 py-2">Línea</th><th class="text-right px-3 py-2">Reclama</th>
+                <th class="text-right px-3 py-2">Frente al ancla (15 d)</th><th class="text-left px-3 py-2">Estado</th></tr>
+            </thead>
+            <tbody>
+              <% r["lines"].each_with_index do |ln, i| %>
+                <% task = @gate_tasks[i] || {} %>
+                <tr class="border-t border-white/5 align-top">
+                  <td class="px-3 py-2 text-white"><%= ln["component"] %></td>
+                  <td class="px-3 py-2 text-right tabular-nums text-white/80"><%= task["engineer_days"] ? "#{task['engineer_days']} d" : "—" %></td>
+                  <% signed = task["engineer_days"] ? (task["engineer_days"] - Rag::QualityController::ANCHOR_DAYS) / Rag::QualityController::ANCHOR_DAYS * 100 : nil %>
+                  <td class="px-3 py-2 text-right tabular-nums <%= signed && signed > 50 ? 'text-danger' : 'text-white/60' %>"><%= signed ? "#{signed.positive? ? '+' : '−'}#{signed.abs.round} %" : "—" %></td>
+                  <td class="px-3 py-2"><%= status_badge.call(ln["status"]) %>
+                    <% if ln["reason"].present? %><span class="block text-xs text-danger mt-1"><%= ln["reason"] %></span><% end %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+          <% if @use_judge %>
+            <p class="text-xs text-white/60 mt-3">El ancla tolera hasta +50 %; el juez no tiene tolerancia. El gate degrada si
+              falla <b>cualquiera</b> de los dos.</p>
+          <% end %>
+          <p class="text-xs text-white/40 mt-3">Endpoint: <code>POST /v1/estimate/stages/verify</code> · código: <code>app/generation/rag/quality/hallucination.py</code></p>
+        <% else %>
+          <div class="p-6 rounded-md bg-ink/30 border border-dashed border-white/10 text-white/50 text-sm">
+            Elige un caso y pásalo por el gate. Con el juez apagado responde al momento.
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+  <% when "conflict" %>
+    <div class="grid md:grid-cols-5 gap-6">
+      <div class="md:col-span-2">
+        <p class="text-sm text-white/70 mb-4">
+          Horas por tarea con búsqueda vectorial (S10). Si los vecinos históricos se contradicen (dispersión &gt; 0,35),
+          la síntesis devuelve un <b>rango con razón</b> en vez de un promedio engañoso.
+        </p>
+        <div class="flex flex-wrap gap-2 mb-3">
+          <% Rag::QualityController::HOURS_PRESETS.each do |_key, p| %>
+            <button type="button" class="px-2 py-1 rounded bg-ink/40 text-xs text-white/80 hover:text-white cursor-pointer"
+                    onclick="document.getElementById('task_module').value=<%= p[:module].to_json %>;document.getElementById('task_name').value=<%= p[:name].to_json %>;document.getElementById('task_description').value=<%= p[:description].to_json %>;">
+              <%= p[:label] %></button>
+          <% end %>
+        </div>
+        <%= form_with url: hours_rag_quality_path, method: :post, local: true do %>
+          <label class="block text-xs uppercase tracking-tight text-white/50 font-bold mb-1">Módulo</label>
+          <input id="task_module" name="task_module" value="<%= @task_module %>" class="w-full bg-ink/40 border border-white/10 rounded-md text-white text-sm px-3 py-2 mb-3">
+          <label class="block text-xs uppercase tracking-tight text-white/50 font-bold mb-1">Tarea</label>
+          <input id="task_name" name="task_name" value="<%= @task_name %>" class="w-full bg-ink/40 border border-white/10 rounded-md text-white text-sm px-3 py-2 mb-3">
+          <label class="block text-xs uppercase tracking-tight text-white/50 font-bold mb-1">Descripción</label>
+          <input id="task_description" name="task_description" value="<%= @task_description %>" class="w-full bg-ink/40 border border-white/10 rounded-md text-white text-sm px-3 py-2 mb-4">
+          <button type="submit" class="px-5 py-2.5 bg-brand text-ink-dark font-bold tracking-tight rounded-md hover:bg-brand-strong text-sm cursor-pointer">
+            Estimar horas →
+          </button>
+        <% end %>
+      </div>
+      <div class="md:col-span-3">
+        <% if (h = @hours_result) %>
+          <% if h["has_match"] %>
+            <div class="grid grid-cols-3 gap-3 mb-4">
+              <div class="p-3 rounded-md bg-ink/30 border border-white/10"><div class="text-xs text-white/50 uppercase font-bold">Consenso</div>
+                <div class="text-2xl font-bold text-white tabular-nums"><%= h["estimated_hours"] %> h</div></div>
+              <div class="p-3 rounded-md bg-ink/30 border border-white/10"><div class="text-xs text-white/50 uppercase font-bold">Dispersión</div>
+                <div class="text-2xl font-bold tabular-nums <%= h['hours_range'] ? 'text-danger' : 'text-white' %>"><%= number_with_precision(h["dispersion"], precision: 2) %></div></div>
+              <div class="p-3 rounded-md bg-ink/30 border border-white/10"><div class="text-xs text-white/50 uppercase font-bold">Fiabilidad</div>
+                <div class="text-2xl font-bold text-white tabular-nums"><%= number_with_precision(h["reliability"], precision: 2) %></div></div>
+            </div>
+            <% if (rg = h["hours_range"]) %>
+              <div class="p-4 rounded-md bg-danger/10 border border-danger/40 mb-4">
+                <div class="text-lg font-bold text-danger">⚠ <%= rg["low"] %>–<%= rg["high"] %> h · fuentes en conflicto</div>
+                <p class="text-sm text-white/80 mt-1"><%= rg["reason"] %></p>
+              </div>
+            <% else %>
+              <div class="p-3 rounded-md bg-success/10 border border-success/30 text-success-light text-sm mb-4">Los vecinos coinciden: sin rango, vale el consenso.</div>
+            <% end %>
+            <table class="w-full text-sm border border-white/10">
+              <thead class="bg-ink/40 text-white/50 text-xs uppercase"><tr><th class="text-left px-3 py-2">Vecino</th><th class="text-left px-3 py-2">Presupuesto</th><th class="text-right px-3 py-2">Horas</th><th class="text-right px-3 py-2">Distancia</th></tr></thead>
+              <tbody>
+                <% Array(h["neighbors"]).each do |n| %>
+                  <tr class="border-t border-white/5"><td class="px-3 py-1.5 text-white/60">#<%= n["source_id"] %></td><td class="px-3 py-1.5 text-white/80"><%= n["budget_id"] %></td>
+                    <td class="px-3 py-1.5 text-right tabular-nums text-white"><%= n["estimated_hours"] %></td><td class="px-3 py-1.5 text-right tabular-nums text-white/60"><%= number_with_precision(n["distance"], precision: 3) %></td></tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <div class="p-4 rounded-md bg-danger/10 border border-danger/40 text-danger text-sm">Sin análogo bajo el umbral de distancia: sin horas (fila roja en el wizard).</div>
+          <% end %>
+          <p class="text-xs text-white/40 mt-3">Endpoint: <code>POST /v1/estimate/tasks/hours</code> · código: <code>app/generation/rag/quality/synthesis.py</code></p>
+        <% else %>
+          <div class="p-6 rounded-md bg-ink/30 border border-dashed border-white/10 text-white/50 text-sm">Elige un caso (o escribe una tarea) y estima sus horas.</div>
+        <% end %>
+      </div>
+    </div>
+
+  <% when "augment" %>
+    <p class="text-sm text-white/70 mb-4">
+      Recupera los presupuestos de la consulta y ensambla el bloque <code>&lt;sources&gt;</code> dos veces: tal cual y con
+      augmentation (comprimir cada fuente a las líneas con cifra o id, y reordenar con lo mejor en los extremos).
+    </p>
+    <%= form_with url: augment_rag_quality_path, method: :post, local: true, class: "mb-6" do %>
+      <div class="flex flex-wrap gap-2 mb-2">
+        <% Rag::QualityController::AUGMENT_PRESETS.each do |key, q| %>
+          <button type="button" class="px-2 py-1 rounded bg-ink/40 text-xs text-white/80 hover:text-white cursor-pointer"
+                  onclick="document.getElementById('query_text').value=<%= q.to_json %>;"><%= key %></button>
+        <% end %>
+      </div>
+      <div class="flex gap-3">
+        <input id="query_text" name="query_text" value="<%= @augment_query %>" class="flex-1 bg-ink/40 border border-white/10 rounded-md text-white text-sm px-3 py-2">
+        <button type="submit" class="px-5 py-2 bg-brand text-ink-dark font-bold tracking-tight rounded-md hover:bg-brand-strong text-sm cursor-pointer">Ensamblar →</button>
+      </div>
+    <% end %>
+    <% if @augment_off && @augment_on %>
+      <div class="grid md:grid-cols-2 gap-4">
+        <% [ [ "Sin augmentation", @augment_off ], [ "Con augmentation", @augment_on ] ].each do |title, res| %>
+          <div class="rounded-md border border-white/10 overflow-hidden">
+            <div class="bg-ink/40 px-3 py-2 flex items-center justify-between">
+              <span class="font-bold text-white"><%= title %></span>
+              <span class="text-xs text-white/60 tabular-nums"><%= res["token_count"] %> tokens · <%= res["kept_chunks"].size %> fuentes</span>
+            </div>
+            <div class="px-3 py-2 text-xs text-white/50">Orden: <%= res["kept_chunks"].map { |c| "##{c['id']}" }.join(" · ") %></div>
+            <pre class="px-3 pb-3 text-[11px] leading-snug text-white/80 whitespace-pre-wrap max-h-[28rem] overflow-y-auto"><%= res["context_block"] %></pre>
+          </div>
+        <% end %>
+      </div>
+      <% saved = @augment_off["token_count"].to_i - @augment_on["token_count"].to_i %>
+      <p class="text-sm text-white/70 mt-3">Ahorro: <b class="text-white"><%= saved %> tokens</b>
+        (<%= number_to_percentage(100.0 * saved / [ @augment_off["token_count"].to_i, 1 ].max, precision: 0) %>) con los mismos ids,
+        así que la verificación de citas no cambia.</p>
+      <p class="text-xs text-white/40 mt-1">Endpoints: <code>/v1/estimate/stages/retrieve</code> + <code>/assemble</code> · código: <code>app/generation/rag/quality/augmentation.py</code></p>
+    <% end %>
+
+  <% when "toggles" %>
+    <p class="text-sm text-white/70 mb-4">
+      Los tres interruptores de la sesión viven en Redis (<code>PUT /api/v1/config/retrieval</code>): se cambian en caliente y
+      afectan a la siguiente estimación. «Por defecto» vuelve al valor del <code>.env</code>.
+    </p>
+    <%= form_with url: toggles_rag_quality_path, method: :patch, local: true do %>
+      <div class="space-y-3 mb-5">
+        <% Rag::QualityController::TOGGLES.each do |field, (key, label, where)| %>
+          <% snap = (@toggles || {})[key] || {} %>
+          <div class="p-4 rounded-md bg-ink/30 border border-white/10 flex items-center justify-between gap-4">
+            <div>
+              <div class="font-bold text-white"><%= label %> <code class="text-xs text-white/40"><%= key %></code></div>
+              <div class="text-xs text-white/50"><%= where %> · ahora:
+                <b class="<%= snap['effective'] ? 'text-success-light' : 'text-danger' %>"><%= snap["effective"] ? "encendido" : "apagado" %></b>
+                <%= "(cambiado en caliente)" if snap["overridden"] %></div>
+            </div>
+            <select name="toggles[<%= field %>]" class="bg-ink/40 border border-white/10 rounded-md text-white text-sm px-3 py-2">
+              <option value="default" <%= "selected" unless snap["overridden"] %>>Por defecto (<%= snap["default"] ? "on" : "off" %>)</option>
+              <option value="on" <%= "selected" if snap["overridden"] && snap["effective"] %>>Encendido</option>
+              <option value="off" <%= "selected" if snap["overridden"] && !snap["effective"] %>>Apagado</option>
+            </select>
+          </div>
+        <% end %>
+      </div>
+      <button type="submit" class="px-5 py-2.5 bg-brand text-ink-dark font-bold tracking-tight rounded-md hover:bg-brand-strong text-sm cursor-pointer">Guardar interruptores</button>
+    <% end %>
+    <p class="text-xs text-white/40 mt-4">La tolerancia del gate (<code>HALLUCINATION_NUMERIC_TOLERANCE</code>) y el umbral de contradicción
+      (<code>SYNTHESIS_CONTRADICTION_THRESHOLD</code>) no son conmutables en caliente: se leen del <code>.env</code>.</p>
+  <% end %>
+</div>

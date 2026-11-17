@@ -95,21 +95,30 @@ module Rag
       parsed.is_a?(Array) ? parsed : [ parsed ]
     end
 
+    # Local (S11 class): a project the corpus has NOTHING like, so the growth is
+    # visible in retrieval too — before indexing, "biometric KYC onboarding" only
+    # finds generic finance tasks (~0.47); after, its three chunks lead (~0.17).
     EXAMPLE_JSON = <<~JSON.freeze
       {
-        "budget_id": "NEW-2025-9100",
-        "client_metadata": { "name": "Nueva Cuenta S.L.", "sector": "finance", "country": "ES" },
-        "project_summary": "New historical project to add to the corpus",
+        "budget_id": "BUD-2025-0100",
+        "client_metadata": { "name": "Neobanco Demo", "sector": "finance", "country": "ES" },
+        "project_summary": "Biometric KYC onboarding for a neobank: identity document OCR, selfie liveness detection and AML screening",
         "main_technology": "Python",
         "year": 2025,
-        "total_estimated_hours": 200,
+        "total_estimated_hours": 300,
         "components": [
-          { "component_id": "AUTH-001", "name": "OAuth2 login", "description": "Auth backend",
-            "module": "Authentication & Access", "tech_stack": ["Python"], "estimated_hours": 120,
-            "complexity": "medium", "dependencies": [] },
-          { "component_id": "RECON-001", "name": "Payment reconciliation", "description": "Nightly batch",
-            "module": "Payments & Billing", "tech_stack": ["Python"], "estimated_hours": 80,
-            "complexity": "medium", "dependencies": [] }
+          { "component_id": "KYC-001", "name": "Identity document OCR",
+            "description": "Capture and OCR of ID cards and passports with MRZ validation and fraud checks",
+            "module": "Onboarding & KYC", "tech_stack": ["Python", "AWS Textract"], "estimated_hours": 110,
+            "complexity": "high", "dependencies": [] },
+          { "component_id": "KYC-002", "name": "Selfie liveness detection",
+            "description": "Passive and active liveness detection with face match against the ID photo",
+            "module": "Onboarding & KYC", "tech_stack": ["Python"], "estimated_hours": 120,
+            "complexity": "high", "dependencies": ["KYC-001"] },
+          { "component_id": "KYC-003", "name": "AML and sanctions screening",
+            "description": "Screening against sanctions and PEP lists with a manual review queue",
+            "module": "Compliance", "tech_stack": ["Python", "PostgreSQL"], "estimated_hours": 70,
+            "complexity": "medium", "dependencies": ["KYC-001"] }
         ]
       }
     JSON
