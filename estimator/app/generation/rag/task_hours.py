@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 4 · horas por tarea (S10) + rango (S11) ───────
+#
+#   Cada tarea se busca en el corpus histórico y sus horas salen del consenso de los
+#   vecinos más cercanos. La S11 añade el rango cuando esos vecinos no coinciden.
+#
+#   · estimate_one: búsqueda filtrada a chunk_type='historical_task'.
+#   · _consensus: horas = media ponderada por 1/distancia, con fiabilidad y dispersión.
+#   · synthesize_range: solo si la síntesis está encendida y la dispersión pasa el umbral.
+#   · estimated_hours no cambia: el humano sigue editando un número; el rango va al lado.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Per-task hours estimation by vector search (Session 10).
 
 The structure-only generation produces modules → tasks WITHOUT hours. This

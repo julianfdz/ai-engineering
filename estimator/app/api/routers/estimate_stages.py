@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloques 3-4 · endpoints de enseñanza, una etapa cada uno ────
+#
+#   Cada paso del pipeline expuesto por separado para enseñarlo y probarlo aislado.
+#   La S11 añade /verify y el flag augment en /assemble.
+#
+#   · /assemble con augment=true: el mismo bloque <sources>, comprimido y reordenado.
+#   · /generate devuelve citation_report: la verificación por línea de lo generado.
+#   · /verify: el gate sobre una estimación que le pasas tú (la demo de atribución falsa).
+#   · Todos piden X-API-Key = ESTIMATE_API_KEY (demo-estimate-key en local).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """``POST /v1/estimate/stages/*`` — the RAG pipeline, one stage at a time (S09).
 
 A teaching aid for the live session and the Rails wizard: the full

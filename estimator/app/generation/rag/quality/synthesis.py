@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 4 · síntesis cuando las fuentes se contradicen ────
+#
+#   Si un análogo dice 40 h y otro 90 h, el promedio (~65 h) parece seguro y esconde
+#   una decisión de alcance. Aquí se devuelve un rango con su razón.
+#
+#   · Etapa 1, determinista: el consenso ponderado de la S10 y su dispersión.
+#   · is_contradiction: dispersión > SYNTHESIS_CONTRADICTION_THRESHOLD (0,35).
+#   · _deterministic_range: mínimo y máximo de los vecinos + razón con el conflicto nombrado.
+#   · use_llm=True solo redacta la razón con gpt-5-mini; si falla, queda la determinista.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 11 — two-stage synthesis of the per-task hours.
 
 The per-task hours estimator (:mod:`app.generation.rag.task_hours`) averages the

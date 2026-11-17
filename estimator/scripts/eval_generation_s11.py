@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# ── Julián · Sesión 11 · Bloque 5 · evaluación en dos modos ───────────────────
+#
+#   El baseline RAGAS convertido en proceso: una puerta antes de desplegar y un
+#   monitor para lo desplegado. Cada técnica es una config, no una rama de código.
+#
+#   · CONFIGS: baseline / gate / augment / full, con sus tres interruptores.
+#   · run_gate: las 4 métricas contra el baseline; exit 1 si alguna cae más de 0,05 → BLOCK.
+#   · Una cita colgante es fallo directo, aunque las métricas estén bien.
+#   · run_monitor: solo faithfulness y answer_relevancy, las que no piden ground_truth.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 11 — two-mode generation-quality evaluation pipeline.
 
 The Session 11 pre-work produced a RAGAS BASELINE (``evals/RAGAS_BASELINE_S11.md``).

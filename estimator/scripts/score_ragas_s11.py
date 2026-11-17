@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# ── Julián · Sesión 11 · Bloque 1 · puntuar con RAGAS (venv aislado) ──────────
+#
+#   Solo importa ragas, langchain-openai y datasets, nunca la app: por eso corre en
+#   un venv aparte (.ragas-venv) y no ensucia el del proyecto.
+#
+#   · _install_vertex_shims: ragas 0.4 importa Vertex al cargar; se registra un stub vacío.
+#   · Entrada: question / answer / contexts / ground_truth (el shape de las 4 métricas).
+#   · Juez gpt-4o-mini y embeddings text-embedding-3-small: no lee el .env, la clave va exportada.
+#   · Errores típicos: NaN por la clave del shell, KeyError por nombres de columna de otra versión.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Standalone RAGAS scorer for pre-collected Session 11 samples.
 
 This script imports ONLY ragas + langchain-openai + datasets — never the app —

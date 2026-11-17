@@ -1,3 +1,15 @@
+<%#
+── Julián · Sesión 11 · Bloque 4 · el rango en la pantalla de horas del wizard ────
+
+  Cuando una tarea tiene fuentes en conflicto, la celda enseña el rango y la razón
+  en vez de un número falso. El consenso sigue ahí para editarlo.
+
+  · Badge de resumen arriba: cuántas tareas están en conflicto.
+  · Celda: «⚠ 40–90 h · fuentes en conflicto» con la razón debajo.
+  · Los datos vienen de TaskItemView#contradicted? y HourRangeView#label.
+  · Rojo = sin análogo (S10); ámbar = análogos que no coinciden (S11).
+──────────────────────────────────────────────────────────────────────────────
+%>
 <% hours = run.task_hours_view %>
 <% modules = run.adjusted_modules %>
 

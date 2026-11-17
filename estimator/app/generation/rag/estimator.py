@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloques 3-4 · el conductor del RAG: dónde entra cada pieza ────
+#
+#   El pipeline completo transcripción → estimación con fuentes. La S11 no crea otro
+#   camino: añade dos pasos a este, cada uno con su interruptor en caliente.
+#
+#   · Paso 4: augment_chunks sobre los chunks ya truncados (comprime + reordena).
+#   · Paso 6: verify_citations y un reintento correctivo si hay ids colgantes.
+#   · Paso 6.5: gate_estimate; una línea degradada baja la confianza a low.
+#   · Paso 7: coherencia de insufficient; si no se repara, MalformedEstimateError.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """End-to-end RAG estimation orchestrator (Session 9).
 
 Wires the four stages into the loop the project has been missing since day one:

@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 3 · el gate semántico de alucinaciones ────────
+#
+#   Una cita real puede mentir: la fuente existe pero la cifra se la inventa el modelo.
+#   Este gate comprueba si la cifra de cada línea se sostiene con lo que cita.
+#
+#   · numeric_anchor: suma las horas de los chunks citados y las pasa a días (÷ 8). Sin LLM.
+#   · gate_line: función pura. Solo el EXCESO sobre la tolerancia (50 %) degrada la línea.
+#   · judge_estimate: UNA llamada a gpt-5-mini para todas las líneas grounded, no una por línea.
+#   · gate_estimate: el conductor; con use_judge=False corre solo el ancla, gratis.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 11 — semantic hallucination gate over a grounded estimate.
 
 ``verify_citations`` (Session 11 pre-work) proves REFERENTIAL integrity: every

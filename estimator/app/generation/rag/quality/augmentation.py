@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 4 · augmentation: mejor material de entrada ────
+#
+#   Dos pasadas deterministas sobre los chunks antes de montar el contexto. Sin LLM y
+#   sin tocar los ids, así que la verificación de citas no cambia.
+#
+#   · extract_key_points: se queda con las líneas con cifra o con «::» (nombre + horas).
+#   · Nunca deja un chunk vacío: si no hay nada, conserva la primera línea.
+#   · reorder_edge_loaded: lo mejor al principio, el segundo mejor al final (lost-in-the-middle).
+#   · augment_chunks: primero comprime (tokens) y luego reordena (posición).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 11 — context augmentation: shape the retrieved chunks before assembly.
 
 Two deterministic passes applied to the token-truncated chunks BEFORE they become

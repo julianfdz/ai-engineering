@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# ── Julián · Sesión 11 · Bloque 1 · prueba offline de la citación ─────────────
+#
+#   Monta una estimación con 4 líneas y planta a propósito un chunk_id=999 colgante
+#   y una línea sin datos. Sin red ni base de datos: solo la lógica del verificador.
+#
+#   · Dos líneas citan los chunks 101 y 102, que sí estaban en el contexto → grounded.
+#   · «Transaction ledger» cita el 999, que nunca se recuperó → dangling.
+#   · «Regulatory reporting» no tiene fuente → insufficient, sin horas a ojo.
+#   · Si las tres cosas se cumplen imprime ACCEPTANCE: PASS (fila 4 del pre-flight).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Offline demo of Session 11 line-level citation verification.
 
 Builds a realistic grounded :class:`Estimate` from a small set of "retrieved"

@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 6 · ampliar el corpus con documentos nuevos ────
+#
+#   Un bucle fino sobre RagIngestService: trocear, embeder y guardar cada documento
+#   con el mismo modelo del corpus, para que los vectores sean comparables.
+#
+#   · expand: un documento cada vez, con source_path = corpus-expansion::<budget_id>.
+#   · Un duplicado se salta (DuplicateDocumentError), no rompe el lote.
+#   · on_progress: avisa del contador para que el job enseñe el progreso.
+#   · No re-embebe lo que ya hay: eso es un cambio de modelo, fuera de alcance hoy.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 11 — incremental corpus expansion (add NEW documents + index them).
 
 Grows the vector DB with new information, one budget document at a time, reusing

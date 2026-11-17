@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 1 · verify_citations (lo que traéis) ──────────
+#
+#   Integridad referencial: cada chunk_id que cita una línea tiene que estar entre los
+#   chunks que de verdad se metieron en el contexto. Es el suelo de la sesión.
+#
+#   · Recorre modules[].tasks[] y clasifica cada línea: grounded, dangling o insufficient.
+#   · dangling = cita un id que nunca se recuperó: una alucinación disfrazada de rigor.
+#   · insufficient = grounded=false: la línea no inventa horas, se abstiene.
+#   · Ojo: prueba que la cita EXISTE, no que la cifra se DEDUZCA de ella (Bloque 3).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Post-generation checks for grounded estimates (Sessions 9 & 11).
 
 Two independent guards run after the LLM returns an :class:`Estimate`:

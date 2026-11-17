@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 6 · el índice HNSW de las tres colecciones ────
+#
+#   Hasta la S10 las tres tablas de chunks iban a seq scan. Con un corpus que crece,
+#   eso escala mal: aquí se crea el índice vectorial.
+#
+#   · Se indexa la expresión embedding::halfvec(1536): la misma que usa la búsqueda.
+#   · Opclass halfvec_cosine_ops: si no casa con el operador, Postgres ignora el índice.
+#   · m=16 y ef_construction=128, como en la S8.
+#   · HNSW es incremental: cada chunk nuevo se indexa al insertarse, sin reconstruir.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 11 — HNSW vector indexes on the three chunk collections.
 
 Migration 0004 deliberately left ``budget_chunks`` / ``transcript_chunks`` /

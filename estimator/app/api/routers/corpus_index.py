@@ -1,3 +1,14 @@
+# ── Julián · Sesión 11 · Bloque 6 · los endpoints de indexación (asíncronos) ────
+#
+#   Un lote puede tardar, así que no se bloquea la petición: se devuelve 202 con un
+#   job_id y el cliente pregunta por el estado.
+#
+#   · POST /embeddings/index/runs → 202 + job_id; el trabajo corre en un BackgroundTask.
+#   · GET /embeddings/index/jobs/{id} → estado y documentos procesados.
+#   · GET /embeddings/index/stats → chunks por colección y si el HNSW existe.
+#   · Sin X-API-Key: va con los endpoints de embeddings de la S8, no con los del RAG.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 11 — incremental corpus expansion + index status.
 
 Three endpoints under ``/embeddings/index``:
