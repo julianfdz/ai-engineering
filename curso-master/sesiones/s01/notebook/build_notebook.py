@@ -90,12 +90,25 @@ code(r'''
 # Config 2 · Claves y clientes
 import os
 
+def limpiar_clave(nombre: str, valor: str | None) -> str | None:
+    """Quita espacios, saltos de línea y comillas del pegado. Si quedan caracteres no ASCII, la clave no vale:
+    viaja en una cabecera HTTP y la llamada fallaría con un UnicodeEncodeError poco claro."""
+    if not valor:
+        return None
+    valor = "".join(valor.split()).strip("\"'")
+    raros = sorted({c for c in valor if not c.isascii()})
+    if raros:
+        print(f"⚠️ {nombre} tiene caracteres no válidos ({', '.join(repr(c) for c in raros[:5])}). "
+              "Bórrala de Secrets y vuelve a pegarla copiándola de un texto plano.")
+        return None
+    return valor
+
 def leer_clave(nombre: str) -> str | None:
     """Colab Secrets si estamos en Colab; si no, variables de entorno o el fichero .env."""
     if EN_COLAB:
         from google.colab import userdata
         try:
-            return userdata.get(nombre)
+            return limpiar_clave(nombre, userdata.get(nombre))
         except Exception:
             return None
     try:
@@ -103,7 +116,7 @@ def leer_clave(nombre: str) -> str | None:
         load_dotenv(".env")
     except ImportError:
         pass
-    return os.environ.get(nombre) or None
+    return limpiar_clave(nombre, os.environ.get(nombre))
 
 from openai import OpenAI
 from anthropic import Anthropic
