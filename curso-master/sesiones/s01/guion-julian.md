@@ -215,11 +215,18 @@ Coste de ejecutar el notebook entero: **unos 0,07 $**, casi todo de la búsqueda
   `previous_response_id`. La memoria comprimida de verdad llega en la S5.
 - ⏱️ Si el bloque pasa de 23 min, las mitigaciones se nombran y ya.
 
+### Diapo 18 · La misma conversación, en una gráfica
+
+- ▶️ `# 6.3 · La gráfica: tokens y coste turno a turno`. No llama a la API: pinta la tabla de la celda anterior.
+- 💬 Izquierda: la barra de color (entrada) crece en cada turno y la gris (salida) se queda igual. Derecha: el
+  área roja es lo que llevamos gastado. Lo que pagamos de más es el historial, no las respuestas.
+- 💬 Los números en directo serán otros (la diapo usa la ejecución guardada), pero la forma es siempre esta.
+
 ---
 
 ## Bloque 7 · Arquitecturas reales y cierre · 13 min (protegido: nunca menos de 10)
 
-### Diapo 18 · Arquitecturas reales
+### Diapo 19 · Arquitecturas reales
 
 - 💬 Cuatro preguntas por producto: ¿cómo abstrae el prompting? ¿Qué modelo usa? ¿Cómo gestiona los tokens?
   ¿Hace routing?
@@ -227,7 +234,7 @@ Coste de ejecutar el notebook entero: **unos 0,07 $**, casi todo de la búsqueda
   caching) · NotebookLM (50 páginas = 50.000 tokens por pregunta → «esto es RAG, Módulo 3»).
 - ▶️ `# Extra · Misma pregunta en las tres interfaces`: Responses API, Messages API y LiteLLM.
 
-### Diapo 19 · Lo que os lleváis hoy
+### Diapo 20 · Lo que os lleváis hoy
 
 - 💬 Las tres frases de cierre (en la diapo).
 - 💬 Mapa del máster: S2 nace el proyecto (FastAPI + CAG) · S3-5 producto CAG completo · S6-11 RAG · S12-14

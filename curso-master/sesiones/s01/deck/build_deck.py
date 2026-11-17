@@ -468,6 +468,20 @@ def slide_multiturno(d: Deck) -> None:
           kind="mint")
 
 
+def slide_multiturno_grafica(d: Deck) -> None:
+    p = d.new("La misma conversación, en una gráfica", "Cada turno reenvía todo el historial: la entrada crece y el "
+              "coste se acumula", "Bloque 6")
+    d.codigo(p, f"{NB} · <code># 6.3 · La gráfica: tokens y coste turno a turno</code> (<code>matplotlib</code>, "
+                "con los datos de <code>filas</code> de la celda anterior)")
+    # Exportada de la celda con los números de la ejecución guardada (los de la tabla de la diapo anterior)
+    img = fitz.Rect(24, 62, 696, 306)
+    p.insert_image(img, filename=str(HERE / "grafica-multiturno-6-3.png"), keep_proportion=True)
+    d.box(p, (24, 310, 696, 338),
+          "La entrada pasa de <b>58</b> a <b>754</b> tokens y la salida apenas cambia: lo que crece es el historial "
+          "que se reenvía, y con él el coste acumulado.",
+          kind="mint")
+
+
 # ===========================================================================
 # Bloque 7
 # ===========================================================================
@@ -520,7 +534,8 @@ def build() -> None:
     cover(d)
     for slide in (slide_hoy, slide_setup, slide_generica, slide_iteraciones, slide_reviewer, slide_consistencia,
                   slide_parametros, slide_resumen_parametros, slide_tools, slide_otras_tools, slide_proveedores,
-                  slide_criterios, slide_litellm, slide_tokens, slide_asimetria, slide_multiturno, slide_productos,
+                  slide_criterios, slide_litellm, slide_tokens, slide_asimetria, slide_multiturno,
+                  slide_multiturno_grafica, slide_productos,
                   slide_cierre):
         slide(d)
     d.template(10)  # ROTI
