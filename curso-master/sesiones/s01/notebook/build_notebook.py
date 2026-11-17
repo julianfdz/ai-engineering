@@ -941,6 +941,55 @@ print(f"\nEl turno 5 envía {filas[-1][1] / filas[0][1]:.1f}× más tokens de en
 ''')
 
 code(r'''
+# 6.3 · La gráfica: tokens y coste turno a turno
+import matplotlib.pyplot as plt
+from matplotlib.ticker import FuncFormatter
+
+turnos = [f[0] for f in filas]
+entrada = [f[1] for f in filas]
+salida = [f[2] for f in filas]
+coste_turno = [f[3] for f in filas]
+coste_acumulado = [f[4] for f in filas]
+
+# Del verde al rojo a medida que la conversación (y la factura) crece
+colores = plt.cm.RdYlGn_r([0.1 + 0.8 * i / max(len(filas) - 1, 1) for i in range(len(filas))])
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 4.8))
+
+# Izquierda: lo que se envía (todo el historial) frente a lo que se recibe
+ax1.bar(turnos, entrada, color=colores, edgecolor="black", linewidth=0.6, label="entrada (historial completo)")
+ax1.bar(turnos, salida, bottom=entrada, color="#B0B7C3", edgecolor="black", linewidth=0.6, label="salida (respuesta)")
+for x, e in zip(turnos, entrada):
+    ax1.text(x, e / 2, str(e), ha="center", va="center", fontsize=9, fontweight="bold")
+ax1.set_title("Tokens de cada turno")
+ax1.set_ylabel("Tokens")
+ax1.legend(loc="upper left")
+
+# Derecha: coste de cada turno (barras) y coste acumulado (línea con el área pintada)
+ax2.fill_between(turnos, coste_acumulado, color="#D62728", alpha=0.15)
+ax2.plot(turnos, coste_acumulado, color="#D62728", marker="o", linewidth=2.5, label="coste acumulado")
+ax2.bar(turnos, coste_turno, color=colores, edgecolor="black", linewidth=0.6, width=0.5, label="coste del turno")
+for x, a in zip(turnos, coste_acumulado):
+    ax2.annotate(f"${a:.6f}", (x, a), textcoords="offset points", xytext=(0, 9), ha="center", fontsize=8)
+ax2.set_ylim(0, max(coste_acumulado) * 1.18)
+ax2.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"${v:.4f}"))
+ax2.set_title("Coste por turno y acumulado")
+ax2.set_ylabel("Dólares")
+ax2.legend(loc="upper left")
+
+for ax in (ax1, ax2):
+    ax.set_xlabel("Turno de la conversación")
+    ax.set_xticks(turnos)
+    ax.grid(True, linestyle="--", alpha=0.5)
+    ax.set_axisbelow(True)
+
+fig.suptitle(f"{MODEL}: el turno {turnos[-1]} envía {entrada[-1] / entrada[0]:.1f}× más tokens de entrada que el turno 1",
+             fontweight="bold")
+fig.tight_layout()
+plt.show()
+''')
+
+code(r'''
 # 6.3 · El system prompt se paga en cada turno
 tokens_prompt = len(enc.encode(PRODUCTION_SYSTEM_PROMPT))
 for turnos in (1, 5, 20):
