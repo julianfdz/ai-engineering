@@ -79,7 +79,7 @@ def slide_hoy(d: Deck) -> None:
 
 def slide_ejercicio(d: Deck) -> None:
     p = d.new("Lo que traéis: citación verificable por línea", "No se reexplica: hoy se profundiza encima", "Bloque 1")
-    d.codigo(p, "rag/<b>schemas.py</b> · <code>SourceReference</code> (l. 333) · <code>TaskItem</code> (l. 357) · "
+    d.codigo(p, "rag/<b>schemas.py</b> · <code>SourceReference</code> (l. 345) · <code>TaskItem</code> (l. 369) · "
                 "rag/<b>validation.py</b> · <code>verify_citations</code> (l. 38) · "
                 "scripts/<b>demo_verify_citations_s11.py</b>")
     d.code(p, (24, 66, 360, 196), """class SourceReference(BaseModel):

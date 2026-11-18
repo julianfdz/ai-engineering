@@ -56,13 +56,14 @@ Enlaces directos a cada demo de Calidad (abren ya con el resultado):
 - Conflicto 40/90: <http://localhost:3000/rag/quality/hours?task_module=Notifications&task_name=Real-time%20notifications%20delivery%20service&task_description=Multi-channel%20delivery%20(push%2C%20email%2C%20SMS)%20with%20a%20durable%20queue%2C%20per-channel%20retry%20and%20backoff%20and%20delivery%20receipts>
 - Augmentation: <http://localhost:3000/rag/quality/augment>
 
-**VS Code** (carpeta `ai-engineering-s11`), con estos ficheros abiertos en este orden:
-`rag/validation.py`, `scripts/demo_verify_citations_s11.py`, `scripts/score_ragas_s11.py`,
-`evals/RAGAS_BASELINE_S11.md`, `rag/quality/hallucination.py`, `api/routers/estimate_stages.py`,
-`rag/estimator.py`, `rag/quality/augmentation.py`, `rag/quality/synthesis.py`, `rag/task_hours.py`,
-`scripts/eval_generation_s11.py`, `alembic/versions/0005_session11_hnsw_multi_index.py`, `rag/index_service.py`,
-`api/routers/corpus_index.py` y `estimator-web/app/views/rag/estimation_runs/_step_hours.html.erb`.
-(`rag/` es `app/generation/rag/`.)
+**VS Code** (carpeta `ai-engineering-s11`), con estos 18 ficheros abiertos en el orden de la clase:
+`rag/schemas.py`, `rag/validation.py`, `scripts/demo_verify_citations_s11.py`, `scripts/score_ragas_s11.py`,
+`evals/golden_generation_s11.json`, `evals/RAGAS_BASELINE_S11.md`, `rag/quality/hallucination.py`,
+`api/routers/estimate_stages.py`, `rag/estimator.py`, `rag/quality/augmentation.py`,
+`data/task_corpus_contradictions.json`, `rag/quality/synthesis.py`, `rag/task_hours.py`,
+`estimator-web/app/views/rag/estimation_runs/_step_hours.html.erb`, `scripts/eval_generation_s11.py`,
+`rag/index_service.py`, `api/routers/corpus_index.py` y `alembic/versions/0005_session11_hnsw_multi_index.py`.
+(`rag/` es `app/generation/rag/`.) Todos los de código llevan cabecera; los JSON y el `.md` no admiten comentarios.
 
 **Interruptores en «Por defecto»** antes de empezar: Calidad → Interruptores, los tres en «Por defecto (on)».
 
@@ -85,7 +86,7 @@ Enlaces directos a cada demo de Calidad (abren ya con el resultado):
 ### Diapo 3 · Lo que traéis: citación verificable por línea
 
 - No se reexplica: se repasa en dos minutos para construir encima.
-- 💻 **`rag/schemas.py`**: `SourceReference` (l. 333) y `TaskItem` (l. 357): `grounded` + `sources`. El validador
+- 💻 **`rag/schemas.py`**: `SourceReference` (l. 345) y `TaskItem` (l. 369): `grounded` + `sources`. El validador
   impone «grounded ⇒ al menos una fuente; no grounded ⇒ sin fuentes y sin horas».
 - 💻 **`rag/validation.py`** → `verify_citations` (l. 38): recorre `modules[].tasks[]` y separa grounded, dangling
   e insufficient. Recalca el límite: comprueba que el id **existe**, no que la cifra se **deduzca**.
