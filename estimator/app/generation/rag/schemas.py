@@ -1,3 +1,15 @@
+# ── Julián · Sesión 11 · Bloque 1 · el contrato de la línea citada ────────────
+#
+#   El esquema es el contrato que Instructor impone al modelo. En la S11 solo importan
+#   cuatro clases de este fichero (el resto es de la S8-S10):
+#
+#   · SourceReference (l. 345): chunk_id + document_id + evidence, la cita de cada línea.
+#   · TaskItem (l. 369) y su validador (l. 399): grounded ⇒ al menos una fuente; no grounded
+#     ⇒ sin fuentes y sin horas. Si el modelo lo incumple, Instructor le vuelve a preguntar.
+#   · LineGate (l. 525): el veredicto del gate semántico por línea (Bloque 3).
+#   · HourRange (l. 720): el rango «15–90 h» cuando las fuentes se contradicen (Bloque 4).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Pydantic models for the embedding pipeline.
 
 Input side mirrors the normalized historical-budget JSON (a budget with a list
