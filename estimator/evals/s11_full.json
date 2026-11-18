@@ -1,0 +1,1111 @@
+{
+  "judge_model": "gpt-4o-mini",
+  "embedding_model": "text-embedding-3-small",
+  "config": "full",
+  "samples": [
+    {
+      "id": "Q1",
+      "question": "Mobile banking application with OAuth2 authentication, PSD2 open banking compliance, strong customer authentication and a transaction ledger.",
+      "answer": "Total: 35 engineer-days.\nConfidence: low.\nModule Authentication & Access (OAuth 2.0 backend):\n  - Authorization Code flow implementation: 4d [grounded]\n  - Refresh token handling: 2d [grounded]\n  - JWT-based session management: 3d [grounded]\n  - Multi-tenant token isolation: 3d [grounded]\n  - Per-client rate limiting: 3d [grounded]\nModule Open Banking & PSD2 Connectors:\n  - Account Information Services (AIS) endpoints: 6d [grounded]\n  - Payment Initiation Services (PIS) endpoints: 6d [grounded]\n  - SCA flows and consent management: 5d [grounded]\n  - Berlin Group conformance & testing: 2d [grounded]\n  - Redirect/decoupled flow handling: 1d [grounded]\nModule Core Banking Ledger (immutable audit log):\n  - Ledger data model and append-only schema: n/a [no-data]\n  - Write path with idempotency: n/a [no-data]\n  - Balance computation and queries: n/a [no-data]\n  - Reconciliation and integrity checks: n/a [no-data]\n  - APIs for posting and reading movements: n/a [no-data]\nModule Notifications (Push & Email):\n  - Push notifications integration: n/a [no-data]\n  - Email notifications integration: n/a [no-data]\n  - Notification templates and preferences: n/a [no-data]\n  - Security and PII redaction: n/a [no-data]\nModule Mobile App (React Native):\n  - Authentication screens and flows: n/a [no-data]\n  - Accounts and balances: n/a [no-data]\n  - Transactions list and details: n/a [no-data]\n  - Payment initiation UI: n/a [no-data]\n  - Notifications UX: n/a [no-data]\nModule Backend Platform & DevOps (Python):\n  - Backend scaffolding: n/a [no-data]\n  - Database setup: n/a [no-data]\n  - CI/CD pipelines: n/a [no-data]\n  - Monitoring & logging: n/a [no-data]\nModule QA, Security & Compliance:\n  - SCA for login: n/a [no-data]\n  - End-to-end and integration testing: n/a [no-data]\n  - Compliance artifacts: n/a [no-data]\nAssumptions: Engineer-day conversion of 8 hours per day applied to historical hours.; Only OAuth 2.0 backend and PSD2 connectors have grounded hours; all other requested scope (ledger, notifications, mobile app, infra, QA, SCA for login) is left un-estimated numerically.; Technology stack differences (historical Ruby on Rails vs. target Python/React Native) may shift effort but are not adjusted here.; Duration in weeks not provided due to unknown team size/velocity and dependencies.\nReasoning: We grounded the estimate on two closely matching historical components. The OAuth 2.0 authentication backend (Estimated hours: 120) was decomposed into core flow and platform tasks totaling 15 engineer-days after converting 120h/8h-per-day. The PSD2 open banking connectors (Estimated hours: 160) were split across AIS, PIS, SCA/consent, Berlin Group conformance, and redirect handling summing to 20 engineer-days. All per-task lines cite the exact source chunk that carries the hours and scope. Requested scope areas without explicit historical hour data (ledger, notifications, mobile app, infra/DevOps, QA, SCA for login) are included structurally but left without numbers to avoid inventing effort. Overall confidence is low because only a subset of the project scope could be quantified from the sources and the historical tech stack differs from the target stack.",
+      "contexts": [
+        "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\nComponent: PSD2 open banking connectors\nDescription: Account information and payment initiation endpoints compliant with PSD2/Berlin Group, including strong customer authentication (SCA) and consent management.\nEstimated hours: 160",
+        "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\nEstimated hours: 60",
+        "[Client sector: finance | Year: 2022 | Main tech: ruby_on_rails]\nEstimated hours: 17",
+        "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\nEstimated hours: 140",
+        "[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]\n[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]\nComponent: OAuth 2.0 authentication backend\nDescription: Implementation of OAuth 2.0 flows (authorization code, refresh token) with JWT-based session management, multi-tenant token isolation, and rate limiting per client.\nEstimated hours: 120"
+      ],
+      "ground_truth": "Reference estimate ~60 engineer-days, grounded mainly in BUD-2024-001 (mobile banking API, 480h). Modules: Authentication & SCA — OAuth 2.0 backend plus strong customer authentication, ~15 engineer-days (AUTH-001, 120h). PSD2 & Open Banking — open banking connectors, ~20 engineer-days (PSD2-002, 160h). Transaction Ledger — ledger service, ~18 engineer-days (TXN-003, 140h). Notifications — push and email, ~8 engineer-days (NOTIF-004, 60h). Fraud/payments hardening can be informed by BUD-2024-003 as a supporting source. Confidence high: the project maps almost one-to-one to a historical banking budget.",
+      "citation_report": {
+        "total_lines": 31,
+        "grounded_lines": 10,
+        "dangling_lines": 0,
+        "insufficient_lines": 21,
+        "verified_citations": 15,
+        "dangling_citations": [],
+        "lines": [
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Authorization Code flow implementation",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Refresh token handling",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "JWT-based session management",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Multi-tenant token isolation",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Per-client rate limiting",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Account Information Services (AIS) endpoints",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "2"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Payment Initiation Services (PIS) endpoints",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "2"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "SCA flows and consent management",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "2"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Berlin Group conformance & testing",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "2"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Redirect/decoupled flow handling",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "2"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Ledger data model and append-only schema",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Write path with idempotency",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Balance computation and queries",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Reconciliation and integrity checks",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "APIs for posting and reading movements",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Push notifications integration",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Email notifications integration",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Notification templates and preferences",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Security and PII redaction",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Authentication screens and flows",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Accounts and balances",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Transactions list and details",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Payment initiation UI",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Notifications UX",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "Backend scaffolding",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "Database setup",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "CI/CD pipelines",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "Monitoring & logging",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "QA, Security & Compliance",
+            "component": "SCA for login",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "QA, Security & Compliance",
+            "component": "End-to-end and integration testing",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "QA, Security & Compliance",
+            "component": "Compliance artifacts",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          }
+        ]
+      },
+      "hallucination_report": {
+        "total_lines": 31,
+        "grounded_lines": 10,
+        "degraded_lines": 0,
+        "insufficient_lines": 21,
+        "lines": [
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Authorization Code flow implementation",
+            "status": "grounded",
+            "numeric_deviation": 0.7333333333333333,
+            "reason": ""
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Refresh token handling",
+            "status": "grounded",
+            "numeric_deviation": 0.8666666666666667,
+            "reason": ""
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "JWT-based session management",
+            "status": "grounded",
+            "numeric_deviation": 0.8,
+            "reason": ""
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Multi-tenant token isolation",
+            "status": "grounded",
+            "numeric_deviation": 0.8,
+            "reason": ""
+          },
+          {
+            "module": "Authentication & Access (OAuth 2.0 backend)",
+            "component": "Per-client rate limiting",
+            "status": "grounded",
+            "numeric_deviation": 0.8,
+            "reason": ""
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Account Information Services (AIS) endpoints",
+            "status": "grounded",
+            "numeric_deviation": 0.7,
+            "reason": ""
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Payment Initiation Services (PIS) endpoints",
+            "status": "grounded",
+            "numeric_deviation": 0.7,
+            "reason": ""
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "SCA flows and consent management",
+            "status": "grounded",
+            "numeric_deviation": 0.75,
+            "reason": ""
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Berlin Group conformance & testing",
+            "status": "grounded",
+            "numeric_deviation": 0.9,
+            "reason": ""
+          },
+          {
+            "module": "Open Banking & PSD2 Connectors",
+            "component": "Redirect/decoupled flow handling",
+            "status": "grounded",
+            "numeric_deviation": 0.95,
+            "reason": ""
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Ledger data model and append-only schema",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Write path with idempotency",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Balance computation and queries",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "Reconciliation and integrity checks",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Core Banking Ledger (immutable audit log)",
+            "component": "APIs for posting and reading movements",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Push notifications integration",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Email notifications integration",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Notification templates and preferences",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Notifications (Push & Email)",
+            "component": "Security and PII redaction",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Authentication screens and flows",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Accounts and balances",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Transactions list and details",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Payment initiation UI",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Mobile App (React Native)",
+            "component": "Notifications UX",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "Backend scaffolding",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "Database setup",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "CI/CD pipelines",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Backend Platform & DevOps (Python)",
+            "component": "Monitoring & logging",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "QA, Security & Compliance",
+            "component": "SCA for login",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "QA, Security & Compliance",
+            "component": "End-to-end and integration testing",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "QA, Security & Compliance",
+            "component": "Compliance artifacts",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          }
+        ]
+      }
+    },
+    {
+      "id": "Q2",
+      "question": "Headless e-commerce storefront with a product catalog, shopping cart checkout and personalized product recommendations.",
+      "answer": "Total: 494 engineer-days.\nConfidence: medium.\nModule Backend: Product Catalog API (Node.js):\n  - Domain modeling & schema design: 20d [grounded]\n  - Product CRUD endpoints: 30d [grounded]\n  - Category/collection endpoints: 15d [grounded]\n  - Search, filtering, sorting: 25d [grounded]\n  - Inventory & pricing endpoints + caching: 25d [grounded]\n  - Catalog import/export utilities: 20d [grounded]\n  - API docs & hardening: 15d [grounded]\nModule Backend: Cart & Checkout Service (Node.js):\n  - Cart service core: 30d [grounded]\n  - Promotions & discounts: 25d [grounded]\n  - Taxes & shipping calculations: 25d [grounded]\n  - Payment gateway integration: 25d [grounded]\n  - Order placement & confirmations: 20d [grounded]\n  - Reliability & idempotency: 15d [grounded]\nModule Frontend/UX: React Progressive Web App:\n  - PWA scaffolding & shell: 20d [grounded]\n  - Home, category, search pages: 20d [grounded]\n  - Product detail page: 20d [grounded]\n  - Cart UI: 20d [grounded]\n  - Checkout flow UI: 20d [grounded]\n  - Account basics: 10d [grounded]\nModule Recommendations & Personalization:\n  - Baseline recommendations: 10d [grounded]\n  - Personalization rules & segments: 8d [grounded]\n  - Recommendations API & PWA integration: 10d [grounded]\n  - Tracking & experiment hooks: 6d [grounded]\nModule Infrastructure & DevOps:\n  - CI/CD pipelines: 15d [grounded]\n  - Environments setup: 15d [grounded]\n  - Monitoring & logging: 10d [grounded]\n  - Infrastructure as Code: 10d [grounded]\n  - Performance/load harness: 10d [grounded]\nModule QA & Testing:\n  - Test plan & cases: n/a [no-data]\n  - Backend unit/integration tests: n/a [no-data]\n  - Frontend e2e flows: n/a [no-data]\n  - Accessibility audit: n/a [no-data]\nModule Security & Compliance:\n  - OWASP review: n/a [no-data]\n  - Dependency scanning & patching: n/a [no-data]\n  - GDPR basics: n/a [no-data]\nModule Project Management:\n  - Planning & backlog: n/a [no-data]\n  - Demos & reviews: n/a [no-data]\n  - Reporting & risk mgmt: n/a [no-data]\nAssumptions: Engineer-day units equal source hours to preserve traceability.; One payment service provider integration is included.; Shipping/tax calculations are via one external calculator or simple rules, not bespoke engines.; Recommendations are rule-based/baseline only, not a full ML pipeline.; PWA scope covers core shopping flows; CMS/content management beyond basic pages is excluded.; Single-vendor B2C; no marketplace, multi-seller, or payout features.; Localization, multi-currency, and advanced analytics are not included unless specified.\nReasoning: The estimate decomposes five ecommerce 2024 historical components into the project’s functional modules. We mapped four Node-based budget components (IDs 16:150h, 17:140h, 18:110h, 19:60h) to Catalog API, Checkout, PWA, and DevOps respectively, then split each component’s total hours across concrete tasks while citing the originating chunk on every line. Personalized recommendations are based on a smaller ecommerce 2024 historical task (ID 1594:34h) and similarly decomposed. Because the sources are unlabeled components without explicit scope names and one source is Django rather than Node/React, we express confidence as medium and keep numbers anchored strictly to the cited hours, distributing them within each module to reflect typical delivery activities for a headless B2C storefront.",
+      "contexts": [
+        "[Client sector: ecommerce | Year: 2024 | Main tech: node]\nEstimated hours: 150",
+        "[Client sector: ecommerce | Year: 2024 | Main tech: node]\nEstimated hours: 140",
+        "[Client sector: ecommerce | Year: 2024 | Main tech: django]\nEstimated hours: 34",
+        "[Client sector: ecommerce | Year: 2024 | Main tech: node]\nEstimated hours: 60",
+        "[Client sector: ecommerce | Year: 2024 | Main tech: node]\nEstimated hours: 110"
+      ],
+      "ground_truth": "Reference estimate ~59 engineer-days, grounded mainly in BUD-2024-005 (headless e-commerce storefront, 460h). Modules: Catalog — product catalog API, ~19 engineer-days (CATALOG-001, 150h). Cart & Checkout — cart and checkout service, ~18 engineer-days (CART-002, 140h). Recommendations — personalized recommendations, ~14 engineer-days (RECO-003, 110h). Storefront — storefront PWA, ~8 engineer-days (STORE-004, 60h). BUD-2024-006/007/017 are supporting analogs for catalog/checkout patterns. Confidence high. Vendor payouts and dispute handling from BUD-2024-006 are out of scope and must NOT be added.",
+      "citation_report": {
+        "total_lines": 38,
+        "grounded_lines": 28,
+        "dangling_lines": 0,
+        "insufficient_lines": 10,
+        "verified_citations": 33,
+        "dangling_citations": [],
+        "lines": [
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Domain modeling & schema design",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "16"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Product CRUD endpoints",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "16"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Category/collection endpoints",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "16"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Search, filtering, sorting",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "16"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Inventory & pricing endpoints + caching",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "16"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Catalog import/export utilities",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "16"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "API docs & hardening",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "16"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Cart service core",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "17"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Promotions & discounts",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "17"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Taxes & shipping calculations",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "17"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Payment gateway integration",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "17"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Order placement & confirmations",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "17"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Reliability & idempotency",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "17"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "PWA scaffolding & shell",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "18"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Home, category, search pages",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "18"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Product detail page",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "18"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Cart UI",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "18"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Checkout flow UI",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "18"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Account basics",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "18"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Baseline recommendations",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1594"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Personalization rules & segments",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1594"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Recommendations API & PWA integration",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1594"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Tracking & experiment hooks",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "1594"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "CI/CD pipelines",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "19"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Environments setup",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "19"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Monitoring & logging",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "19"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Infrastructure as Code",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "19"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Performance/load harness",
+            "status": "grounded",
+            "cited_chunk_ids": [
+              "19"
+            ],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Test plan & cases",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Backend unit/integration tests",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Frontend e2e flows",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Accessibility audit",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Security & Compliance",
+            "component": "OWASP review",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Security & Compliance",
+            "component": "Dependency scanning & patching",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Security & Compliance",
+            "component": "GDPR basics",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Project Management",
+            "component": "Planning & backlog",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Project Management",
+            "component": "Demos & reviews",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          },
+          {
+            "module": "Project Management",
+            "component": "Reporting & risk mgmt",
+            "status": "insufficient",
+            "cited_chunk_ids": [],
+            "dangling_chunk_ids": []
+          }
+        ]
+      },
+      "hallucination_report": {
+        "total_lines": 38,
+        "grounded_lines": 0,
+        "degraded_lines": 28,
+        "insufficient_lines": 10,
+        "lines": [
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Domain modeling & schema design",
+            "status": "degraded",
+            "numeric_deviation": 0.06666666666666667,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 150\" and does not explicitly name or allocate hours to Domain modeling & schema design, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Product CRUD endpoints",
+            "status": "degraded",
+            "numeric_deviation": 0.6,
+            "reason": "claims 30d but the cited evidence supports ~19d; Cited evidence only gives an aggregate \"Estimated hours: 150\" and does not explicitly name or allocate hours to Product CRUD endpoints, so it does not support the claimed 30 engineer-days."
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Category/collection endpoints",
+            "status": "degraded",
+            "numeric_deviation": 0.2,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 150\" and does not explicitly name or allocate hours to Category/collection endpoints, so it does not support the claimed 15 engineer-days."
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Search, filtering, sorting",
+            "status": "degraded",
+            "numeric_deviation": 0.3333333333333333,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 150\" and does not explicitly name or allocate hours to Search, filtering, sorting, so it does not support the claimed 25 engineer-days."
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Inventory & pricing endpoints + caching",
+            "status": "degraded",
+            "numeric_deviation": 0.3333333333333333,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 150\" and does not explicitly name or allocate hours to Inventory & pricing endpoints + caching, so it does not support the claimed 25 engineer-days."
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "Catalog import/export utilities",
+            "status": "degraded",
+            "numeric_deviation": 0.06666666666666667,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 150\" and does not explicitly name or allocate hours to Catalog import/export utilities, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Backend: Product Catalog API (Node.js)",
+            "component": "API docs & hardening",
+            "status": "degraded",
+            "numeric_deviation": 0.2,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 150\" and does not explicitly name or allocate hours to API docs & hardening, so it does not support the claimed 15 engineer-days."
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Cart service core",
+            "status": "degraded",
+            "numeric_deviation": 0.7142857142857143,
+            "reason": "claims 30d but the cited evidence supports ~18d; Cited evidence only gives an aggregate \"Estimated hours: 140\" and does not explicitly name or allocate hours to Cart service core, so it does not support the claimed 30 engineer-days."
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Promotions & discounts",
+            "status": "degraded",
+            "numeric_deviation": 0.42857142857142855,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 140\" and does not explicitly name or allocate hours to Promotions & discounts, so it does not support the claimed 25 engineer-days."
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Taxes & shipping calculations",
+            "status": "degraded",
+            "numeric_deviation": 0.42857142857142855,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 140\" and does not explicitly name or allocate hours to Taxes & shipping calculations, so it does not support the claimed 25 engineer-days."
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Payment gateway integration",
+            "status": "degraded",
+            "numeric_deviation": 0.42857142857142855,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 140\" and does not explicitly name or allocate hours to Payment gateway integration, so it does not support the claimed 25 engineer-days."
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Order placement & confirmations",
+            "status": "degraded",
+            "numeric_deviation": 0.14285714285714285,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 140\" and does not explicitly name or allocate hours to Order placement & confirmations, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Backend: Cart & Checkout Service (Node.js)",
+            "component": "Reliability & idempotency",
+            "status": "degraded",
+            "numeric_deviation": 0.14285714285714285,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 140\" and does not explicitly name or allocate hours to Reliability & idempotency, so it does not support the claimed 15 engineer-days."
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "PWA scaffolding & shell",
+            "status": "degraded",
+            "numeric_deviation": 0.45454545454545453,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 110\" and does not explicitly name or allocate hours to PWA scaffolding & shell, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Home, category, search pages",
+            "status": "degraded",
+            "numeric_deviation": 0.45454545454545453,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 110\" and does not explicitly name or allocate hours to Home, category, search pages, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Product detail page",
+            "status": "degraded",
+            "numeric_deviation": 0.45454545454545453,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 110\" and does not explicitly name or allocate hours to Product detail page, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Cart UI",
+            "status": "degraded",
+            "numeric_deviation": 0.45454545454545453,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 110\" and does not explicitly name or allocate hours to Cart UI, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Checkout flow UI",
+            "status": "degraded",
+            "numeric_deviation": 0.45454545454545453,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 110\" and does not explicitly name or allocate hours to Checkout flow UI, so it does not support the claimed 20 engineer-days."
+          },
+          {
+            "module": "Frontend/UX: React Progressive Web App",
+            "component": "Account basics",
+            "status": "degraded",
+            "numeric_deviation": 0.2727272727272727,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 110\" and does not explicitly name or allocate hours to Account basics, so it does not support the claimed 10 engineer-days."
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Baseline recommendations",
+            "status": "degraded",
+            "numeric_deviation": 1.3529411764705883,
+            "reason": "claims 10d but the cited evidence supports ~4d; Cited evidence only gives an aggregate \"Estimated hours: 34\" and does not explicitly name or allocate hours to Baseline recommendations, so it does not support the claimed 10 engineer-days."
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Personalization rules & segments",
+            "status": "degraded",
+            "numeric_deviation": 0.8823529411764706,
+            "reason": "claims 8d but the cited evidence supports ~4d; Cited evidence only gives an aggregate \"Estimated hours: 34\" and does not explicitly name or allocate hours to Personalization rules & segments, so it does not support the claimed 8 engineer-days."
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Recommendations API & PWA integration",
+            "status": "degraded",
+            "numeric_deviation": 1.3529411764705883,
+            "reason": "claims 10d but the cited evidence supports ~4d; Cited evidence only gives an aggregate \"Estimated hours: 34\" and does not explicitly name or allocate hours to Recommendations API & PWA integration, so it does not support the claimed 10 engineer-days."
+          },
+          {
+            "module": "Recommendations & Personalization",
+            "component": "Tracking & experiment hooks",
+            "status": "degraded",
+            "numeric_deviation": 0.4117647058823529,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 34\" and does not explicitly name or allocate hours to Tracking & experiment hooks, so it does not support the claimed 6 engineer-days."
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "CI/CD pipelines",
+            "status": "degraded",
+            "numeric_deviation": 1.0,
+            "reason": "claims 15d but the cited evidence supports ~8d; Cited evidence only gives an aggregate \"Estimated hours: 60\" and does not explicitly name or allocate hours to CI/CD pipelines, so it does not support the claimed 15 engineer-days."
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Environments setup",
+            "status": "degraded",
+            "numeric_deviation": 1.0,
+            "reason": "claims 15d but the cited evidence supports ~8d; Cited evidence only gives an aggregate \"Estimated hours: 60\" and does not explicitly name or allocate hours to Environments setup, so it does not support the claimed 15 engineer-days."
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Monitoring & logging",
+            "status": "degraded",
+            "numeric_deviation": 0.3333333333333333,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 60\" and does not explicitly name or allocate hours to Monitoring & logging, so it does not support the claimed 10 engineer-days."
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Infrastructure as Code",
+            "status": "degraded",
+            "numeric_deviation": 0.3333333333333333,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 60\" and does not explicitly name or allocate hours to Infrastructure as Code, so it does not support the claimed 10 engineer-days."
+          },
+          {
+            "module": "Infrastructure & DevOps",
+            "component": "Performance/load harness",
+            "status": "degraded",
+            "numeric_deviation": 0.3333333333333333,
+            "reason": "Cited evidence only gives an aggregate \"Estimated hours: 60\" and does not explicitly name or allocate hours to Performance/load harness, so it does not support the claimed 10 engineer-days."
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Test plan & cases",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Backend unit/integration tests",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Frontend e2e flows",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "QA & Testing",
+            "component": "Accessibility audit",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Security & Compliance",
+            "component": "OWASP review",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Security & Compliance",
+            "component": "Dependency scanning & patching",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Security & Compliance",
+            "component": "GDPR basics",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Project Management",
+            "component": "Planning & backlog",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Project Management",
+            "component": "Demos & reviews",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          },
+          {
+            "module": "Project Management",
+            "component": "Reporting & risk mgmt",
+            "status": "insufficient",
+            "numeric_deviation": null,
+            "reason": ""
+          }
+        ]
+      }
+    }
+  ]
+}
