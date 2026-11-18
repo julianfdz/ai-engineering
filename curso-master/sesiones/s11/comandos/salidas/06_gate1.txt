@@ -1,0 +1,9 @@
+﻿
+
+component : OAuth login
+status    : degraded
+reason    : claims 90d but the cited evidence supports ~15d
+
+
+
+

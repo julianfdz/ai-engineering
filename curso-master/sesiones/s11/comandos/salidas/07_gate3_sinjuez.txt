@@ -1,0 +1,9 @@
+﻿
+component                status   reason                                         
+---------                ------   ------                                         
+OAuth login              degraded claims 90d but the cited evidence supports ~15d
+OAuth token refresh      grounded                                                
+OAuth session management grounded                                                
+
+
+

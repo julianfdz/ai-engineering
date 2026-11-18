@@ -1,0 +1,6 @@
+﻿    chunk_type    | count 
+------------------+-------
+ budget_component |    60
+ historical_task  |  1547
+(2 rows)
+

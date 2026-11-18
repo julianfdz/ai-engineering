@@ -1,0 +1,160 @@
+<!doctype html><html lang='es'><head><meta charset='utf-8'><title>S11 · comandos y salidas</title><style>
+@page { size: A4; margin: 14mm 13mm 14mm 13mm; }
+body { font-family: 'Segoe UI', Arial, sans-serif; color: #1d2330; font-size: 10pt; margin: 0; }
+h1 { font-size: 19pt; margin: 0 0 2mm; color: #12305e; }
+.sub { color: #4a5568; margin-bottom: 5mm; font-size: 9.5pt; line-height: 1.45; }
+h2 { font-size: 13pt; color: #fff; background: #12305e; padding: 2mm 3mm; margin: 6mm 0 3mm; border-radius: 1.5mm;
+     break-after: avoid; }
+.paso { border: 0.3mm solid #cfd6e3; border-radius: 1.5mm; margin: 0 0 3.5mm; padding: 2.5mm 3mm;
+        break-inside: avoid; }
+.cab { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; margin-bottom: 1.5mm; }
+.tit { font-weight: 600; font-size: 10.5pt; }
+.diapo { background: #e7eefb; color: #12305e; font-weight: 700; border-radius: 1mm; padding: 0.3mm 2mm;
+         margin-right: 2mm; font-size: 9pt; }
+.origen { font-size: 8pt; color: #6b7280; white-space: nowrap; }
+.origen.hoy { color: #0f7a3a; }
+.lab { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin: 1.5mm 0 0.6mm; }
+pre { font-family: Consolas, 'Cascadia Mono', monospace; font-size: 7.6pt; line-height: 1.32; margin: 0;
+      padding: 1.8mm 2.2mm; border-radius: 1mm; white-space: pre-wrap; word-break: break-word; }
+pre.cmd { background: #12305e; color: #f3f6fb; }
+pre.out { background: #f4f6f9; color: #1d2330; border: 0.25mm solid #e1e6ee; }
+.nota { margin-top: 1.6mm; font-size: 9pt; line-height: 1.4; }
+.nota b { color: #12305e; }
+</style></head><body><h1>Sesión 11 · Comandos y su salida</h1><div class='sub'>Cada comando de la línea de formación, en orden de clase, con la salida real que dio en local. <b style='color:#0f7a3a'>hoy</b> = relanzado el 18/11 antes de clase (no llama a ningún modelo). <b>ensayo</b> = salida guardada de los ensayos del 17/11 y el 18/11; esos comandos llaman a OpenAI y no se han repetido. Carpeta: <code>ai-engineering-s11</code>, proyecto <code>-p aieng-s11live</code>.</div><h2>Antes de empezar (10 min antes)</h2><div class='paso'><div class='cab'><div class='tit'>Ir a la carpeta de la S11</div><div class='origen'></div></div><div class='lab'>Comando</div><pre class='cmd'>cd &quot;C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering-s11&quot;</pre><div class='nota'><b>Qué comentar:</b> Sin salida. Todos los comandos siguientes se lanzan desde aquí.</div></div><div class='paso'><div class='cab'><div class='tit'>Levantar el stack</div><div class='origen'></div></div><div class='lab'>Comando</div><pre class='cmd'>docker compose -p aieng-s11live up -d</pre><div class='nota'><b>Qué comentar:</b> Si ya está levantado no recrea nada. Comprueba con el siguiente.</div></div><div class='paso'><div class='cab'><div class='tit'>Los cinco contenedores, sanos</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>docker compose -p aieng-s11live ps</pre><div class='lab'>Salida</div><pre class='out'>NAME                     STATUS
+s11-estimator            Up 19 hours (healthy)
+s11-estimator-postgres   Up 19 hours (healthy)
+s11-estimator-web        Up 19 hours (healthy)
+s11-redis                Up 19 hours (healthy)
+s11-web-postgres         Up 19 hours (healthy)</pre><div class='nota'><b>Qué comentar:</b> Los cinco s11-* tienen que salir «healthy». (Salida resumida a nombre y estado.)</div></div><div class='paso'><div class='cab'><div class='tit'>Helpers (pegar una vez)</div><div class='origen'></div></div><div class='lab'>Comando</div><pre class='cmd'>$B = &quot;http://localhost:8000&quot;; $E = @{ &quot;X-API-Key&quot; = &quot;demo-estimate-key&quot; }; $R = @{ &quot;X-API-Key&quot; = &quot;demo-retrieval-key&quot; }
+function api($metodo, $ruta, $cuerpo = $null, $cab = @{}) { $p = @{ Method = $metodo; Uri = &quot;$B$ruta&quot;; Headers = $cab; ContentType = &quot;application/json; charset=utf-8&quot; }; if ($cuerpo) { $p.Body = [Text.Encoding]::UTF8.GetBytes(($cuerpo | ConvertTo-Json -Depth 10)) }; Invoke-RestMethod @p }
+function linea($nombre, $dias) { @{ name = $nombre; engineer_days = $dias; grounded = $true; sources = @(@{ chunk_id = &quot;1&quot;; document_id = &quot;BUD-1&quot;; evidence = &quot;AUTH-001 :: OAuth backend — 120 h&quot; }) } }
+function gate($lineas, $juez = $false) { api POST &quot;/v1/estimate/stages/verify&quot; @{ use_judge = $juez; kept_chunks = @(@{ id = 1; content = &quot;AUTH-001 :: OAuth backend — 120 h&quot;; chunk_type = &quot;budget_component&quot;; distance = 0.2; estimated_hours = 120 }); estimate = @{ confidence = &quot;high&quot;; reasoning = &quot;demo&quot;; total_engineer_days = 90; modules = @(@{ name = &quot;Auth&quot;; tasks = @($lineas) }) } } $E }
+function horas($modulo, $tarea, $desc) { (api POST &quot;/v1/estimate/tasks/hours&quot; @{ modules = @(@{ name = $modulo; tasks = @(@{ name = $tarea; description = $desc }) }) } $E).tasks[0] }
+function psql($sql) { docker compose -p aieng-s11live exec estimator-postgres psql -U estimator -d estimator -c $sql }</pre><div class='nota'><b>Qué comentar:</b> Sin salida. Definen api, linea, gate, horas y psql para el resto de la clase.</div></div><h2>Bloque 1 · Pre-vuelo y errores</h2><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 3</span>Citación verificable, sin red</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>docker compose -p aieng-s11live exec estimator python scripts/demo_verify_citations_s11.py 2&gt;$null</pre><div class='lab'>Salida</div><pre class='out'>=== Citation verification report ===
+lines: 4  grounded: 2  dangling: 1  insufficient: 1
+verified citations: 2
+dangling citations: [&#x27;999&#x27;]
+
+module                   line                     status        cited -&gt; dangling
+----------------------------------------------------------------------------------------
+Authentication &amp; SCA     OAuth 2.0 backend        grounded      [&#x27;101&#x27;] -&gt; -
+PSD2 &amp; Open Banking      Open banking connectors  grounded      [&#x27;102&#x27;] -&gt; -
+Ledger                   Transaction ledger       dangling      [&#x27;999&#x27;] -&gt; [&#x27;999&#x27;]
+Reporting                Regulatory reporting     insufficient  [] -&gt; -
+
+ACCEPTANCE: PASS</pre><div class='nota'><b>Qué comentar:</b> Cuatro líneas: dos grounded, el 999 colgante (dangling) y «Regulatory reporting» insufficient. verify_citations comprueba que el id existe, no que la cifra salga de él.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 4</span>Pre-vuelo 1 · el servicio responde</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>api GET &quot;/health&quot;</pre><div class='lab'>Salida</div><pre class='out'>status  version environment
+------  ------- -----------
+healthy 0.1.0   development</pre></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 4</span>Pre-vuelo 2 · el corpus está</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>psql &quot;select chunk_type, count(*) from budget_chunks group by 1;&quot;</pre><div class='lab'>Salida</div><pre class='out'>    chunk_type    | count 
+------------------+-------
+ budget_component |    60
+ historical_task  |  1547
+(2 rows)</pre><div class='nota'><b>Qué comentar:</b> 1.547 tareas = 1.543 del corpus + las 4 del caso en conflicto. 60 componentes de presupuesto.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 4</span>Pre-vuelo 3 · el golden set</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>(Get-Content estimator\evals\golden_generation_s11.json -Raw | ConvertFrom-Json).queries.Count</pre><div class='lab'>Salida</div><pre class='out'>5</pre><div class='nota'><b>Qué comentar:</b> Cinco consultas, cada una con su ground_truth en días.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 4</span>Pre-vuelo 5 · el gate nuevo, sin LLM</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>(gate @(linea &quot;OAuth login&quot; 90)).lines | Format-List component, status, reason</pre><div class='lab'>Salida</div><pre class='out'>component : OAuth login
+status    : degraded
+reason    : claims 90d but the cited evidence supports ~15d</pre><div class='nota'><b>Qué comentar:</b> Cita 120 h (≈15 días) y reclama 90: degradada. La fila 4 es el demo_verify de la diapo 3. Ninguna de las cinco comprobaciones llama a un modelo.</div></div><h2>Bloque 3 · Detección de alucinaciones</h2><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 10</span>Referencia: las tres líneas solo con el ancla (sin juez)</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>$r = gate @((linea &quot;OAuth login&quot; 90), (linea &quot;OAuth token refresh&quot; 10), (linea &quot;OAuth session management&quot; 20)); $r.lines | Format-Table component, status, reason -Wrap</pre><div class='lab'>Salida</div><pre class='out'>component                status   reason                                         
+---------                ------   ------                                         
+OAuth login              degraded claims 90d but the cited evidence supports ~15d
+OAuth token refresh      grounded                                                
+OAuth session management grounded</pre><div class='nota'><b>Qué comentar:</b> Sin el $true final no llama al juez. La de 20 días (+33 %) pasa porque el ancla tolera hasta +50 %.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 10</span>El gate con juez (el comando del guion)</div><div class='origen'>ensayo 17/11 · llama a gpt-5-mini (~7 s)</div></div><div class='lab'>Comando</div><pre class='cmd'>$r = gate @((linea &quot;OAuth login&quot; 90), (linea &quot;OAuth token refresh&quot; 10), (linea &quot;OAuth session management&quot; 20)) $true; $r.lines | Format-Table component, status, reason -Wrap</pre><div class='lab'>Salida</div><pre class='out'>component                status    reason
+---------                ------    ------
+OAuth login              degraded  claims 90d but the cited evidence supports ~15d; Cited evidence is
+                                   &quot;OAuth backend — 120 h&quot; (120 hours) but the claim is 90 engineer-days
+                                   (~720 hours), which far …
+OAuth token refresh      grounded
+OAuth session management degraded  Cited evidence is &quot;OAuth backend — 120 h&quot; (120 hours) but the claim is
+                                   20 engineer-days (~160 hours), which exceeds the recorded 120 h and is
+                                   not supported.</pre><div class='nota'><b>Qué comentar:</b> Con juez, la de 20 días pasa a degraded: el juez no tiene tolerancia y basta con que uno de los dos falle. Las razones del juez cambian de redacción en cada ejecución; el estado de cada línea sale igual.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 10</span>El mismo gate con la evidencia «120 h» (en la web: Calidad → Gate)</div><div class='origen'>ensayo 17/11 · llama a gpt-5-mini</div></div><div class='lab'>Comando</div><pre class='cmd'>(en la web: «Las cuatro a la vez», «Con juez», evidencia «solo la cifra: 120 h»)</pre><div class='lab'>Salida</div><pre class='out'>OAuth login               degraded      claims 90d but the cited evidence supports ~15d; Cited evidence only
+                                        states «120 h» without naming OAuth login …
+OAuth token refresh       degraded      Cited evidence does not specify token refresh work; although 120 hours
+                                        exceeds the claimed 10 engineer-days (80 hours), the evidence fails to
+                                        name the same work
+OAuth session management  degraded      Cited evidence only shows «120 h» (15 engineer-days), which both doesn&#x27;t
+                                        explicitly refer to session management and is insufficient …
+Regulatory reporting      insufficient</pre><div class='nota'><b>Qué comentar:</b> 0 grounded, 3 degraded, 1 insufficient: el juez degrada también la porción honesta de 10 días porque la cita no dice de qué trabajo es.</div></div><h2>Bloque 4 · Augmentation y síntesis</h2><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 13</span>Fuentes en conflicto: el rango</div><div class='origen'>ensayo 17/11 · igual en 3 repeticiones · hace un embedding de la consulta</div></div><div class='lab'>Comando</div><pre class='cmd'>horas &quot;Notifications&quot; &quot;Real-time notifications delivery service&quot; &quot;Multi-channel delivery (push, email, SMS) with a durable queue, per-channel retry and backoff and delivery receipts&quot; | Format-List estimated_hours, reliability, dispersion, hours_range</pre><div class='lab'>Salida</div><pre class='out'>estimated_hours : 39
+reliability     : 0.191
+dispersion      : 0.711
+hours_range     : @{low=15; high=90; reason=historical sources disagree (15h vs 90h across 5 analogs);
+                  estimate depends on scope not yet pinned down}
+
+vecinos (source_id → horas): 1606 → 90 · 1604 → 40 · 567 → 15 · 691 → 23 · 1345 → 23</pre><div class='nota'><b>Qué comentar:</b> Consenso 39 h, dispersión 0,71 &gt; 0,35, así que se ofrece rango con razón. Sale 15 y no 40 porque el rango es el min/max de los vecinos y la síntesis no sabe cuál es el fixture.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 14</span>La misma tarea descrita como en el guion de LIDR</div><div class='origen'>ensayo 17/11 · hace un embedding de la consulta</div></div><div class='lab'>Comando</div><pre class='cmd'>horas &quot;Notifications&quot; &quot;Real-time notifications delivery service&quot; &quot;push, email and SMS with retries&quot; | Format-List estimated_hours, dispersion, hours_range</pre><div class='lab'>Salida</div><pre class='out'>estimated_hours : 24
+dispersion      : 0.37
+hours_range     : @{low=15; high=40; reason=historical sources disagree (15h vs 40h across 5 analogs); …}
+
+vecinos (source_id → horas): 1604 → 40 · 567 → 15 · 144 → 17 · 1051 → 24 · 691 → 23</pre><div class='nota'><b>Qué comentar:</b> Con esta descripción el vecino de 90 h no entra en el top 5: solo está el de 40 h y sale 15–40. El rango depende de cómo se describa la tarea.</div></div><h2>Bloque 5 · Evaluación en dos modos</h2><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 16</span>Recoger las muestras (lanzar al empezar el Bloque 4, en otra PowerShell)</div><div class='origen'>ensayo 18/11 · 5,5 min · gpt-5 + gpt-5-mini (log resumido)</div></div><div class='lab'>Comando</div><pre class='cmd'>docker compose -p aieng-s11live exec estimator python scripts/eval_generation_s11.py --gate --config full --limit 2 --collect-only evals/s11_full.json 2&gt;$null</pre><div class='lab'>Salida</div><pre class='out'>Collecting 2 samples · config=full (+ Synthesis (full S11))...
+  - Q1: Mobile banking application with OAuth2 authentication, PSD2 ...
+[info] llm_structured_call_completed  latency_ms=8376   model=gpt-5-mini  (reformulación)
+[info] rag_retrieve_done  candidates_evaluated=1607 rerank=True results=5 search_mode=hybrid
+[info] llm_structured_call_completed  latency_ms=98615  model=gpt-5       (estimación)
+[info] llm_structured_call_completed  latency_ms=18553  model=gpt-5-mini  response_model=_Panel (juez)
+  - Q2: Headless e-commerce storefront with a product catalog, shopp...
+[info] llm_structured_call_completed  latency_ms=10097  model=gpt-5-mini
+[info] rag_retrieve_done  candidates_evaluated=1610 rerank=True results=5 search_mode=hybrid
+[info] llm_structured_call_completed  latency_ms=135362 model=gpt-5
+[info] llm_structured_call_completed  latency_ms=22875  model=gpt-5-mini  response_model=_Panel
+
+Wrote 2 samples to evals/s11_full.json (score with --score-file).</pre><div class='nota'><b>Qué comentar:</b> Cada consulta: reformular (gpt-5-mini) → recuperar (híbrida + reranker) → estimar (gpt-5, 1,5–2,5 min) → juez del gate. Que aparezca _Panel confirma que el gate está encendido. No toques los interruptores mientras corre. Plan B: el fichero ya está commiteado, salta directamente a puntuar.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 16</span>Cargar la clave para RAGAS (no la imprime)</div><div class='origen'></div></div><div class='lab'>Comando</div><pre class='cmd'>$env:OPENAI_API_KEY = ((Get-Content estimator\.env | Select-String &#x27;^OPENAI_API_KEY=&#x27;).Line -split &#x27;=&#x27;, 2)[1]</pre><div class='nota'><b>Qué comentar:</b> Sin salida. RAGAS corre en el host (venv aparte) y necesita la clave en el entorno.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 15</span>Modo puerta (offline, con ground_truth)</div><div class='origen'>ensayo 18/11 · 83 s · RAGAS llama a OpenAI</div></div><div class='lab'>Comando</div><pre class='cmd'>estimator\.ragas-venv\Scripts\python.exe estimator\scripts\eval_generation_s11.py --gate --score-file estimator\evals\s11_full.json; &quot;exit=$LASTEXITCODE&quot;</pre><div class='lab'>Salida</div><pre class='out'>=== Offline regression gate (golden set + ground_truth) ===
+metric                 baseline      now    floor  verdict
+faithfulness              0.552    0.551    0.502  PASS
+answer_relevancy          0.033    0.039   -0.017  PASS
+context_precision         1.000    1.000    0.950  PASS
+context_recall            0.114    0.312    0.064  PASS
+dangling_citations            0        0        0  PASS
+(degraded lines flagged by the gate: 28)
+
+GATE: DEPLOY
+exit=0</pre><div class='nota'><b>Qué comentar:</b> floor = baseline − 0,05. Ninguna métrica cae por debajo y no hay citas colgantes, así que DEPLOY y exit 0 (un CI lo dejaría pasar). Son 2 de las 5 consultas del baseline: orientativo.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 15</span>Modo monitor (producción, sin ground_truth)</div><div class='origen'>ensayo 18/11 · 65 s · RAGAS llama a OpenAI</div></div><div class='lab'>Comando</div><pre class='cmd'>estimator\.ragas-venv\Scripts\python.exe estimator\scripts\eval_generation_s11.py --monitor --score-file estimator\evals\s11_full.json</pre><div class='lab'>Salida</div><pre class='out'>=== Reference-free production monitor (no ground_truth) ===
+faithfulness            0.535
+answer_relevancy        0.039
+dangling_citations          0
+degraded_lines             28
+
+(no exit gating — this is a health read on live, unlabelled traffic)</pre><div class='nota'><b>Qué comentar:</b> Solo las dos métricas que no necesitan referencia. No bloquea nada: es una lectura de salud del tráfico real.</div></div><h2>Bloque 6 · Ampliar e indexar el corpus</h2><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 19</span>EXPLAIN tal cual: Seq Scan</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>psql &quot;EXPLAIN ANALYZE SELECT id FROM budget_chunks ORDER BY embedding::halfvec(1536) &lt;=&gt; (SELECT embedding::halfvec(1536) FROM budget_chunks LIMIT 1) LIMIT 5;&quot;</pre><div class='lab'>Salida</div><pre class='out'>                                                                QUERY PLAN                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=310.97..310.98 rows=5 width=16) (actual time=90.258..90.260 rows=5 loops=1)
+   InitPlan 1 (returns $0)
+     -&gt;  Limit  (cost=0.00..0.17 rows=1 width=32) (actual time=0.047..0.049 rows=1 loops=1)
+           -&gt;  Seq Scan on budget_chunks budget_chunks_1  (cost=0.00..280.09 rows=1607 width=32) (actual time=0.047..0.048 rows=1 loops=1)
+   -&gt;  Sort  (cost=310.80..314.81 rows=1607 width=16) (actual time=90.234..90.234 rows=5 loops=1)
+         Sort Key: (((budget_chunks.embedding)::halfvec(1536) &lt;=&gt; $0))
+         Sort Method: top-N heapsort  Memory: 25kB
+         -&gt;  Seq Scan on budget_chunks  (cost=0.00..284.11 rows=1607 width=16) (actual time=0.420..89.329 rows=1607 loops=1)
+ Planning Time: 0.840 ms
+ Execution Time: 90.440 ms
+(10 rows)</pre><div class='nota'><b>Qué comentar:</b> Con 1.607 filas al planificador le sale más barato recorrer la tabla y ordenar (top-N heapsort).</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 19</span>Forzando: usa el índice HNSW</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>psql &quot;SET enable_seqscan = off; EXPLAIN ANALYZE SELECT id FROM budget_chunks ORDER BY embedding::halfvec(1536) &lt;=&gt; (SELECT embedding::halfvec(1536) FROM budget_chunks LIMIT 1) LIMIT 5;&quot;</pre><div class='lab'>Salida</div><pre class='out'>SET
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=10000000870.69..10000000881.38 rows=5 width=16) (actual time=139.066..139.106 rows=5 loops=1)
+   InitPlan 1 (returns $0)
+     -&gt;  Limit  (cost=10000000000.00..10000000000.17 rows=1 width=32) (actual time=0.128..0.129 rows=1 loops=1)
+           -&gt;  Seq Scan on budget_chunks budget_chunks_1  (cost=10000000000.00..10000000280.09 rows=1607 width=32) (actual time=0.126..0.127 rows=1 loops=1)
+   -&gt;  Index Scan using ix_budget_chunks_embedding_hnsw on budget_chunks  (cost=870.52..4304.16 rows=1607 width=16) (actual time=9.693..9.730 rows=5 loops=1)
+         Order By: ((embedding)::halfvec(1536) &lt;=&gt; $0)
+ Planning Time: 0.373 ms
+ JIT:
+   Functions: 9
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+   Timing: Generation 1.014 ms, Inlining 60.717 ms, Optimization 33.231 ms, Emission 35.444 ms, Total 130.406 ms
+ Execution Time: 262.172 ms
+(12 rows)</pre><div class='nota'><b>Qué comentar:</b> Index Scan using ix_budget_chunks_embedding_hnsw. El índice existe y casa con la consulta porque los dos usan halfvec(1536). El tiempo total lo infla el JIT de la primera ejecución; el Index Scan en sí tarda ~10 ms.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 19</span>Con vector a secas no puede usarlo ni forzado</div><div class='origen hoy'>hoy, 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>psql &quot;SET enable_seqscan = off; EXPLAIN SELECT id FROM budget_chunks ORDER BY embedding &lt;=&gt; (SELECT embedding FROM budget_chunks LIMIT 1) LIMIT 5;&quot;</pre><div class='lab'>Salida</div><pre class='out'>SET
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=20000000306.95..20000000306.96 rows=5 width=16)
+   InitPlan 1 (returns $0)
+     -&gt;  Limit  (cost=10000000000.00..10000000000.17 rows=1 width=18)
+           -&gt;  Seq Scan on budget_chunks budget_chunks_1  (cost=10000000000.00..10000000276.07 rows=1607 width=18)
+   -&gt;  Sort  (cost=10000000306.78..10000000310.80 rows=1607 width=16)
+         Sort Key: ((budget_chunks.embedding &lt;=&gt; $0))
+         -&gt;  Seq Scan on budget_chunks  (cost=10000000000.00..10000000280.09 rows=1607 width=16)
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+(10 rows)</pre><div class='nota'><b>Qué comentar:</b> Sigue siendo Seq Scan + Sort (el coste 10000000000 es la penalización de enable_seqscan=off). La consulta tiene que usar la misma expresión que el índice.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 20</span>Búsqueda antes de ampliar</div><div class='origen'>ensayo 17/11 y 18/11 · hace un embedding de la consulta</div></div><div class='lab'>Comando</div><pre class='cmd'>(api POST &quot;/v1/retrieval/search&quot; @{ query_text = &quot;Biometric KYC onboarding with liveness detection and document OCR for a neobank&quot;; top_k = 3 } $R).chunks | Format-Table id, budget_id, distance</pre><div class='lab'>Salida</div><pre class='out'>  id budget_id      distance
+  -- ---------      --------
+1568 TASK-2024-0059    0.465
+ 855 TASK-2022-0032    0.472
+ 134 TASK-2024-0003    0.477</pre><div class='nota'><b>Qué comentar:</b> Lo más parecido son tareas genéricas de una plataforma financiera (~0,47): no hay nada de KYC en el corpus.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 20</span>(web) Corpus → Añadir información → «Indexar en el corpus →»</div><div class='origen'>ensayo 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>(en la web)</pre><div class='lab'>Salida</div><pre class='out'>Estado pending → running → completed   Procesados 1 / 1
+Corpus: budget 79 → 80 documentos · 1.607 → 1.610 chunks · Índice HNSW ✓</pre><div class='nota'><b>Qué comentar:</b> El job responde 202 al momento y la página se actualiza sola. Tres componentes = tres chunks.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 20</span>La misma búsqueda después</div><div class='origen'>ensayo 18/11 · hace un embedding de la consulta</div></div><div class='lab'>Comando</div><pre class='cmd'>(api POST &quot;/v1/retrieval/search&quot; @{ query_text = &quot;Biometric KYC onboarding with liveness detection and document OCR for a neobank&quot;; top_k = 3 } $R).chunks | Format-Table id, budget_id, distance</pre><div class='lab'>Salida</div><pre class='out'>  id budget_id     distance
+  -- ---------     --------
+1613 BUD-2025-0100    0.167
+1612 BUD-2025-0100    0.188
+1614 BUD-2025-0100    0.242</pre><div class='nota'><b>Qué comentar:</b> Los tres primeros son ya el proyecto nuevo, a ~0,17. Lo indexado se recupera sin reiniciar nada. Los id pueden ser otros en clase: dependen de la secuencia de la tabla.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 20</span>(web) Indexar otra vez el mismo JSON</div><div class='origen'>ensayo 18/11</div></div><div class='lab'>Comando</div><pre class='cmd'>(en la web)</pre><div class='lab'>Salida</div><pre class='out'>Estado completed   Procesados 0 / 1
+log del servicio: corpus_expansion_skip_duplicate · documents_indexed=0 documents_skipped=1</pre><div class='nota'><b>Qué comentar:</b> El duplicado se salta: no se re-embebe ni se paga dos veces.</div></div><div class='paso'><div class='cab'><div class='tit'><span class='diapo'>Diapo 20</span>Para repetir la demo otro día: borrar lo añadido</div><div class='origen'>esperado</div></div><div class='lab'>Comando</div><pre class='cmd'>psql &quot;DELETE FROM documents WHERE source_path LIKE &#x27;corpus-expansion::%&#x27;;&quot;</pre><div class='lab'>Salida</div><pre class='out'>DELETE 1</pre><div class='nota'><b>Qué comentar:</b> Un documento; sus chunks se van en cascada y el corpus vuelve a 1.607. Solo después de clase.</div></div></body></html>

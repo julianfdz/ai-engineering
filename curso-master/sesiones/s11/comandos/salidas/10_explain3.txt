@@ -1,0 +1,15 @@
+﻿SET
+                                                    QUERY PLAN                                                     
+-------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=20000000306.95..20000000306.96 rows=5 width=16)
+   InitPlan 1 (returns $0)
+     ->  Limit  (cost=10000000000.00..10000000000.17 rows=1 width=18)
+           ->  Seq Scan on budget_chunks budget_chunks_1  (cost=10000000000.00..10000000276.07 rows=1607 width=18)
+   ->  Sort  (cost=10000000306.78..10000000310.80 rows=1607 width=16)
+         Sort Key: ((budget_chunks.embedding <=> $0))
+         ->  Seq Scan on budget_chunks  (cost=10000000000.00..10000000280.09 rows=1607 width=16)
+ JIT:
+   Functions: 6
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+(10 rows)
+

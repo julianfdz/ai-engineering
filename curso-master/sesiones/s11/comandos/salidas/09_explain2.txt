@@ -1,0 +1,17 @@
+﻿SET
+                                                                          QUERY PLAN                                                                          
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=10000000870.69..10000000881.38 rows=5 width=16) (actual time=139.066..139.106 rows=5 loops=1)
+   InitPlan 1 (returns $0)
+     ->  Limit  (cost=10000000000.00..10000000000.17 rows=1 width=32) (actual time=0.128..0.129 rows=1 loops=1)
+           ->  Seq Scan on budget_chunks budget_chunks_1  (cost=10000000000.00..10000000280.09 rows=1607 width=32) (actual time=0.126..0.127 rows=1 loops=1)
+   ->  Index Scan using ix_budget_chunks_embedding_hnsw on budget_chunks  (cost=870.52..4304.16 rows=1607 width=16) (actual time=9.693..9.730 rows=5 loops=1)
+         Order By: ((embedding)::halfvec(1536) <=> $0)
+ Planning Time: 0.373 ms
+ JIT:
+   Functions: 9
+   Options: Inlining true, Optimization true, Expressions true, Deforming true
+   Timing: Generation 1.014 ms, Inlining 60.717 ms, Optimization 33.231 ms, Emission 35.444 ms, Total 130.406 ms
+ Execution Time: 262.172 ms
+(12 rows)
+

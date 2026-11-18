@@ -1,0 +1,13 @@
+﻿=== Citation verification report ===
+lines: 4  grounded: 2  dangling: 1  insufficient: 1
+verified citations: 2
+dangling citations: ['999']
+
+module                   line                     status        cited -> dangling
+----------------------------------------------------------------------------------------
+Authentication & SCA     OAuth 2.0 backend        grounded      ['101'] -> -
+PSD2 & Open Banking      Open banking connectors  grounded      ['102'] -> -
+Ledger                   Transaction ledger       dangling      ['999'] -> ['999']
+Reporting                Regulatory reporting     insufficient  [] -> -
+
+ACCEPTANCE: PASS

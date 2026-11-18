@@ -1,0 +1,14 @@
+﻿                                                                QUERY PLAN                                                                 
+-------------------------------------------------------------------------------------------------------------------------------------------
+ Limit  (cost=310.97..310.98 rows=5 width=16) (actual time=90.258..90.260 rows=5 loops=1)
+   InitPlan 1 (returns $0)
+     ->  Limit  (cost=0.00..0.17 rows=1 width=32) (actual time=0.047..0.049 rows=1 loops=1)
+           ->  Seq Scan on budget_chunks budget_chunks_1  (cost=0.00..280.09 rows=1607 width=32) (actual time=0.047..0.048 rows=1 loops=1)
+   ->  Sort  (cost=310.80..314.81 rows=1607 width=16) (actual time=90.234..90.234 rows=5 loops=1)
+         Sort Key: (((budget_chunks.embedding)::halfvec(1536) <=> $0))
+         Sort Method: top-N heapsort  Memory: 25kB
+         ->  Seq Scan on budget_chunks  (cost=0.00..284.11 rows=1607 width=16) (actual time=0.420..89.329 rows=1607 loops=1)
+ Planning Time: 0.840 ms
+ Execution Time: 90.440 ms
+(10 rows)
+
