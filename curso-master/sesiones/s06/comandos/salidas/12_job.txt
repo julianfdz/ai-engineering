@@ -1,0 +1,7 @@
+﻿job_id          : 95f56fd1-404c-4766-bc29-2ed69412ed15
+source_name     : presupuestos_json
+status          : completed
+documents_count : 6
+error_message   : 
+started_at      : 2026-11-18T19:01:28.567096Z
+finished_at     : 2026-11-18T19:01:28.612883Z

@@ -1053,10 +1053,17 @@ que son los que hay que cubrir en el deck.
 
 ## 7. Material para clase
 
-- **Deck**: [Sesion06-Julian-Fernandez.pdf](Sesion06-Julian-Fernandez.pdf) y
-  [Sesion06-Julian-Fernandez.pptx](Sesion06-Julian-Fernandez.pptx) (mismo contenido; se
-  regeneran con `deck/build_deck.py`).
-- **Guion personal**: [guion-julian.md](guion-julian.md).
+Edición 2026-10 (19/11/2026, TA Sisley Jiménez), rehecho el 18/11 con el formato de la S11:
+
+- **Deck**: [Sesion06-Julian-Fernandez.pdf](Sesion06-Julian-Fernandez.pdf), 25 diapos con la franja «En el
+  código» (fichero + línea) en cada diapo de contenido. Se regenera con `deck/build_deck.py` (motor de la S5/S7).
+- **Para los alumnos**: [S06-comandos-y-salidas.pdf](S06-comandos-y-salidas.pdf), cada script y comando con para
+  qué sirve, la salida real del 18/11 y cómo leerla, más tres «Prueba tú» (escenarios de `architecture.py`, romper
+  el catálogo y ver los fallos de Pandera). Se regenera con `comandos/build_comandos.py`.
+- **Guion personal**: [guion-julian.md](guion-julian.md), diapo a diapo con los comandos de PowerShell probados.
+- **Cabeceras**: los 26 ficheros que se abren en clase llevan arriba una cabecera «Sesión 6 · …» (rama
+  `session_06_live_local` del fork).
+- **Edición 2609 (14/10)**: el deck de 30 diapos, el pptx y el guion de entonces están en `anterior-2609/`.
 - **Píldoras**:
   [decision-cag-rag-hibrido.md](../../pildoras/decision-cag-rag-hibrido.md) ·
   [catalogo-de-fuentes.md](../../pildoras/catalogo-de-fuentes.md) ·
@@ -1068,5 +1075,5 @@ que son los que hay que cubrir en el deck.
 
 - [ ] Tabla de umbrales del Bloque 4 (en el texto original venía a continuación de "Tres métricas
       nuevas" y no llegó a pegarse).
-- [ ] Deck de la S6 sobre la plantilla de LIDR, cubriendo las 11 diapositivas del guion.
-- [ ] Levantar `session_06_live` en local (parche `TORCH_CPU_ONLY` + `.env`) y pasar el pre-flight.
+- [x] Deck de la S6 sobre la plantilla de LIDR (rehecho el 18/11 para la edición 2026-10).
+- [x] Levantar `session_06_live` en local y pasar el pre-flight: 8/8 el 18/11 (`-p aieng-s06live`).

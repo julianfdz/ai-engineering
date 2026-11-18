@@ -1,315 +1,253 @@
-# Guion de Julián · Sesión 6 LIDR · Data-driven AI
+# Línea de formación · Sesión 6 · Data-driven AI: análisis y normalización
 
-> Mi guion personal para dar la clase: qué digo, qué diapo pongo, qué fichero abro y qué comando lanzo.
-> Las diapos son las del **deck de alumnos**: `Sesion06-Julian-Fernandez.pdf` (30 diapos).
-> El guion oficial completo está en [guion-directo.md](guion-directo.md).
+> Edición 2026-10 · jueves 19/11/2026, 17:30 · TA: Sisley Jiménez.
+>
+> Diapo a diapo: **qué contar**, **qué fichero abrir** (y en qué línea), **qué lanzar** y **qué sale**. Las rutas son
+> relativas a `estimator/`. En VS Code (carpeta `ai-engineering-s06`): Ctrl+P con el nombre y Ctrl+G con la línea.
+> Cada fichero lleva arriba una cabecera «Sesión 6 · …» con para qué sirve.
+>
+> - Deck: [Sesion06-Julian-Fernandez.pdf](Sesion06-Julian-Fernandez.pdf) (25 diapos).
+> - Para los alumnos: [S06-comandos-y-salidas.pdf](S06-comandos-y-salidas.pdf), con cada script, su salida real y cómo leerla.
+> - El material de la edición 2609 (14/10) está en `anterior-2609/`.
+>
+> Formato: **no se teclea código**. Se abre, se explica y se ejecuta. Ninguna demo llama a un modelo: se pueden
+> repetir sin coste.
 
 ---
 
-## 🔧 Antes de empezar (5 min antes)
-
-**Dónde lanzo TODO:** en **PowerShell**, siempre desde la carpeta del worktree de la S6:
+## Antes de empezar (10 min antes)
 
 ```powershell
 cd "C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering-s06"
 ```
 
-1. Abrir **Docker Desktop** y esperar a que el motor esté verde.
-2. Comprobar que los 5 contenedores están sanos (`healthy`):
+```powershell
+docker compose -p aieng-s06live up -d
+```
 
-   ```powershell
-   docker compose -p aieng-s06live ps
-   ```
+```powershell
+docker compose -p aieng-s06live ps
+```
 
-   Si alguno está parado, levantarlos **sin** reconstruir:
+Los cinco `s06-*` en `healthy`. Luego el pre-flight (8 ✅):
 
-   ```powershell
-   docker compose -p aieng-s06live up -d
-   ```
+```powershell
+docker compose -p aieng-s06live exec estimator python scripts/preflight_s06.py
+```
 
-3. Pasar el preflight (tienen que salir 8 ✅):
+Si sale ❌ en `/health` justo después de tocar código, es la recarga del servicio: repetir en 10 s.
 
-   ```powershell
-   docker compose -p aieng-s06live exec estimator python scripts/preflight_s06.py
-   ```
+**Ventanas:** VS Code con los 26 ficheros (abajo), el deck, el PDF de comandos y el Swagger
+(<http://localhost:8000/docs>). La web de Rails no tiene nada de la S6.
 
-**Ventanas abiertas:**
-
-- **VS Code** con la carpeta `ai-engineering-s06` (el código de la sesión).
-- **El PDF** de alumnos para proyectar.
-- **El navegador** con http://localhost:8000/docs (Swagger, para la demo web).
-- **PowerShell** ya situado en la carpeta de arriba.
-
-> ⚠️ Todos los comandos llevan `-p aieng-s06live`. Sin eso, Docker no encuentra los contenedores.
-
----
-
-## 📖 Glosario rápido
-
-| Término | Qué es |
-|---|---|
-| **PII** | *Personally Identifiable Information*: información personal identificable (nombres, emails, teléfonos, DNI…) |
-| **CAG** | Meter todo el conocimiento dentro del prompt y cachearlo |
-| **RAG** | Guardar el conocimiento fuera (vectores) y recuperar solo lo relevante en cada pregunta |
-| **Lost in the middle** | El modelo atiende peor lo que está a mitad de un prompt largo: pierde la información del centro |
-| **Document** | La entidad base de la sesión: cualquier fichero (PDF, JSON, Excel…) convertido a texto + metadatos |
-| **Metadatos** | Datos sobre los datos: de dónde viene, cuándo, quién es el responsable, si tiene PII… |
-| **Cuarentena** | Un registro dudoso que no entra al RAG pero se guarda para que lo revise una persona |
+**VS Code, en orden de clase:** `scripts/preflight_s06.py`, `app/ingestion/architecture.py`,
+`catalog/inspect.py`, `catalog/models.py`, `catalog/loader.py`, `data/catalog/catalog.yaml`,
+`documents/models.py`, `loaders/filesystem.py`, `parsers/protocol.py`, `parsers/budget_json.py`,
+`parsers/transcript_txt.py`, `parsers/registry.py`, `orchestrator.py`, `app/routers/ingestion.py`,
+`estimator-web/…/ingestion_client.rb`, `cleaning/budget_records.py`, `cleaning/schemas.py`, `cleaning/policy.py`,
+`scripts/demo_cleaning_s06.py`, `pii/analyzer.py`, `pii/recognizers.py`, `pii/pseudonymizer.py`,
+`pii/mapping_store.py`, `app/persistence/models.py` y `scripts/demo_pii_s06.py`.
+(`catalog/`, `documents/`, `loaders/`, `parsers/`, `cleaning/` y `pii/` cuelgan de `app/ingestion/`.)
 
 ---
 
-## 1 · El ejercicio: estresar el CAG
+## Apertura · Diapos 1-2 · 3 min
 
-# 🖥️ DIAPO 4 — "¿Qué restricción del CAG se rompió primero?"
+- Hoy no se vectoriza nada: se prepara el corpus para que merezca ser vectorizado.
+- El viaje del dato: decidir → catalogar → ingerir → limpiar → proteger. Todo en `app/ingestion/`.
 
-*(Antes, 30 segundos con la **diapo 2** para presentarme.)*
+## Bloque 0 · Diapo 3 · 7 min
 
-- Preguntar quién ha hecho el ejercicio, qué experiencia han tenido y si han sacado alguna conclusión.
-- El ejercicio era **estresar el sistema**. Lo que tienen que haber notado:
-  - **Más coste** y **más lentitud** a medida que crece la información.
-  - Que mucha información ya es un reto en sí: aparecen **grietas en la memoria y en la calidad**.
-  - **Lost in the middle**: se pierde la información de la mitad del prompt porque se pierde la atención.
-- Apuntar en la tabla de la diapo los números de 3–4 alumnos y **cortar al cuarto**.
+- «¿Qué restricción del CAG se rompió primero?». Un número, no una sensación. Rellenar la tabla con 3-4 alumnos y
+  **cortar al cuarto**.
+- Si nadie lo menciona: lost in the middle. El modelo siempre responde algo plausible; solo se ve midiendo.
 
----
+## Bloque 1 · Errores y pre-flight · 15 min
 
-## 2 · Enfoque y objetivo de la sesión
+### Diapo 4 · Errores típicos
 
-# 🖥️ DIAPO 3 — "Lo que vamos a ver hoy"
+- Dos cubetas: formato/encoding y dependencias. La de spaCy en español es la que más duele: Presidio falla en silencio.
+- 💻 `scripts/preflight_s06.py` → `check_spacy_model` (l. 109).
 
-- Qué tienen que llevarse de hoy: un corpus **listo y defendible** antes de vectorizar.
-- Hoy **no vectorizamos nada**: preparamos los datos para que merezcan ser vectorizados.
+### Diapo 5 · Pre-flight
 
----
+- ⌨️ El comando de arriba. Recorrer las 8 líneas; parar en la de spaCy: «detected PER entities: ['Laura Fernández']».
+- 💻 `CHECKS` (l. 179): cada chequeo es una función.
 
-## 3 · Data-driven AI como metodología
+## 2.1 · Decisión arquitectónica · 15 min
 
-# 🖥️ DIAPO 5 — "Data-driven AI"
+### Diapo 6 · Las cuatro restricciones
 
-*(La **diapo 6** — "Cada problema de la IA genérica, una pieza" — refuerza esta idea si hay tiempo.)*
+- Ventana, coste, latencia y lost in the middle. Es un **AND**.
+- 💻 `app/ingestion/architecture.py` → `CAGViability` (l. 48), `viable` (l. 57): `all([...])`.
 
-- Data-driven AI es una **metodología de trabajo**: todo el foco y la importancia están en los **datos**.
-- El dato de internet no es fiable. Todo se construye con los **datos privados** de la empresa, del proyecto, del negocio.
-- La idea clave: **depender de los datos, no del modelo**.
+### Diapo 7 · architecture.py
 
----
-
-## 4 · RAG vs fine-tuning
-
-# 🖥️ DIAPO 7 — "RAG vs Fine-tuning · cinco dimensiones"
-
-- **Muy importante saber diferenciarlos.**
-- No significa que RAG sea perfecto ni que el fine-tuning no haga falta nunca: a veces sí hace falta, pero hay que saber cuándo.
-- **Limitaciones del RAG:** el error típico es *chunkear* mucha información a lo loco y que luego no funcione. Los programadores nos ponemos a crear muchos vectores, pero **si no reflejan la verdad, no sirven de nada**.
-- **Embeddings y vectores → Sesión 7.** Si preguntan, respuesta única: *"eso es la Sesión 7"*.
-
----
-
-## 5 · Las restricciones del CAG
-
-# 🖥️ DIAPO 10 — "Las cuatro restricciones del CAG"
-
-*(Si quieres dar el mapa antes: **diapo 9**, "El viaje del dato, cinco piezas".)*
-
-- Las cuatro tienen que estar en verde **a la vez**: context window, coste, latencia y lost-in-the-middle.
-- Es un **AND, no un OR**: basta con que falle una.
-
----
-
-## 6 · El código que decide si el CAG es viable
-
-# 🖥️ DIAPO 11 — "Dónde vive: architecture.py"
-
-**📂 VS Code:** `estimator/app/ingestion/architecture.py`
-
-- Enseñar `CAGViability`: analiza si es viable usar un CAG. Señalar que `viable` es un `all([...])`.
-- Enseñar `recommend_architecture` y los cuatro ejes.
-
-**▶️ Lanzar (PowerShell, en la carpeta `ai-engineering-s06`):**
+- 💻 `assess_cag_viability` (l. 98), `recommend_architecture` (l. 114), `PROYECTO_2` (l. 141).
+- ⌨️
 
 ```powershell
 docker compose -p aieng-s06live exec estimator python -m app.ingestion.architecture
 ```
 
-**Sale:** `Viabilidad CAG: NO viable` · `Restricciones en rojo: context_window, latency, lost_in_the_middle` · `Recomendación arquitectónica: RAG`.
+  → `NO viable` · rojo: `context_window, latency, lost_in_the_middle` · `RAG`. El coste pasa (caché de prefijo y
+  refresco semanal).
+- Si preguntan: con 60.000 tokens y sin citar sale `CAG`; con 60.000 y citar, `Hybrid` (está en el PDF de comandos,
+  «Prueba tú»).
 
-*(Opcional: **diapos 12 y 13** con el árbol CAG / RAG / híbrido.)*
+### Diapo 8 · CAG, RAG o híbrido
 
----
+- El árbol. Fine-tuning no es alternativa: es una capa encima. Embeddings o pgvector → «Sesión 7».
+- Puente: decidido RAG, lo primero es saber qué indexar.
 
-## 7 · El antipatrón: vectorizar primero, mirar después
+## 2.2 · Catálogo · 20 min
 
-# 🖥️ DIAPO 14 — "Antipatrón: vectorizar primero, mirar después"
+### Diapo 9 · Antipatrón
 
-- Recalcar el error de **primero vectorizar y luego mirar los datos**. Es al revés: primero conviene **normalizar**.
-  - Quizá transformar cosas a JSON.
-  - Limpiar.
-  - Pasarlos por una IA uno a uno quitando erratas, información que sobra, información redundante…
-- **El caos documental de las empresas:** primero deberían haber digitalizado para poder entrar a la IA, pero muchas no lo han hecho. **No se puede empezar la casa por el tejado** si trabajan con documentos sueltos o con ERPs de hace 20 años.
+- Mezcla de versiones, fuentes podridas, huecos invisibles. El caos documental de las empresas.
+- 💻 Enseñar `data/seed/`: `budgets/`, `transcripts/` y el `rate_card_2024.xlsx` suelto.
 
-**📂 VS Code:** `estimator/data/seed/` → enseñar las carpetas `budgets/` y `transcripts/` (y el `rate_card_2024.xlsx` suelto).
+### Diapo 10 · Inspeccionar
 
----
-
-## 8 · Catalogar: metadatos y prefiltro
-
-# 🖥️ DIAPO 15 — "El catálogo es código, no documentación"
-
-- La idea ahora es **catalogar toda la información** del RAG y crear **metadatos** (datos sobre los datos) para hacerles un **prefiltro**.
-- Inspeccionar los datos antes de decidir nada.
-
-**📂 VS Code:** `estimator/app/ingestion/catalog/models.py`
-
-- Enseñar las tres decisiones: `include`, `review` y `exclude`.
-- Si no es `include`, el **motivo es obligatorio**.
-
-**📂 VS Code:** `estimator/data/catalog/catalog.yaml`
-
-- Es un fichero YAML sin más, algo simple, pero con la información bien puesta.
-
-> 💡 **Matiz para no liarla:** en el código de la sesión la decisión la toma **una persona** (el YAML se escribe a mano). Que **la IA procese el documento y lo catalogue ella misma** es una idea mía y una extensión muy buena para proponer, pero no es lo que hace este repo.
-
----
-
-## 9 · Inspeccionar los datos
-
-**▶️ Lanzar (PowerShell, en la carpeta `ai-engineering-s06`):**
+- 💻 `catalog/inspect.py` → `FolderFacts` (l. 31), `inspect_root` (l. 68).
+- ⌨️
 
 ```powershell
 docker compose -p aieng-s06live exec estimator python -m app.ingestion.catalog.inspect data/seed
 ```
 
-**Sale:** `budgets 6 files` · `transcripts 3 files` · `seed 1 files latest=2024-01-12 formats=xlsx`.
+  → `seed 1 files latest=2024-01-12 formats=xlsx`: la fuente podrida.
+- Las cuatro dimensiones de calidad; no se promedian.
 
-→ Señalar el XLSX: **última modificación de enero de 2024**. Es la "fuente podrida".
+### Diapo 11 · El catálogo es código
 
-Y para ver el catálogo validado (**3 fuentes, solo 1 incluida**):
+- 💻 `catalog/models.py` → `CatalogDecision` (l. 33), `_decision_requires_reason_when_not_include` (l. 95).
+- 💻 `data/catalog/catalog.yaml`: leerlo en voz alta, no editarlo. Fuentes en l. 33, 58 y 86.
+- ⌨️
 
 ```powershell
 docker compose -p aieng-s06live exec estimator python -m app.ingestion.catalog.loader data/catalog/catalog.yaml
 ```
 
-*(Sale un `RuntimeWarning` de Python al principio: es inofensivo, ignorarlo.)*
+  → 3 fuentes, 1 incluida. El `RuntimeWarning` de la primera línea es inofensivo.
+- Matiz: aquí la decisión la toma una persona; que una IA catalogue los documentos es una extensión posible, no lo
+  que hace el repo.
 
----
+## 2.3 · Ingesta · 20 min
 
-## 10 · Loader, parser y Document
+### Diapo 12 · Tres capas y el Document
 
-# 🖥️ DIAPO 16 — "Tres capas, responsabilidades separadas"
+- Loader (bytes) → parser (uno por formato) → Document (el contrato). Varios loaders, varios parsers, un Document.
+- 💻 `documents/models.py` → `DocumentMetadata` (l. 30), `Document` (l. 43): `extra="forbid"`.
+- 💻 `loaders/filesystem.py` → `iter_blobs` (l. 37) · `parsers/protocol.py` → `Parser` (l. 46).
 
-- La diferencia entre **loader** y **parser**, porque no es lo mismo:
-  - El **loader** trae el documento (los bytes).
-  - El **parser** es uno por tipo de documento: el que lo sabe leer.
-- Y la entidad **Document**: la base del RAG o de la base de conocimiento. Me da igual si era PDF, Excel o JSON: para mí ya son datos en un abstracto *Document*, y además lleva **metadatos**.
-- **Document es la entidad clave de esta sesión.**
-- El loader que tenemos ahora es en local, pero es fácilmente intercambiable. Lo normal es tener **varios loaders, varios parsers y una sola entidad Document**, y construir el catálogo encima.
+### Diapo 13 · Parsers
 
-# 🖥️ DIAPO 17 — "El Document canónico y los parsers"
+- 💻 `parsers/budget_json.py` → `_render_budget_markdown` (l. 59): Markdown, no `json.dumps`.
+- 💻 `parsers/transcript_txt.py` → `_parse_tagged` (l. 54) y `_parse_legacy` (l. 76): no se inventa el speaker.
+- XLSX, DOCX y PDF: el mismo patrón, en el repo de referencia.
 
-**📂 VS Code:**
+### Diapo 14 · Ingesta asíncrona
 
-- `estimator/app/ingestion/documents/models.py` → el `Document`
-- `estimator/app/ingestion/loaders/filesystem.py` → el loader local
-- `estimator/app/ingestion/parsers/` → `budget_json.py` y `transcript_txt.py`
+- 💻 `app/routers/ingestion.py` → `create_ingestion_run` (l. 86), `get_ingestion_job` (l. 128);
+  `orchestrator.py` → `ingest_source` (l. 51), el filtro del catálogo en l. 71.
+- 🖥️ Swagger → *ingestion* → `POST /api/v1/ingestion/runs` → Try it out → `{"source_name": "presupuestos_json"}` →
+  202 → copiar el `job_id` → `GET /api/v1/ingestion/jobs/{job_id}` → `completed`, `documents_count: 6`.
+  Repetir con `rate_card_xlsx` (400 con el motivo del YAML) y `no_existe` (404).
+- ⌨️ Lo mismo en PowerShell:
 
-*(Opcional: **diapos 18 y 19** con offline vs online y la demo de ingesta. Ver "Demo web" abajo.)*
+```powershell
+$r = Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/v1/ingestion/runs -ContentType 'application/json' -Body '{"source_name":"presupuestos_json"}'; $r
+```
 
----
+```powershell
+Invoke-RestMethod "http://localhost:8000/api/v1/ingestion/jobs/$($r.job_id)" | Format-List
+```
 
-## 11 · Madurez documental y saltos de precisión
+- Opcional, el cliente de Rails (`estimator-web/…/ingestion_client.rb`, l. 38 y 51):
 
-# 🖥️ DIAPO 20 — "La madurez documental marca el techo de precisión"
+```powershell
+docker compose -p aieng-s06live exec estimator-web bin/rails runner 'c = EstimatorAi::IngestionClient.new; j = c.trigger_ingestion(source_name: :presupuestos_json.to_s); p j; sleep 2; p c.job_status(j.fetch(:job_id.to_s))'
+```
 
-- Esta madurez documental y este detalle **hay que saberlos de antemano**, porque luego vienen las quejas y los problemas con el cliente, con el jefe de proyecto, etc.
-- **Los saltos de precisión:**
-  - Tener un resultado de un **60 %** de precisión es fácil.
-  - De un **60 a un 80 %** ya es un salto enorme, metiendo cosas como las que estamos viendo hoy.
-  - Pasar cerca del **100 %**, o sin errores, en una adopción de IA agéntica o RAG ya son **meses de trabajo**, o directamente imposible por la propia IA.
+### Diapo 15 · Madurez documental
 
----
+- 60 % fácil, de 60 a 80 % un salto enorme (lo de hoy), cerca del 100 % meses o imposible. La casa no se empieza por
+  el tejado.
 
-## 12 · Limpieza y validación
+## 2.4 · Limpieza y validación · 15 min
 
-# 🖥️ DIAPO 21 — "Cuatro familias de suciedad" → DIAPO 22 — "Limpiar y validar son dos pasos distintos"
+### Diapo 16 · Cuatro familias de suciedad
 
-**▶️ Lanzar (PowerShell, en la carpeta `ai-engineering-s06`):**
+- 💻 Abrir `data/seed/budgets/BUDGET-2024-0002.json` («eur», `12/03/2024`), `…0003` («TBD»), `…0004` (−50000).
+- 💻 `cleaning/budget_records.py` → `NULL_PLACEHOLDERS` (l. 44).
+
+### Diapo 17 · Limpiar y validar
+
+- 💻 `cleaning/budget_records.py` → `clean_budget_records` (l. 47), fechas (l. 69), dedup (l. 79).
+- 💻 `cleaning/schemas.py` → `BudgetRecord` (l. 30), `total_amount` (l. 55), `strict=True` (l. 67).
+- 💻 `cleaning/policy.py` → `QUARANTINE_CHECKS` (l. 40), `DISCARD_CHECKS` (l. 45), `lazy=True` (l. 73).
+
+### Diapo 18 · Demo
+
+- ⌨️
 
 ```powershell
 docker compose -p aieng-s06live exec estimator python scripts/demo_cleaning_s06.py
 ```
 
-**Sale:** `input_rows: 5` · `valid_rows: 3` · `quarantined_rows: 1` · `discarded_rows: 1` · descartada `BUDGET-2024-0004 -50000` · en cuarentena `BUDGET-2024-0002`.
+  → 6 ficheros, 5 filas · 3 válidas · cuarentena `BUDGET-2024-0002` · descartada `BUDGET-2024-0004 -50000`.
+- La 0002 va a cuarentena por la **fecha** (pandas deduce `%Y-%m-%d` y `12/03/2024` queda `NaT`), no la del «TBD».
+  La limpieza no pudo repararla y la validación la cazó: por eso son dos pasos.
+- Si preguntan por `column_in_schema: 5` y `dtype('float64')`: fallos de columna (columnas no declaradas con
+  `strict=True` y el importe como entero), sin fila; no mandan nada a cuarentena. Está en el PDF de comandos.
 
-# 🖥️ DIAPO 23 — "Lo que sale de verdad en la demo"
+## 2.5 · PII y GDPR · 20 min
 
-- 6 ficheros → 5 filas: el dedup fusionó las dos versiones de `BUDGET-2024-0005`.
-- **Ojo:** la que va a cuarentena es la 0002 (por su fecha `12/03/2024`), **no** la del `"TBD"`. La limpieza no pudo reparar esa fecha y la validación la cazó: por eso son dos pasos distintos.
+### Diapo 19 · Tres formas de filtrar
 
----
+- Directa, por agregación y por inferencia. ¿Cuál es la más peligrosa? → la inferencia.
+- Pseudonimizar (reversible, sigue siendo dato personal) frente a anonimizar (irreversible).
 
-## ➕ Lo que todavía no está en mi guion (propuesta, por si da tiempo)
+### Diapo 20 · Presidio en inglés
 
-### 13 · PII y pseudonimización
+- Contar el fallo **antes** de abrir el código: por defecto, cero personas en nombres españoles, y en silencio.
+- 💻 `pii/analyzer.py` → `build_analyzer` (l. 37) · `pii/recognizers.py` → l. 28 y 46.
 
-# 🖥️ DIAPO 24 — "Tres modos de filtración semántica"
+### Diapo 21 · Demo
 
-- Pregunta al chat: ¿cuál es la más peligrosa? → **la inferencia**.
-
-# 🖥️ DIAPO 25 — "Empezar por el fallo: Presidio en inglés"
-
-**📂 VS Code:** `estimator/app/ingestion/pii/analyzer.py`
-
-- Presidio por defecto va en inglés y **no detecta "Laura Fernández"**. Falla en silencio.
-
-# 🖥️ DIAPO 26 — "Mismo valor → mismo pseudónimo"
-
-**▶️ Lanzar (PowerShell, en la carpeta `ai-engineering-s06`):**
+- 💻 `pii/pseudonymizer.py` → `ConsistentPseudonymizer` (l. 60), `_generators` (l. 78), derecha a izquierda
+  (l. 103), `_hash` (l. 130).
+- ⌨️
 
 ```powershell
 docker compose -p aieng-s06live exec estimator python scripts/demo_pii_s06.py
 ```
 
-**Sale:** la transcripción con nombres, emails e ids sustituidos por otros falsos y verosímiles. Comentar los **falsos positivos** (un código de cliente sustituido por un nombre): es el precio de Presidio en español.
+  → «Javier Romero» pasa a «Pánfilo del Barros»; 20 mapeos. Falsos positivos a la vista: «Quería» y «Sí» como
+  personas, `CLI-0078` sustituido por un nombre. El `BUDGET-…` nuevo es aleatorio (hoy salió `BUDGET-2023-5601`).
 
-# 🖥️ DIAPO 27 — "Derecho al olvido (GDPR art. 17)"
+### Diapo 22 · Derecho al olvido
 
-- Sin la mapping table, borrar a un cliente es imposible.
+- 💻 `pii/mapping_store.py` → `PostgresMappingStore` (l. 50), `forget` (l. 69) · `persistence/models.py` → l. 40-43.
+- ⌨️ La tabla sale vacía porque la demo usa el almacén en memoria:
 
-### 14 · Cierre
+```powershell
+docker compose -p aieng-s06live exec estimator-postgres psql -U estimator -d estimator -c "SELECT entity_type, count(*) FROM pseudonym_mappings GROUP BY 1"
+```
 
-# 🖥️ DIAPO 28 — "Cinco piezas: el corpus ya es defendible"
+## Cierre · Diapos 23-25 · 5 min
 
-- La Sesión 7: chunking, embeddings y pgvector.
-
-# 🖥️ DIAPO 29 — ROTI → DIAPO 30 — ¡Gracias!
+- Cinco piezas, todas con su motivo escrito. Sesión 7: chunking, embeddings y pgvector.
+- ROTI y gracias.
 
 ---
 
-## 🌐 Demo web (alternativa a la terminal)
+## Si algo falla
 
-**La web de Rails (`localhost:3000`) no tiene nada de la Sesión 6**: solo el chat de la S5 y las estimaciones de la S4. Para enseñar la ingesta con interfaz gráfica, usar el **Swagger** del servicio de IA:
-
-1. Abrir **http://localhost:8000/docs** → bajar a la sección **ingestion**.
-2. **`POST /api/v1/ingestion/runs`** → *Try it out* → en el cuerpo poner:
-
-   ```json
-   {"source_name": "presupuestos_json"}
-   ```
-
-   → *Execute* → respuesta **202** con un `job_id` y `"status": "pending"`.
-3. Copiar el `job_id` → **`GET /api/v1/ingestion/jobs/{job_id}`** → *Try it out* → pegarlo → *Execute* → `"status": "completed"`, `"documents_count": 6`.
-4. Repetir el paso 2 con `"rate_card_xlsx"` → **400** (fuente excluida) y con `"no_existe"` → **404**.
-
-**Lo mismo desde PowerShell** (aquí `curl` no sirve: en PowerShell es otro comando y rompe las comillas del JSON):
-
-```powershell
-$r = Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/v1/ingestion/runs -ContentType 'application/json' -Body '{"source_name":"presupuestos_json"}'
-$r
-Invoke-RestMethod "http://localhost:8000/api/v1/ingestion/jobs/$($r.job_id)" | Format-List
-```
-
-**El "cameo" de Rails** (Rails como cliente HTTP de la ingesta, desde la terminal):
-
-```powershell
-docker compose -p aieng-s06live exec estimator-web bin/rails runner 'c = EstimatorAi::IngestionClient.new; j = c.trigger_ingestion(source_name: :presupuestos_json.to_s); p j; sleep 2; p c.job_status(j.fetch(:job_id.to_s))'
-```
+| Síntoma | Qué hacer |
+|---|---|
+| Docker no arranca: «Ingest server … sock.stale» | cerrar Docker, renombrar `%LOCALAPPDATA%\Docker\run` y `%LOCALAPPDATA%\docker-secrets-engine`, abrirlo |
+| `/health` ❌ en el pre-flight | el servicio se está recargando: repetir en 10 s |
+| La 400 de `rate_card_xlsx` no sale | revisa que el catálogo cargue (diapo 11); `docker compose -p aieng-s06live logs --tail 50 estimator` |
+| Demasiados falsos positivos en la PII | es lo esperado; si molestan, contarlo como trade-off (diapo 21) |

@@ -1,0 +1,5 @@
+﻿Inspection of /app/data/seed
+
+budgets                  6 files     0.00 MB  latest=2026-10-14T13:18:12.524157+00:00 formats=json
+transcripts              3 files     0.00 MB  latest=2026-10-14T13:18:12.525159+00:00 formats=txt
+seed                     1 files     0.01 MB  latest=2024-01-12T09:00:00+00:00 formats=xlsx

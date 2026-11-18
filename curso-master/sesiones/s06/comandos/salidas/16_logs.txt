@@ -1,0 +1,8 @@
+﻿s06-estimator  | 2026-11-18T19:01:28.616012Z [info     ] ingestion.completed            documents_count=6 job_id=95f56fd1-404c-4766-bc29-2ed69412ed15 source_name=presupuestos_json
+s06-estimator  | INFO:     172.20.0.1:58140 - "GET /api/v1/ingestion/jobs/95f56fd1-404c-4766-bc29-2ed69412ed15 HTTP/1.1" 200 OK
+s06-estimator  | INFO:     172.20.0.1:58140 - "POST /api/v1/ingestion/runs HTTP/1.1" 400 Bad Request
+s06-estimator  | INFO:     172.20.0.1:58140 - "POST /api/v1/ingestion/runs HTTP/1.1" 404 Not Found
+s06-estimator  | INFO:     172.20.0.5:35582 - "POST /api/v1/ingestion/runs HTTP/1.1" 202 Accepted
+s06-estimator  | 2026-11-18T19:01:37.427258Z [info     ] ingestion.started              format=json job_id=fc6e04f7-b4fa-48b8-9d04-93c30ff0e510 source_name=presupuestos_json
+s06-estimator  | 2026-11-18T19:01:37.457046Z [info     ] ingestion.completed            documents_count=6 job_id=fc6e04f7-b4fa-48b8-9d04-93c30ff0e510 source_name=presupuestos_json
+s06-estimator  | INFO:     172.20.0.5:33066 - "GET /api/v1/ingestion/jobs/fc6e04f7-b4fa-48b8-9d04-93c30ff0e510 HTTP/1.1" 200 OK

@@ -1,0 +1,6 @@
+﻿Corpus 'Proyecto 2': 250,000 tokens, refresh cada 7 días, trazabilidad=True, control_acceso=True
+Modelo 'gpt-4o-mini': ventana 128,000 tokens, prefix_caching=True
+
+Viabilidad CAG: NO viable
+  Restricciones en rojo: context_window, latency, lost_in_the_middle
+Recomendación arquitectónica: RAG

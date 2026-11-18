@@ -1,0 +1,12 @@
+﻿Pre-flight Sesión 06
+
+✅  Python version: 3.11.17
+✅  Required packages: 12 packages OK
+✅  spaCy es_core_news_md: loaded; detected PER entities: ['Laura Fernández']
+✅  unstructured parsers: unstructured 0.22.29
+✅  Corpus seed present: 6 json + 3 txt + 1 xlsx
+✅  Catalog validates: version 1.0.0, 1 included
+✅  Estimator /health: 200 OK
+✅  Postgres + migration: tables OK: ['alembic_version', 'ingestion_jobs', 'pseudonym_mappings']
+
+✅  All checks passed

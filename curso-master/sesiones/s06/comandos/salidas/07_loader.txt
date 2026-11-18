@@ -1,0 +1,5 @@
+﻿<frozen runpy>:128: RuntimeWarning: 'app.ingestion.catalog.loader' found in sys.modules after import of package 'app.ingestion.catalog', but prior to execution of 'app.ingestion.catalog.loader'; this may result in unpredictable behaviour
+Catalog version: 1.0.0
+Sources total:  3
+Sources included: 1
+  - presupuestos_json (json) — 'Presupuestos firmados 2024 en formato JSON. Cada fichero un presupuesto. Fuente principal para el módulo de retrieval del Proyecto 2.\n'

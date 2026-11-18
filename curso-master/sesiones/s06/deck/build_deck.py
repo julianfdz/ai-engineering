@@ -1,573 +1,518 @@
-"""Genera el deck de la Sesión 6 personalizado para Julián Fernández.
+"""Genera el deck de la Sesión 6 (Data-driven AI: análisis y normalización) de Julián Fernández.
 
-Reutiliza la plantilla oficial de LIDR (portada, las 11 diapos de contenido,
-ROTI y cierre) y le intercala diapos propias que siguen el guion del directo:
-código de cada pieza, salida real de las demos, defensa oral y chuleta.
+Edición 2026-10 (19/11/2026). Reutiliza el motor de la S7 y la franja grande «En el código» de la S5,
+como el deck de la S11. Cada diapo de contenido lleva al pie el fichero y la línea que se abre en VS Code
+(rama session_06_live_local, worktree ai-engineering-s06). Las salidas son las de la ejecución en local
+del 18/11/2026. El deck de la edición 2609 está en ../anterior-2609/.
 
     python build_deck.py
-    # → ../Sesion06-Julian-Fernandez.pdf   y   ../Sesion06-Julian-Fernandez.pptx
-
-Para iterar: cambia el contenido de las funciones ``slide_*`` y vuelve a lanzar.
+    # → ../Sesion06-Julian-Fernandez.pdf
 """
 
 from __future__ import annotations
 
-import html
+import importlib.util
 from pathlib import Path
 
 import fitz
 
 HERE = Path(__file__).resolve().parent
-TEMPLATE = HERE / "plantilla-lidr-s06.pdf"
-ASSETS = HERE.parent.parent.parent / "assets"
-OUTPUT_PUBLIC = HERE.parent / "Sesion06-Julian-Fernandez.pdf"          # la que ven los alumnos
-OUTPUT_MENTOR = HERE.parent / "Sesion06-Julian-Fernandez-MENTOR.pdf"   # solo para Julián: notas del guion
+_spec = importlib.util.spec_from_file_location("s05_deck", HERE.parent.parent / "s05" / "deck" / "build_deck.py")
+s05 = importlib.util.module_from_spec(_spec)
+_spec.loader.exec_module(s05)
 
-SECTIONS = {
-    "Bloque 0": "Apertura", "Bloque 1": "Resolución de dudas", "Bloque 2": "Las cinco piezas",
-    "Bloque 3": "Cierre", "2.1": "2.1 · Decisión arquitectónica", "2.2": "2.2 · Catálogo de fuentes",
-    "2.3": "2.3 · Ingesta y Document canónico", "2.4": "2.4 · Limpieza y validación",
-    "2.5": "2.5 · PII y pseudonimización", "Apéndice": "Apéndice",
-}
-
-W, H = 720, 405
-BADGE = fitz.Rect(7, 7, 72, 35)
-
-PALETTE = {
-    "mint": ("#e5f3ec", "#4a9a78", "#0f5a40"),
-    "lav": ("#eeedfb", "#6d64c7", "#33298a"),
-    "peach": ("#fbeae4", "#c97a62", "#7a2e1a"),
-    "beige": ("#f3f0ea", "#a39c8e", "#3a362f"),
-    "code": ("#f7f7f5", "#c9c6bf", "#2a2a2a"),
-    "note": ("#fff7dc", "#d9b54a", "#5c4a12"),
-}
-
-CSS = """
-* { font-family: sans-serif; }
-body { margin: 0; color: #2b2b2b; font-size: 10pt; line-height: 1.32; }
-h1 { font-size: 16.5pt; font-weight: normal; text-align: center; margin: 0; color: #222; }
-.sub { font-size: 9.5pt; text-align: center; color: #666; margin-top: 3pt; }
-.t { font-weight: bold; font-size: 11pt; margin-bottom: 2pt; }
-.s { color: #555; font-size: 9pt; }
-.mono, code, pre { font-family: monospace; font-size: 8.3pt; }
-pre { margin: 0; white-space: pre-wrap; line-height: 1.25; }
-ul { margin: 2pt 0 0 0; padding-left: 12pt; }
-li { margin-bottom: 2pt; }
-table { border-collapse: collapse; width: 100%; }
-td, th { border-bottom: 0.5pt solid #ddd; padding: 2.5pt 4pt; text-align: left; vertical-align: top; font-size: 9.5pt; }
-th { color: #555; font-weight: bold; border-bottom: 0.8pt solid #999; }
-.k { color: #0f5a40; font-weight: bold; }
-.r { color: #a33a1e; font-weight: bold; }
-.big { font-size: 13pt; }
-.center { text-align: center; }
-"""
+base = s05.base
+base.OUTPUT = HERE.parent / "Sesion06-Julian-Fernandez.pdf"
+H, W = base.H, base.W
 
 
-def esc(text: str) -> str:
-    return html.escape(text, quote=False)
-
-
-class Deck:
-    def __init__(self, mentor: bool) -> None:
-        self.mentor = mentor
-        self.tpl = fitz.open(TEMPLATE)
-        self.doc = fitz.open()
-        self.archive = fitz.Archive(str(ASSETS))
-
-    # ---- piezas básicas -------------------------------------------------
-    def template(self, pno: int, cue: str | None = None) -> fitz.Page:
-        self.doc.insert_pdf(self.tpl, from_page=pno, to_page=pno)
-        page = self.doc[-1]
-        if cue:
-            self.footer(page, cue)
-        return page
-
-    def new(self, title: str, sub: str = "", cue: str = "") -> fitz.Page:
-        page = self.doc.new_page(width=W, height=H)
-        page.show_pdf_page(BADGE, self.tpl, 1, clip=BADGE)
-        head = f"<h1>{title}</h1>" + (f'<div class="sub">{sub}</div>' if sub else "")
-        page.insert_htmlbox(fitz.Rect(80, 16, W - 80, 62), head, css=CSS)
-        if cue:
-            self.footer(page, cue)
-        return page
-
-    def footer(self, page: fitz.Page, cue: str) -> None:
+class Deck(s05.Deck):
+    def footer(self, page: fitz.Page, section: str) -> None:
         band = fitz.Rect(0, H - 17, W, H)
         page.draw_rect(band, color=None, fill=(0.965, 0.96, 0.95))
         page.draw_line(band.tl, band.tr, color=(0.85, 0.83, 0.8), width=0.5)
-        if self.mentor:
-            left = f"<b>GUION</b> · {cue}"
-        else:
-            # Versión alumnos: solo la sección, nunca las notas internas del guion.
-            left = SECTIONS.get(cue.split(" · ")[0], "")
-        txt = (
-            f'<div style="font-size:6.8pt;color:#6b655b">{left}'
-            f'<span style="color:#9b958a"> &nbsp;&nbsp;|&nbsp;&nbsp; Julián Fernández · Sesión 6 · Data-driven AI · '
-            f'{len(self.doc)}</span></div>'
-        )
-        page.insert_htmlbox(fitz.Rect(12, H - 14.5, W - 12, H - 2), txt, css=CSS)
+        txt = (f'<div style="font-size:6.8pt;color:#6b655b">{section}'
+               f'<span style="color:#9b958a"> &nbsp;&nbsp;|&nbsp;&nbsp; Julián Fernández · Sesión 6 · '
+               f"Data-driven AI: análisis y normalización · {len(self.doc)}</span></div>")
+        page.insert_htmlbox(fitz.Rect(12, H - 14.5, W - 12, H - 2), txt, css=base.CSS)
 
-    def box(self, page: fitz.Page, rect: tuple, body: str, kind: str = "beige", pad: float = 6) -> None:
-        r = fitz.Rect(rect)
-        fill, stroke, ink = PALETTE[kind]
-        page.draw_rect(r, color=_hex(stroke), fill=_hex(fill), width=0.7, radius=0.06)
-        inner = fitz.Rect(r.x0 + pad, r.y0 + pad - 1, r.x1 - pad, r.y1 - pad + 1)
-        page.insert_htmlbox(inner, f'<div style="color:{ink}">{body}</div>', css=CSS,
-                            archive=self.archive, scale_low=0.55)
-
-    def html(self, page: fitz.Page, rect: tuple, body: str) -> None:
-        page.insert_htmlbox(fitz.Rect(rect), body, css=CSS, archive=self.archive, scale_low=0.55)
-
-    def code(self, page: fitz.Page, rect: tuple, src: str, label: str = "") -> None:
-        head = f'<div class="s" style="margin-bottom:2pt"><b>{label}</b></div>' if label else ""
-        self.box(page, rect, head + f"<pre>{esc(src)}</pre>", kind="code", pad=5)
-
-    def image(self, page: fitz.Page, rect: tuple, name: str) -> None:
-        """Inserta un PNG recortando el margen blanco para aprovechar el hueco."""
-        from io import BytesIO
-        from PIL import Image, ImageChops
-        im = Image.open(ASSETS / name).convert("RGB")
-        bg = Image.new("RGB", im.size, (255, 255, 255))
-        bbox = ImageChops.difference(im, bg).point(lambda v: 255 if v > 12 else 0).getbbox()
-        if bbox:
-            m = 12
-            im = im.crop((max(bbox[0] - m, 0), max(bbox[1] - m, 0),
-                          min(bbox[2] + m, im.width), min(bbox[3] + m, im.height)))
-        buf = BytesIO()
-        im.save(buf, format="PNG")
-        page.insert_image(fitz.Rect(rect), stream=buf.getvalue(), keep_proportion=True)
-
-    def save(self) -> None:
-        out = OUTPUT_MENTOR if self.mentor else OUTPUT_PUBLIC
-        self.doc.save(out, garbage=4, deflate=True)
-        print(f"{out.name}: {len(self.doc)} diapos")
-
-
-def _hex(value: str) -> tuple[float, float, float]:
-    value = value.lstrip("#")
-    return tuple(int(value[i:i + 2], 16) / 255 for i in (0, 2, 4))
-
-
-# ===========================================================================
-# Diapos
-# ===========================================================================
 
 def cover(d: Deck) -> None:
     d.doc.insert_pdf(d.tpl, from_page=0, to_page=0)
     page = d.doc[-1]
-    old = fitz.Rect(54, 280, 420, 307)
-    page.add_redact_annot(old, fill=False)
+    page.add_redact_annot(fitz.Rect(48, 158, 470, 242), fill=False)
+    page.add_redact_annot(fitz.Rect(48, 124, 330, 147), fill=False)
     page.apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE, graphics=fitz.PDF_REDACT_LINE_ART_NONE)
-    page.insert_text((56, 301), "Mentor: Julián Fernández", fontname="helv", fontsize=22, color=(1, 1, 1))
+    for y, line in ((191, "Sesión 6: Data-driven AI,"), (232, "análisis y normalización")):
+        page.insert_text((51, y), line, fontname="hebo", fontsize=34.5, color=(1, 1, 1))
+    page.insert_text((51, 141), "MÓDULO 3: Data-driven AI", fontname="hebo", fontsize=15, color=(1, 1, 1))
 
 
-def slide_about(d: Deck) -> None:
-    p = d.new("Quién os acompaña hoy", "Sesión 6 · Módulo 3 · Data-driven AI",
-              "Bloque 0 · 0:00 · presentación rápida, 1 minuto máximo")
-    d.box(p, (60, 80, 400, 300),
-          '<div class="t big">Julián Fernández</div>'
-          '<div class="s">Informático · fundador de Búho AI</div>'
-          "<ul>"
-          "<li>Transformo operativas complejas en procesos eficientes con IA y software a medida.</li>"
-          "<li>Profesor de IA en LIDR, EBF y UCAM HiTech.</li>"
-          "<li>Enfoque <b>transparente y ético</b>: si no sabemos un dato, no lo inventamos "
-          "— que es justo la metanorma de hoy.</li>"
-          "</ul>"
-          '<div class="s" style="margin-top:6pt">linkedin.com/in/julianfernandez-iaenmurcia</div>',
-          kind="mint")
-    d.box(p, (420, 80, 660, 175),
-          '<div class="t">Teaching Assistant</div>'
-          "George Kutsia Andguladze<br/>"
-          '<span class="s">george@lidr.co · dudas técnicas en el canal asíncrono</span>',
-          kind="lav")
-    d.box(p, (420, 190, 660, 300),
-          '<div class="t">Cómo es la clase</div>'
-          "<ul><li>Flipped: los 5 articles y el ejercicio ya están hechos.</li>"
-          "<li><b>No se teclea código</b>: se lee el que ya existe y se ejecuta.</li>"
-          "<li>Todo en Python en el servicio IA.</li></ul>",
-          kind="beige")
-    d.html(p, (60, 315, 660, 360),
-           '<div class="center s">"Hoy no vectorizamos nada: hoy preparamos el corpus para que '
-           "<b>merezca</b> ser vectorizado.\"</div>")
+# ===========================================================================
+# Apertura · Bloque 0 · Bloque 1
+# ===========================================================================
 
-
-def slide_agenda_public(d: Deck) -> None:
-    p = d.new("Lo que vamos a ver hoy",
-              "En el orden en que viaja un dato: decidir → elegir fuentes → parsear → limpiar → proteger",
-              "Bloque 0")
-    items = [
-        ("Apertura", "Vuestros números del ejercicio: ¿dónde se rompió el CAG?", "mint"),
-        ("Resolución de dudas", "Errores del ejercicio y del stack nuevo", "beige"),
-        ("1 · Decisión arquitectónica", "CAG, RAG o híbrido: una decisión defendible", "lav"),
-        ("2 · Catálogo de fuentes", "Qué entra al sistema, qué no y por qué", "lav"),
-        ("3 · Ingesta", "Un Document canónico para todos los formatos", "lav"),
-        ("4 · Limpieza y validación", "pandas + Pandera: reparar, cuarentena o descartar", "lav"),
-        ("5 · PII y GDPR", "Pseudonimización con Presidio y mapping table", "lav"),
-        ("Cierre", "Un corpus listo para vectorizar · puente a la Sesión 7", "mint"),
-    ]
-    y = 72
-    for title, desc, k in items:
-        d.box(p, (70, y, 430, y + 26), f"<b>{title}</b> · {desc}", kind=k, pad=6)
-        y += 30
-    d.box(p, (450, 72, 660, 186),
-          '<div class="t">Al salir de hoy sabréis…</div>'
-          "<ul><li>Defender por qué este proyecto necesita RAG.</li>"
-          "<li>Auditar y catalogar las fuentes de datos.</li>"
-          "<li>Limpiar y validar antes de vectorizar.</li>"
-          "<li>Proteger la PII cumpliendo GDPR.</li></ul>",
-          kind="mint")
-    d.box(p, (450, 198, 660, 312),
-          '<div class="t">Cómo trabajamos</div>'
-          "Cada pieza: <b>el fundamento</b> → <b>dónde vive en el código</b> → <b>demo</b> → "
-          "<b>las decisiones que tenéis que saber defender</b>.<br/>"
-          '<span class="s">Todo el código ya está en la rama session_06_live.</span>',
-          kind="beige")
-
-
-def slide_agenda(d: Deck) -> None:
-    if not d.mentor:
-        slide_agenda_public(d)
-        return
-    p = d.new("Agenda · 120 minutos", "El orden es el del viaje de un dato: decidir → elegir fuentes → parsear → limpiar → proteger",
-              "Bloque 0 · 0:02 · enseñar el mapa y las dos reglas del directo")
-    rows = [
-        ("0:00 – 0:10", "Bloque 0", "Apertura · vuestros números del CAG roto", "mint"),
-        ("0:10 – 0:25", "Bloque 1", "Resolución de errores (15 min innegociables)", "beige"),
-        ("0:25 – 0:40", "2.1", "Decisión arquitectónica: CAG, RAG o híbrido", "lav"),
-        ("0:40 – 1:00", "2.2", "El catálogo de fuentes como artefacto vivo", "lav"),
-        ("1:00 – 1:20", "2.3", "Ingesta y Document canónico", "lav"),
-        ("1:20 – 1:35", "2.4", "Limpieza con pandas + validación con Pandera", "lav"),
-        ("1:35 – 1:55", "2.5", "Pseudonimización con Presidio + mapping table", "lav"),
-        ("1:55 – 2:00", "Bloque 3", "Cierre del módulo y puente a la Sesión 7", "mint"),
-    ]
-    y = 74
-    for t, b, desc, k in rows:
-        d.box(p, (70, y, 430, y + 26), f'<span class="mono">{t}</span> &nbsp; <b>{b}</b> · {desc}', kind=k, pad=6)
-        y += 30
-    d.box(p, (450, 74, 660, 200),
-          '<div class="t">Dos reglas innegociables</div>'
-          "<ul><li>Embeddings, pgvector activo o chunking → <b>\"Sesión 7.\"</b></li>"
-          "<li>Todo el código nuevo es <b>Python en el servicio IA</b>. Rails solo aparece como cliente "
-          "HTTP ilustrativo (decirlo cada vez).</li></ul>",
-          kind="peach")
-    d.box(p, (450, 212, 660, 314),
-          '<div class="t">Patrón de cada sub-bloque</div>'
-          "<b>Fundamento</b> (pizarra) → <b>dónde vive</b> (IDE, leer) → <b>demo</b> (terminal) → "
-          "<b>defensa oral</b> → <b>bridge</b>.<br/>"
-          '<span class="s">Lidera con el fundamento, después abre el archivo.</span>',
-          kind="beige")
+def slide_hoy(d: Deck) -> None:
+    p = d.new("Hoy: preparar el corpus antes de vectorizar",
+              "Hoy no vectorizamos nada: preparamos los datos para que merezcan serlo", "Apertura")
+    d.codigo(p, "Todo lo de hoy vive en <code>estimator/app/ingestion/</code> · rama <code>session_06_live</code> · "
+                "los datos de ejemplo en <code>estimator/data/seed/</code> · <b>Interfaz:</b> Swagger "
+                "(<code>localhost:8000/docs</code>)")
+    pasos = [("Decidir", "CAG, RAG o híbrido", "beige"), ("Catalogar", "qué fuentes entran", "beige"),
+             ("Ingerir", "un Document común", "mint"), ("Limpiar", "reparar y validar", "mint"),
+             ("Proteger", "PII y GDPR", "lav")]
+    for i, (t, s, k) in enumerate(pasos):
+        x = 24 + i * 136
+        d.box(p, (x, 66, x + 124, 124), f'<div class="t center">{t}</div><div class="center s">{s}</div>', kind=k)
+        if i < 4:
+            d.arrow(p, x + 125, 95, x + 135, 95)
+    bloques = [("0 · Vuestros números del ejercicio", "10'"), ("1 · Errores y pre-flight", "15'"),
+               ("2.1 · Decisión arquitectónica", "15'"), ("2.2 · Catálogo de fuentes", "20'"),
+               ("2.3 · Ingesta y Document canónico", "20'"), ("2.4 · Limpieza y validación", "15'"),
+               ("2.5 · PII y GDPR", "20'"), ("3 · Cierre y puente a la Sesión 7", "5'")]
+    for i, (t, m) in enumerate(bloques):
+        col, row = i % 2, i // 2
+        x, y = 24 + col * 340, 136 + row * 50
+        d.box(p, (x, y, x + 332, y + 42), f"<b>{t}</b> &nbsp;<span class='s'>{m}</span>",
+              kind="note" if i in (3, 5, 6) else "beige", pad=5)
 
 
 def slide_bloque0(d: Deck) -> None:
-    p = d.new("¿Qué restricción del CAG se rompió primero en tu ejercicio?",
-              "Quiero un número, no una sensación: tokens, ms, $/turn o drift event",
-              "Bloque 0 · 0:03–0:08 · tabular en vivo · al CUARTO input, cortar sin excepción")
-    names = [("1 · Context window", "¿Cabía el corpus?"), ("2 · Coste", "$/turno con prefix caching"),
-             ("3 · Latencia", "P95 frente al SLO"), ("4 · Lost-in-the-middle", "recall del dato del centro")]
-    x = 60
-    for n, s in names:
-        d.box(p, (x, 74, x + 142, 112), f'<div class="t">{n}</div><span class="s">{s}</span>', kind="mint", pad=5)
-        x += 152
-    d.box(p, (60, 124, 450, 292),
+    p = d.new("¿Qué restricción del CAG se rompió primero?",
+              "Un número, no una sensación: tokens, ms, € por turno o un dato olvidado", "Bloque 0")
+    d.codigo(p, "Vuestro ejercicio: <code>evals/stress/REPORT.md</code> y <code>results.csv</code> · el evento "
+                "<code>turn_observed</code> · las métricas <code>LatencyBudgetMetric</code>, "
+                "<code>CostBudgetMetric</code> y <code>MemoryDriftMetric</code>")
+    names = [("1 · Ventana de contexto", "¿cabía el corpus?"), ("2 · Coste", "€ por turno"),
+             ("3 · Latencia", "P95 frente al SLA"), ("4 · Lost in the middle", "recall del dato del centro")]
+    for i, (n, s) in enumerate(names):
+        x = 24 + i * 170
+        d.box(p, (x, 66, x + 160, 110), f'<div class="t">{n}</div><span class="s">{s}</span>', kind="mint", pad=5)
+    d.box(p, (24, 120, 440, 330),
           '<div class="t">Lo que traéis de casa</div>'
-          "<table><tr><th>Alumno</th><th>Restricción rota primero</th><th>Número concreto</th><th>Escenario</th></tr>"
+          "<table><tr><th>#</th><th>Restricción rota primero</th><th>Número</th><th>Escenario</th></tr>"
           "<tr><td>1</td><td></td><td></td><td></td></tr><tr><td>2</td><td></td><td></td><td></td></tr>"
           "<tr><td>3</td><td></td><td></td><td></td></tr><tr><td>4</td><td></td><td></td><td></td></tr></table>",
-          kind="beige")
-    trap_title = "Pregunta trampa" if d.mentor else "¿Alguien detectó lost-in-the-middle?"
-    trap_lead = ("Si nadie lo dice: <b>¿alguien detectó lost-in-the-middle?</b><br/><br/>"
-                 if d.mentor else "")
-    d.box(p, (465, 124, 660, 292),
-          f'<div class="t">{trap_title}</div>'
-          f"{trap_lead}"
-          "Es el fallo más sutil: el modelo <b>siempre responde algo plausible</b>. Solo aparece "
-          "si mides el recall del dato que pusiste en el centro.<br/><br/>"
-          '<span class="s">Mitigarlo = curar el corpus o un retrieval que ponga lo relevante al final → Sesión 7.</span>',
+          kind="beige", role="table")
+    d.box(p, (452, 120, 696, 330),
+          '<div class="t">¿Alguien detectó lost in the middle?</div>'
+          "Es el fallo más sutil: el modelo <b>siempre responde algo plausible</b>. Solo aparece si se mide el "
+          "recall del dato que se puso en el centro del contexto.<br/><br/>"
+          "Estos números no son anécdotas: son la justificación de todo el módulo.",
           kind="note")
-    d.html(p, (60, 302, 660, 330),
-           '<div class="center"><b>"Estos números no son anécdotas: son la justificación arquitectónica del módulo entero."</b></div>')
 
 
-def slide_bloque1(d: Deck) -> None:
-    p = d.new("Resolución de errores · 15 minutos",
-              "Tres cubetas, en este orden: encoding/formato → dependencias rotas → dudas conceptuales",
-              "Bloque 1 · 0:10–0:25 · caso que bloquea > 3 min → \"lo retomo en el canal asíncrono\"")
-    d.box(p, (40, 70, 355, 312),
-          '<div class="t">Formato y encoding</div>'
-          "<ul>"
-          "<li><b>UTF-8 vs Latin-1</b> → <code>chardet.detect(raw_bytes)</code> y releer.</li>"
-          "<li><b>CSV irregular</b> → <code>pd.read_csv(..., sep=\";\", engine=\"python\", on_bad_lines=\"warn\")</code></li>"
-          "<li><b>JSON con campos ausentes</b> → <code>payload.get(\"x\")</code> y <code>x: str | None = None</code></li>"
-          "<li><b>Fechas en varios formatos</b> → <code>pd.to_datetime(s, errors=\"coerce\", dayfirst=True)</code>"
-          '<br/><span class="s">Es el patrón que veremos en 2.4 (<code>cleaning/budget_records.py</code>).</span></li>'
-          "</ul>", kind="mint")
-    d.box(p, (365, 70, 680, 312),
-          '<div class="t">Dependencias del stack</div>'
-          "<ul>"
-          "<li><b>es_core_news_md</b> → sin él Presidio <b>falla en silencio</b>. Verificar: "
+def slide_errores(d: Deck) -> None:
+    p = d.new("Errores típicos: formato, encoding y dependencias", "Antes de construir, que el stack esté sano",
+              "Bloque 1")
+    d.codigo(p, "scripts/<b>preflight_s06.py</b> · <code>check_spacy_model</code> (l. 109) · <code>CHECKS</code> "
+                "(l. 179) · cleaning/<b>budget_records.py</b> · fechas con <code>dayfirst=True</code> (l. 69)")
+    d.box(p, (24, 66, 352, 330),
+          '<div class="t">Formato y encoding</div><ul>'
+          "<li><b>UTF-8 frente a Latin-1</b>: <code>chardet.detect(raw_bytes)</code> y releer.</li>"
+          "<li><b>CSV irregular</b>: <code>pd.read_csv(..., sep=\";\", engine=\"python\", "
+          "on_bad_lines=\"warn\")</code>.</li>"
+          "<li><b>JSON con campos ausentes</b>: <code>payload.get(\"x\")</code> y <code>x: str | None = None</code>.</li>"
+          "<li><b>Fechas en varios formatos</b>: <code>pd.to_datetime(s, errors=\"coerce\", dayfirst=True)</code>. "
+          "Lo vemos en 2.4.</li></ul>",
+          kind="mint")
+    d.box(p, (368, 66, 696, 330),
+          '<div class="t">Dependencias del stack</div><ul>'
+          "<li><b>es_core_news_md</b>: sin él Presidio <b>falla en silencio</b>. Prueba: "
           "<code>nlp(\"Laura Fernández firmó en Madrid.\").ents</code> → PER + LOC.</li>"
-          "<li><b>unstructured[all-docs]</b> → ~500 MB la primera vez; para el primer humo, "
+          "<li><b>unstructured[all-docs]</b>: cientos de MB la primera vez; para probar, "
           "<code>strategy=\"fast\"</code>.</li>"
-          "<li><b>Pandera v2</b> → <code>import pandera.pandas as pa</code> (no <code>import pandera as pa</code>).</li>"
-          "<li><b>Pydantic v2</b> → <code>@field_validator</code> + <code>@classmethod</code>; "
-          "<code>@model_validator(mode=\"after\")</code>.</li>"
-          "</ul>", kind="lav")
-    d.html(p, (40, 320, 680, 345),
-           '<div class="center s">El preflight de la sesión comprueba los 8 puntos críticos: '
-           '<code>python scripts/preflight_s06.py</code></div>')
+          "<li><b>Pandera</b>: <code>import pandera.pandas as pa</code>.</li>"
+          "<li><b>Pydantic v2</b>: <code>@field_validator</code> + <code>@classmethod</code> y "
+          "<code>@model_validator(mode=\"after\")</code>.</li></ul>",
+          kind="lav")
 
 
-def slide_21_code(d: Deck) -> None:
-    p = d.new("Dónde vive: app/ingestion/architecture.py",
-              "La decisión del Article 1, codificada y testeada como un módulo más",
-              "2.1 · 0:30 · aha: viable es un all([...]) → AND, no OR · una sola restricción en rojo tumba el CAG")
-    d.code(p, (40, 70, 360, 190), """class CAGViability:              # las 4 restricciones
+def slide_preflight(d: Deck) -> None:
+    p = d.new("Pre-flight: ocho comprobaciones antes de empezar", "Si las ocho pasan, el entorno está listo",
+              "Bloque 1")
+    d.codigo(p, "scripts/<b>preflight_s06.py</b> · <code>CHECKS</code> (l. 179) · se lanza con "
+                "<code>docker compose exec estimator python scripts/preflight_s06.py</code> · sale con código 1 si "
+                "alguna falla")
+    d.code(p, (24, 66, 430, 330), """Pre-flight Sesión 06
+
+✅  Python version: 3.11.17
+✅  Required packages: 12 packages OK
+✅  spaCy es_core_news_md: loaded;
+      detected PER entities: ['Laura Fernández']
+✅  unstructured parsers: unstructured 0.22.29
+✅  Corpus seed present: 6 json + 3 txt + 1 xlsx
+✅  Catalog validates: version 1.0.0, 1 included
+✅  Estimator /health: 200 OK
+✅  Postgres + migration: tables OK:
+      ['alembic_version', 'ingestion_jobs',
+       'pseudonym_mappings']
+
+✅  All checks passed""", "Salida real")
+    d.box(p, (442, 66, 696, 196),
+          '<div class="t">Por qué un script y no una lista</div>Cada comprobación es una función: si falla, '
+          "imprime el motivo en vez de dejaros descubrirlo a mitad de una demo.",
+          kind="mint")
+    d.box(p, (442, 206, 696, 330),
+          '<div class="t">La más importante</div>La de spaCy: comprueba que el modelo en español reconoce a '
+          "«Laura Fernández» como persona. Sin eso, la pseudonimización de 2.5 no detecta nombres y nadie se entera.",
+          kind="peach")
+
+
+# ===========================================================================
+# 2.1 · Decisión arquitectónica
+# ===========================================================================
+
+def slide_restricciones(d: Deck) -> None:
+    p = d.new("Las cuatro restricciones del CAG", "Las cuatro en verde a la vez: es un AND, no un OR", "2.1")
+    d.codigo(p, "app/ingestion/<b>architecture.py</b> · <code>CAGViability</code> (l. 48) · <code>viable</code> "
+                "(l. 57): un <code>all([...])</code> de las cuatro")
+    cards = [("Ventana de contexto", "Binaria: si el corpus no cabe, no se puede inyectar.", "beige"),
+             ("Coste por consulta", "Crece lineal con los tokens. 3 céntimos es desplegable; 2 €, no.", "beige"),
+             ("Latencia", "100.000 tokens tardan segundos. Depende del producto, no de la arquitectura.", "beige"),
+             ("Lost in the middle", "Aunque quepa, lo del centro se atiende peor. La más subestimada.", "peach")]
+    for i, (t, s, k) in enumerate(cards):
+        x = 24 + i * 170
+        d.box(p, (x, 66, x + 160, 196), f'<div class="t">{t}</div>{s}', kind=k)
+    d.code(p, (24, 206, 420, 330), """@dataclass
+class CAGViability:
+    context_window_ok: bool
+    cost_ok: bool
+    latency_ok: bool
+    lost_in_the_middle_ok: bool
+
     @property
     def viable(self) -> bool:
-        return all([self.context_window_ok,
-                    self.cost_ok,
-                    self.latency_ok,
-                    self.lost_in_the_middle_ok])""", "Las cuatro restricciones")
-    d.code(p, (40, 198, 360, 312), """def recommend_architecture(corpus, model):
+        return all([...las cuatro...])""", "architecture.py")
+    d.box(p, (432, 206, 696, 330),
+          '<div class="t">Data-driven AI</div>El valor no está en el modelo, que es el mismo para todos, sino en '
+          "<b>vuestros datos</b>. Y casi nunca falla solo una restricción.",
+          kind="mint")
+
+
+def slide_architecture(d: Deck) -> None:
+    p = d.new("Dónde vive la decisión: architecture.py", "El Article 1 convertido en un módulo que se ejecuta",
+              "2.1")
+    d.codigo(p, "app/ingestion/<b>architecture.py</b> · <code>assess_cag_viability</code> (l. 98) · "
+                "<code>recommend_architecture</code> (l. 114) · <code>PROYECTO_2</code> (l. 141) · "
+                "<code>python -m app.ingestion.architecture</code>")
+    d.code(p, (24, 66, 360, 196), """def recommend_architecture(corpus, model):
     fits_in_window = (corpus.estimated_tokens
                       <= model.context_window * 0.7)
     cache_friendly = corpus.refresh_frequency_days >= 7
     traceability_doable = not corpus.traceability_required
-    access_doable = not corpus.access_control_required""", "Los cuatro ejes")
-    d.box(p, (372, 70, 680, 188),
-          '<div class="t">Proyecto 2 · los números que defendemos</div>'
-          "<table><tr><td>Volumen</td><td><b>≈ 250 000 tokens</b></td></tr>"
-          "<tr><td>Refresco</td><td>7 días (cierre comercial)</td></tr>"
-          "<tr><td>Trazabilidad</td><td>obligatoria (contractual)</td></tr>"
-          "<tr><td>Acceso</td><td>por usuario</td></tr>"
-          "<tr><td>Ventana gpt-4o-mini</td><td><b>128 000 tokens</b></td></tr></table>",
-          kind="lav")
-    d.code(p, (372, 198, 680, 312), """$ python -m app.ingestion.architecture
-Corpus 'Proyecto 2': 250,000 tokens, refresh cada 7 días,
+    access_doable = not corpus.access_control_required""", "Los cuatro ejes de la decisión")
+    d.box(p, (372, 66, 696, 196),
+          "<table><tr><th>Proyecto 2</th><th></th></tr>"
+          "<tr><td>Volumen</td><td><b>250.000 tokens</b></td></tr>"
+          "<tr><td>Refresco</td><td>cada 7 días</td></tr>"
+          "<tr><td>Trazabilidad</td><td>obligatoria</td></tr>"
+          "<tr><td>Control de acceso</td><td>por usuario</td></tr>"
+          "<tr><td>Ventana de gpt-4o-mini</td><td><b>128.000 tokens</b></td></tr></table>",
+          kind="lav", role="table")
+    d.code(p, (24, 206, 470, 330), """Corpus 'Proyecto 2': 250,000 tokens, refresh cada 7 días,
   trazabilidad=True, control_acceso=True
-Modelo 'gpt-4o-mini': ventana 128,000 tokens
+Modelo 'gpt-4o-mini': ventana 128,000 tokens, prefix_caching=True
 
 Viabilidad CAG: NO viable
-  Restricciones en rojo: context_window, latency,
-                         lost_in_the_middle
-Recomendación arquitectónica: RAG""", "Demo · salida real")
-    d.html(p, (40, 318, 680, 345),
-           '<div class="center"><b>"250 000 contra 128 000: no cabe ni usando el 70 % útil de la ventana. '
-           'Game over para el CAG puro."</b></div>')
-
-
-def slide_21_defensa(d: Deck) -> None:
-    p = d.new("La decisión: CAG, RAG o híbrido",
-              "Lo que tenéis que poder defender ante un Director de Producto",
-              "2.1 · 0:37 · riesgo: preguntas de embeddings/pgvector → \"Sesión 7\" · bridge: primero el catálogo")
-    d.image(p, (30, 66, 370, 330), "s06-arbol-cag-rag-hibrido.png")
-    d.box(p, (385, 70, 685, 128),
-          '<div class="t">Los cuatro ejes son AND</div>'
-          "Un solo eje en rojo tumba el CAG. Por eso <code>viable</code> es un <code>all([...])</code>.",
+  Restricciones en rojo: context_window, latency, lost_in_the_middle
+Recomendación arquitectónica: RAG""", "Salida real")
+    d.box(p, (482, 206, 696, 330),
+          '<div class="t">Lectura</div>250.000 tokens no caben ni en el 70 % útil de 128.000. El coste pasa '
+          "(hay caché de prefijo y el corpus cambia cada semana), pero tres en rojo: <b>RAG</b>.",
           kind="mint")
-    d.box(p, (385, 136, 685, 212),
-          '<div class="t">Fine-tuning no está en el árbol</div>'
-          "Es una capa <b>ortogonal</b>: enseña <i>cómo responder</i>, no aporta datos nuevos ni resuelve "
-          "trazabilidad. <b>Nunca</b> sustituye a un retrieval mal diseñado.",
+
+
+def slide_decision(d: Deck) -> None:
+    p = d.new("CAG, RAG o híbrido: una decisión defendible", "Lo que hay que poder explicar a un Director de Producto",
+              "2.1")
+    d.codigo(p, "app/ingestion/<b>architecture.py</b> · <code>recommend_architecture</code> (l. 114): devuelve "
+                "<code>\"CAG\"</code>, <code>\"Hybrid\"</code> o <code>\"RAG\"</code>")
+    d.image(p, (24, 64, 372, 330), "s06-arbol-cag-rag-hibrido.png")
+    d.box(p, (384, 66, 696, 146),
+          '<div class="t">Tres opciones, no dos</div>Si el corpus cabe y es estable pero hay que citar o filtrar por '
+          "usuario: <b>híbrido</b>. Lo estable por CAG, lo volátil o sensible por RAG.",
+          kind="mint")
+    d.box(p, (384, 156, 696, 246),
+          '<div class="t">Fine-tuning no está en el árbol</div>Es una capa que se suma encima: enseña <i>cómo</i> '
+          "responder, no aporta datos ni trazabilidad. <b>Nunca</b> sustituye a un retrieval mal diseñado.",
           kind="lav")
-    d.box(p, (385, 220, 685, 296),
-          '<div class="t">Tres opciones, no dos</div>'
-          "Lo estable (glosario, plantillas, tarifas) por CAG; lo volátil por RAG: la "
-          "<b>arquitectura híbrida residual</b>. Hoy vamos a RAG.",
+    d.box(p, (384, 256, 696, 330),
+          '<div class="t">Y ahora qué</div>Decidido RAG, lo primero <b>no</b> es cargar un parser: es saber qué '
+          "vamos a indexar. Eso es el catálogo.",
+          kind="note")
+
+
+# ===========================================================================
+# 2.2 · Catálogo de fuentes
+# ===========================================================================
+
+def slide_antipatron(d: Deck) -> None:
+    p = d.new("Antipatrón: vectorizar primero, mirar después", "Los errores no salen el día 1: salen el día 60", "2.2")
+    d.codigo(p, "estimator/<b>data/seed/</b> · <code>budgets/</code> (6 JSON) · <code>transcripts/</code> (3 TXT) · "
+                "<code>rate_card_2024.xlsx</code> suelto en la raíz: las fuentes del Proyecto 2")
+    fallos = [("Mezcla silenciosa de versiones", "La propuesta inicial y la firmada conviven; se recupera la "
+                                                 "equivocada porque nada las distingue.", "peach"),
+              ("Fuentes podridas", "Documentos válidos pero obsoletos (tarifas, políticas) que dan respuestas "
+                                   "seguras y falsas.", "peach"),
+              ("Huecos invisibles", "Responde bien donde hay datos e inventa algo plausible donde no los hay.",
+               "peach")]
+    for i, (t, s, k) in enumerate(fallos):
+        x = 24 + i * 226
+        d.box(p, (x, 66, x + 216, 186), f'<div class="t">{t}</div>{s}', kind=k)
+    d.box(p, (24, 196, 352, 330),
+          '<div class="t">El caos documental</div>Presupuestos en Drive, transcripciones en Dropbox '
+          "(<code>meeting_final_v3_FINAL.txt</code>), un Excel de tarifas que nadie sabe si sigue vigente. "
+          "Sin digitalizar y ordenar antes, la IA no tiene de dónde leer.",
+          kind="beige")
+    d.box(p, (368, 196, 696, 330),
+          '<div class="t">Por dónde empezar</div>Por el <b>inventario</b>: qué hay, dónde, de quién, cada cuánto se '
+          "actualiza y con qué calidad. Las tres causas tienen la misma raíz: nadie miró lo que había.",
+          kind="mint")
+
+
+def slide_inspeccion(d: Deck) -> None:
+    p = d.new("Inspeccionar: hechos antes que opiniones", "El censo mide lo medible; la calidad la decide una persona",
+              "2.2")
+    d.codigo(p, "app/ingestion/catalog/<b>inspect.py</b> · <code>FolderFacts</code> (l. 31) · "
+                "<code>inspect_root</code> (l. 68) · <code>python -m app.ingestion.catalog.inspect data/seed</code>")
+    d.code(p, (24, 66, 696, 136), """budgets       6 files  0.00 MB  latest=2026-10-14T13:18:12+00:00  formats=json
+transcripts   3 files  0.00 MB  latest=2026-10-14T13:18:12+00:00  formats=txt
+seed          1 files  0.01 MB  latest=2024-01-12T09:00:00+00:00  formats=xlsx""", "Salida real")
+    dims = [("Completitud", "¿Qué % cumple el esquema?"), ("Consistencia", "¿EUR, eur, € y euros a la vez?"),
+            ("Actualidad", "¿Cuándo fue el último dato?"), ("Fiabilidad", "¿Fuente autoritativa o una copia?")]
+    for i, (t, s) in enumerate(dims):
+        x = 24 + i * 170
+        d.box(p, (x, 146, x + 160, 220), f'<div class="t">{t}</div>{s}', kind="lav", pad=5)
+    d.box(p, (24, 230, 352, 330),
+          '<div class="t">La fuente podrida</div>El Excel de tarifas se tocó por última vez el <b>12/01/2024</b>. '
+          "Si se declara «anual», hace casi dos años que no se cumple.",
           kind="peach")
-    d.html(p, (385, 302, 685, 335),
-           '<div class="s"><b>Siguiente →</b> "Decidido RAG, lo primero NO es cargar un parser: es saber '
-           "<b>qué</b> vamos a indexar. Eso es el catálogo.\"</div>")
+    d.box(p, (368, 230, 696, 330),
+          '<div class="t">No se promedia</div>Cada dimensión va de 1 a 5 y todas son necesarias: completitud 5 y '
+          "fiabilidad 1 no es «calidad 3», son datos completos que pueden ser mentira.",
+          kind="note")
 
 
-def slide_22_code(d: Deck) -> None:
-    p = d.new("El catálogo es código, no documentación",
-              "Tres ficheros pequeños en app/ingestion/catalog/ y un YAML versionado en git",
-              "2.2 · 0:45 · leer el YAML en voz alta, NO editarlo en vivo (ya está pre-redactado)")
-    d.code(p, (30, 70, 240, 200), """@dataclass
-class FolderFacts:
-    folder: Path
-    file_count: int = 0
-    total_size_mb: float = 0.0
-    latest_modified: datetime | None
-    formats_detected: set[str]""", "inspect.py · facts, cero opiniones")
-    d.code(p, (250, 70, 470, 200), """class CatalogDecision(str, Enum):
+def slide_catalogo(d: Deck) -> None:
+    p = d.new("El catálogo es código, no documentación", "Un YAML versionado que la ingesta lee para decidir", "2.2")
+    d.codigo(p, "catalog/<b>models.py</b> · <code>CatalogDecision</code> (l. 33) · "
+                "<code>_decision_requires_reason_when_not_include</code> (l. 95) · data/catalog/<b>catalog.yaml</b> "
+                "(l. 33, 58, 86) · catalog/<b>loader.py</b> (l. 28)")
+    d.code(p, (24, 66, 352, 186), """class CatalogDecision(str, Enum):
     INCLUDE = "include"
-    REVIEW  = "review"   # la 3ª
+    REVIEW  = "review"     # la tercera vía
     EXCLUDE = "exclude"
 
 @model_validator(mode="after")
-def _decision_requires_reason(...):
-    # no include => motivo obligatorio""", "models.py · contrato Pydantic v2")
-    d.code(p, (480, 70, 690, 200), """def load_catalog(path) -> DataCatalog:
-    raw = yaml.safe_load(
-        Path(path).read_text("utf-8"))
-    return DataCatalog.model_validate(raw)
-
-# 3 líneas: todo el peso está
-# en el modelo, que se testea""", "loader.py · deliberadamente trivial")
-    d.box(p, (30, 210, 400, 312),
-          '<div class="t">data/catalog/catalog.yaml</div>'
-          "<table><tr><th>Fuente</th><th>Decisión</th><th>Motivo</th></tr>"
-          '<tr><td>presupuestos_json</td><td class="k">include</td><td>PII confidencial</td></tr>'
-          "<tr><td>transcripciones_txt</td><td><b>review</b></td><td>la de 2023 sin speaker tags rompe el parser</td></tr>"
-          '<tr><td>rate_card_xlsx</td><td class="r">exclude</td><td>actuality=1, fichero del 12/01/2024</td></tr></table>',
-          kind="beige")
-    d.code(p, (410, 210, 690, 312), """$ python -m app.ingestion.catalog.inspect data/seed
-budgets      6 files  formats=json
-transcripts  3 files  formats=txt
-seed         1 files  latest=2024-01-12  formats=xlsx
-
-$ python -m app.ingestion.catalog.loader \\
+def _decision_requires_reason_when_not_include(self):
+    # si no es include, el motivo es obligatorio""", "models.py · contrato Pydantic")
+    d.code(p, (368, 66, 696, 186), """$ python -m app.ingestion.catalog.loader \\
       data/catalog/catalog.yaml
-Sources total: 3 · Sources included: 1
-  - presupuestos_json (json)""", "Demo · salida real")
-    d.html(p, (30, 318, 690, 345),
-           '<div class="center"><b>"Tres fuentes, una sola incluida. Esto es lo que enseñáis a un auditor."</b> '
-           '<span class="s">· excluir es disciplina, no desidia · review evita que lo dudoso se cuele en include</span></div>')
+Catalog version: 1.0.0
+Sources total:  3
+Sources included: 1
+  - presupuestos_json (json)""", "Salida real")
+    d.box(p, (24, 196, 696, 290),
+          "<table><tr><th>Fuente</th><th>Decisión</th><th>Motivo</th></tr>"
+          "<tr><td>presupuestos_json</td><td class='k'>include</td><td>fuente principal; tiene PII → "
+          "se pseudonimiza</td></tr>"
+          "<tr><td>transcripciones_txt</td><td><b>review</b></td><td>un fichero de 2023 sin speaker tags rompe el "
+          "parser por defecto</td></tr>"
+          "<tr><td>rate_card_xlsx</td><td class='r'>exclude</td><td>actuality=1: tarifas de enero de 2024</td></tr>"
+          "</table>",
+          kind="beige", role="table")
+    d.box(p, (24, 298, 696, 336),
+          "Excluir con el motivo escrito es disciplina, no desidia. El <code>git log</code> del YAML dice quién "
+          "decidió qué y por qué.",
+          kind="mint", pad=5)
 
 
-def slide_23_code(d: Deck) -> None:
-    p = d.new("El Document canónico y los parsers",
-              "Un contrato plano para todo lo que sale de la ingesta, venga de JSON, TXT o PDF",
-              "2.3 · 1:05 · metanorma del módulo: \"si no sabes, no rellenas con basura\"")
-    d.code(p, (30, 70, 260, 175), """class Document(BaseModel):
+# ===========================================================================
+# 2.3 · Ingesta
+# ===========================================================================
+
+def slide_capas(d: Deck) -> None:
+    p = d.new("Tres capas y un contrato: el Document", "Venga de JSON, TXT, XLSX o PDF, sale lo mismo", "2.3")
+    d.codigo(p, "documents/<b>models.py</b> · <code>DocumentMetadata</code> (l. 30) · <code>Document</code> (l. 43) · "
+                "loaders/<b>filesystem.py</b> · <code>iter_blobs</code> (l. 37) · parsers/<b>protocol.py</b> · "
+                "<code>Parser</code> (l. 46)")
+    capas = [("Loader", "Cómo llego al fichero: disco, Drive, S3. Entrega bytes y no sabe qué hay dentro."),
+             ("Parser", "Qué hay dentro: uno por formato, todos con la misma firma."),
+             ("Document", "El contrato común: texto + metadatos. Lo único que verá la Sesión 7.")]
+    for i, (t, s) in enumerate(capas):
+        x = 24 + i * 226
+        d.box(p, (x, 66, x + 204, 150), f'<div class="t">{t}</div>{s}', kind="mint" if i < 2 else "lav")
+        if i < 2:
+            d.arrow(p, x + 205, 108, x + 225, 108)
+    d.code(p, (24, 160, 352, 330), """class Document(BaseModel):
     model_config = ConfigDict(extra="forbid")
     id: str
     text: str
     metadata: DocumentMetadata
-    # lo específico de formato
-    # va en metadata.extra""", "documents/models.py")
-    d.code(p, (270, 70, 480, 175), """@runtime_checkable
-class Parser(Protocol):
-    supported_formats: ClassVar[set[str]]
-    def parse(self, blob, context
-              ) -> Iterable[Document]: ...""", "parsers/protocol.py · Protocol, no ABC")
-    d.code(p, (490, 70, 690, 175), """registry.register(BudgetJsonParser())
-registry.register(TranscriptTxtParser())
-# XLSX/DOCX/PDF: repo de referencia
-# añadir un formato = una línea""", "parsers/registry.py")
-    d.box(p, (30, 185, 355, 312),
-          '<div class="t">budget_json.py · markdown, no json.dumps</div>'
-          "<code>text = _render_budget_markdown(payload)</code><br/><br/>"
-          "El embedder embebe <b>prosa</b>: \"¿quién es el cliente?\" se parece más a "
-          "<code>## Cliente - Nombre: Acme</code> que a <code>{\"client_name\":\"Acme\"}</code>.<br/>"
-          '<span class="s">Una decisión de retrieval que adelantamos al parser.</span>',
-          kind="mint")
-    d.box(p, (365, 185, 690, 312),
-          '<div class="t">transcript_txt.py · un formato, dos modos</div>'
-          "<ul><li><b>Tagged</b> (≥ 3 líneas <code>[hh:mm:ss] Speaker:</code>) → un Document por turno con "
-          "<code>speaker</code> y <code>timestamp</code>.</li>"
-          "<li><b>Legacy</b> → un Document por bloque, <b>sin speaker: no lo fabrico</b>.</li></ul>"
-          '<span class="s">"Mejor admitir que no sé el speaker que inventármelo."</span>',
-          kind="lav")
-    d.html(p, (30, 318, 690, 345),
-           '<div class="center s"><b>extra="forbid"</b>: si un parser cuela un campo no declarado, Pydantic falla · '
-           "<b>error fuerte &gt; error silencioso</b> · el loader solo da bytes, el parser no sabe de dónde vienen</div>")
 
-
-def slide_23_demo(d: Deck) -> None:
-    p = d.new("La ingesta es offline: 202 + polling",
-              "Indexar tarda minutos; una llamada síncrona tira al cliente. El query de la Sesión 7 sí será síncrono",
-              "2.3 · 1:12 · la defensa más importante del sub-bloque · enseñar los structlog en la otra terminal")
-    d.image(p, (24, 66, 330, 245), "s06-pipeline-offline-online.png")
-    d.code(p, (340, 68, 692, 250), """$ curl -X POST localhost:8000/api/v1/ingestion/runs \\
-       -d '{"source_name": "presupuestos_json"}'
-{"job_id": "e417f7f9-...", "status": "pending"}       ← 202
-
-$ curl localhost:8000/api/v1/ingestion/jobs/$JID
-{"status": "completed", "documents_count": 6,
- "error_message": null}
-
-# ramas de error
-transcripciones_txt (review)  → HTTP 400
-rate_card_xlsx (exclude)      → HTTP 400 source_not_included
-no_existe                     → HTTP 404 unknown_source""", "Demo · salida real")
-    d.box(p, (24, 258, 330, 312),
-          '<div class="t">Router fino</div>'
-          "Valida contra el catálogo, crea el job, dispara el <code>BackgroundTask</code> (con su propia "
-          "sesión de BD) y devuelve <b>202</b>.", kind="beige")
-    d.box(p, (340, 258, 692, 312),
-          '<div class="t">Cliente Rails ilustrativo · ingestion_client.rb</div>'
-          "Solo ilustra el contrato: <b>cualquier cliente HTTP funciona</b> (curl, httpx, fetch). "
-          "El servicio Python es el autoritativo.", kind="lav")
-    d.html(p, (24, 318, 692, 345),
-           '<div class="center s">XLSX, DOCX y PDF siguen exactamente este patrón: '
-           "los tenéis en el repo de referencia.</div>")
-
-
-def slide_madurez(d: Deck) -> None:
-    p = d.new("La madurez documental marca el techo de precisión",
-              "Lo que hay que saber de antemano, antes de prometerle nada a un cliente",
-              "Bloque 2 · 1:18 · idea propia de Julián · contarlo con un ejemplo real de cliente")
-    steps = [
-        ("~60 %", "Fácil", "Un RAG directo sobre los documentos tal cual llegan. Impresiona en la demo.", "peach"),
-        ("60 → 80 %", "Un salto enorme", "Catálogo, Document canónico, limpieza, validación y PII: "
-         "exactamente lo que construimos hoy.", "lav"),
-        ("≈ 100 %", "Meses de trabajo… o imposible", "Sin errores en una adopción agéntica o RAG: meses de "
-         "iteración, o directamente inalcanzable por la propia naturaleza de la IA.", "mint"),
-    ]
-    y = 74
-    for pct, name, desc, k in steps:
-        d.box(p, (40, y, 400, y + 70),
-              f'<span class="big"><b>{pct}</b></span> &nbsp;<b>{name}</b><br/>{desc}', kind=k, pad=8)
-        y += 80
-    d.box(p, (415, 74, 685, 228),
-          '<div class="t">No se empieza la casa por el tejado</div>'
-          "Muchas empresas aún no han digitalizado de verdad: documentos sueltos en Word, carpetas compartidas "
-          "sin orden, ERPs de hace 20 años.<br/><br/>"
-          "Sin esa base, la IA <b>no tiene de dónde leer</b>. Primero digitalizar y ordenar; después, IA.",
+class DocumentMetadata(BaseModel):
+    source_name: str
+    source_version: str   # versión del catálogo
+    ingested_at: datetime
+    lineage: list[str]
+    sensitivity_pii_flags: list[str]
+    extra: dict[str, Any]   # lo propio del formato""", "documents/models.py")
+    d.box(p, (368, 160, 696, 240),
+          '<div class="t">extra="forbid"</div>Si un parser cuela un campo no declarado, Pydantic falla. '
+          "Un error fuerte es mejor que uno silencioso.",
           kind="beige")
-    d.box(p, (415, 238, 685, 312),
-          '<div class="t">Por qué importa</div>'
-          "Si no se sabe desde el principio, llegan las quejas: del cliente, del jefe de proyecto… "
-          "y la culpa acaba siendo \"de la IA\".",
+    d.box(p, (368, 250, 696, 330),
+          '<div class="t">Parser es un Protocol</div>Tipado estructural, sin herencia: cualquier clase con '
+          "<code>parse(blob, context)</code> vale. Añadir un formato es registrar una clase.",
           kind="note")
 
 
-def slide_24_code(d: Deck) -> None:
-    p = d.new("Limpiar y validar son dos pasos distintos",
-              "Limpieza permisiva (repara lo reparable) · validación estricta (decide qué entra)",
-              "2.4 · 1:25 · los checks de Pandera confunden la primera vez → se leen, no se teclean")
-    d.code(p, (30, 70, 350, 160), """# cleaning/budget_records.py  — repara, no juzga
-df["signed_at"] = pd.to_datetime(df["signed_at"],
-                     errors="coerce", dayfirst=True)
-df = (df.sort_values(["budget_id", "signed_at"])
-        .drop_duplicates(subset=["budget_id"], keep="last"))""",
-           "1 · Limpieza")
-    d.code(p, (360, 70, 690, 160), """# cleaning/schemas.py  — Pandera v2
-import pandera.pandas as pa
-"total_amount": Column(float,
-     checks=[Check.ge(0), Check.le(10_000_000)]),
-"client_name":  Column(str, nullable=True),
-strict=True, coerce=False""", "2 · Contrato de contenido")
-    d.code(p, (30, 168, 350, 250), """# cleaning/policy.py  — enruta a tres cubetas
-QUARANTINE_CHECKS = {"not_nullable", "no_default",
-                     "column_in_dataframe"}
-DISCARD_CHECKS    = {"in_range", "greater_than_or_equal_to",
-                     "isin", "str_matches"}
-validated = BudgetRecord.validate(df, lazy=True)""", "3 · Política")
-    d.box(p, (360, 168, 690, 250),
-          '<div class="t">Reparar · cuarentena · descartar</div>'
-          "<table><tr><td class=\"k\">Reparar</td><td>sin pérdida semántica, sin humano</td></tr>"
-          "<tr><td><b>Cuarentena</b></td><td>grave pero útil tras revisión: no entra al RAG, se guarda con motivo</td></tr>"
-          "<tr><td class=\"r\">Descartar</td><td>contaminación clara: fuera, con log</td></tr></table>",
+def slide_parsers(d: Deck) -> None:
+    p = d.new("Un parser por formato, cada uno con su estrategia", "JSON y TXT en el repo; XLSX, DOCX y PDF siguen el "
+              "mismo patrón", "2.3")
+    d.codigo(p, "parsers/<b>budget_json.py</b> · <code>_render_budget_markdown</code> (l. 59) · "
+                "parsers/<b>transcript_txt.py</b> · <code>_parse_tagged</code> (l. 54) · <code>_parse_legacy</code> "
+                "(l. 76) · parsers/<b>registry.py</b> (l. 45)")
+    d.box(p, (24, 66, 352, 200),
+          '<div class="t">JSON → Markdown, no json.dumps</div>Un JSON no se extrae: se decide cómo representarlo. '
+          "El embedding entiende mejor <code>## Cliente · BetaNorte</code> que "
+          "<code>{\"client_name\": \"BetaNorte\"}</code>.",
+          kind="mint")
+    d.box(p, (368, 66, 696, 200),
+          '<div class="t">TXT: un formato, dos modos</div><ul>'
+          "<li><b>Con etiquetas</b> <code>[hh:mm:ss] Speaker:</code> → un Document por turno, con speaker.</li>"
+          "<li><b>Legacy</b> (2023, sin etiquetas) → un Document por bloque, <b>sin speaker</b>: no se inventa.</li>"
+          "</ul>",
+          kind="lav")
+    d.box(p, (24, 210, 696, 330),
+          "<table><tr><th>Formato</th><th>Estrategia</th></tr>"
+          "<tr><td>XLSX</td><td>tabla limpia → tabla Markdown; celdas combinadas o varias tablas por hoja → fuera o "
+          "a mano</td></tr>"
+          "<tr><td>DOCX</td><td><code>python-docx</code>: un Document por sección, con el título como metadato</td></tr>"
+          "<tr><td>PDF</td><td><code>pypdf</code> por defecto; <code>unstructured</code> <i>hi_res</i> solo si hay "
+          "tablas o escaneo, decidido una vez por fuente en el catálogo</td></tr></table>",
+          kind="beige", role="table")
+
+
+def slide_ingesta(d: Deck) -> None:
+    p = d.new("La ingesta es offline: 202 y un job", "Indexar tarda; la petición no espera", "2.3")
+    d.codigo(p, "routers/<b>ingestion.py</b> · <code>create_ingestion_run</code> (l. 86) · "
+                "<code>get_ingestion_job</code> (l. 128) · <b>orchestrator.py</b> · <code>ingest_source</code> "
+                "(l. 51) · <b>Interfaz:</b> Swagger, sección <i>ingestion</i>")
+    d.image(p, (24, 64, 330, 150), "s06-ui-swagger.png")
+    d.code(p, (24, 158, 330, 330), """POST /api/v1/ingestion/runs
+{"source_name": "presupuestos_json"}
+→ 202  job_id: 95f56fd1-…  status: pending
+
+GET /api/v1/ingestion/jobs/95f56fd1-…
+→ status: completed  documents_count: 6
+
+rate_card_xlsx → 400 source_not_included
+no_existe      → 404 unknown_source""", "Salida real")
+    d.image(p, (342, 64, 696, 214), "s06-pipeline-offline-online.png")
+    d.box(p, (342, 222, 696, 270),
+          '<div class="t">Offline frente a online</div>Indexar es por lotes, sin usuario esperando. La consulta de '
+          "la Sesión 7 será síncrona y rápida.",
+          kind="lav", pad=5)
+    d.box(p, (342, 278, 696, 330),
+          '<div class="t">El catálogo manda</div>La 400 trae el motivo del YAML: «actuality=1 — fichero del '
+          "12/01/2024 con tarifas obsoletas».",
+          kind="note", pad=5)
+
+
+def slide_madurez(d: Deck) -> None:
+    p = d.new("La madurez documental marca el techo de precisión", "Lo que conviene saber antes de prometer nada",
+              "2.3")
+    d.codigo(p, "La calidad declarada en data/catalog/<b>catalog.yaml</b> (bloques <code>quality</code>) · lo que "
+                "sube del 60 al 80 % es lo de hoy: <code>catalog/</code>, <code>parsers/</code>, "
+                "<code>cleaning/</code> y <code>pii/</code>")
+    steps = [("~60 %", "Fácil", "Un RAG directo sobre los documentos tal cual. Impresiona en la demo.", "peach"),
+             ("60 → 80 %", "Un salto enorme", "Catálogo, Document común, limpieza, validación y PII: lo que vemos "
+                                              "hoy.", "lav"),
+             ("≈ 100 %", "Meses de trabajo, o imposible", "Sin errores en un RAG o un agente: mucha iteración, o "
+                                                          "inalcanzable por la propia naturaleza de la IA.", "mint")]
+    for i, (pct, name, desc, k) in enumerate(steps):
+        y = 66 + i * 90
+        d.box(p, (24, y, 420, y + 82), f'<div class="huge">{pct}</div><b>{name}</b> · {desc}', kind=k)
+    d.box(p, (432, 66, 696, 196),
+          '<div class="t">La casa no se empieza por el tejado</div>Documentos sueltos en Word, carpetas sin orden, '
+          "ERPs de hace veinte años: sin digitalizar y ordenar, la IA no tiene de dónde leer.",
           kind="beige")
-    d.box(p, (30, 258, 690, 312),
-          '<div class="t">Para defender</div>'
-          "<code>errors=\"coerce\"</code>: no excepciones, la validación decide · dedup por hash distingue duplicado exacto de "
-          "divergencia · \"keep last by signed_at\" es <b>política de negocio</b> documentada en código · "
-          "<code>lazy=True</code> recoge <b>todos</b> los errores para poder enrutar · <code>strict=True</code> siempre: "
-          "lo que se relaja es la política, no el contrato.",
+    d.box(p, (432, 206, 696, 330),
+          '<div class="t">Por qué importa</div>Si no se sabe desde el principio, llegan las quejas del cliente y del '
+          "jefe de proyecto, y la culpa acaba siendo «de la IA».",
+          kind="note")
+
+
+# ===========================================================================
+# 2.4 · Limpieza y validación
+# ===========================================================================
+
+def slide_suciedad(d: Deck) -> None:
+    p = d.new("Cuatro familias de suciedad", "El Document garantiza la forma; nada garantiza todavía el contenido",
+              "2.4")
+    d.codigo(p, "data/seed/budgets/ · <b>BUDGET-2024-0002.json</b> (moneda «eur», fecha 12/03/2024) · <b>…0003</b> "
+                "(«TBD») · <b>…0004</b> (−50000) · <b>…0005-v1 / v2</b> · cleaning/<b>budget_records.py</b> · "
+                "<code>NULL_PLACEHOLDERS</code> (l. 44)")
+    d.box(p, (24, 66, 696, 246),
+          "<table><tr><th>Familia</th><th>En nuestros datos</th><th>Cómo daña al RAG</th></tr>"
+          "<tr><td><b>Formato heterogéneo</b></td><td><code>\"eur\"</code> y <code>\"EUR\"</code>; "
+          "<code>12/03/2024</code> y <code>2024-06-21</code></td><td>cada variante es un token distinto</td></tr>"
+          "<tr><td><b>Duplicados divergentes</b></td><td>BUDGET-2024-0005 en v1 y v2</td>"
+          "<td>se recupera la que se indexó primero</td></tr>"
+          "<tr><td><b>Nulos disfrazados</b></td><td><code>\"client_name\": \"TBD\"</code>, "
+          "<code>\"contact\": \"N/A\"</code></td><td>se vectorizan como si fueran un dato</td></tr>"
+          "<tr><td><b>Fuera de rango</b></td><td><code>\"total_amount\": -50000</code></td>"
+          "<td>respuestas muy seguras sobre un absurdo</td></tr></table>",
+          kind="beige", role="table")
+    d.box(p, (24, 256, 696, 330),
+          '<div class="t">En un solo sitio</div>La limpieza y la validación viven en un módulo, entre el parser y el '
+          "Document, no repartidas en parches por el chunker, el embedder y el retriever. Así se pueden auditar, "
+          "testear y parar el pipeline cuando algo falla.",
           kind="mint")
 
 
-def slide_24_demo(d: Deck) -> None:
-    p = d.new("Lo que sale de verdad en la demo",
-              "Ejecución real del código de la sesión",
-              "2.4 · 1:30 · ojo: no coincide con la diapo anterior → convertirlo en el mejor ejemplo de la sesión")
-    d.code(p, (30, 70, 360, 300), """$ python scripts/demo_cleaning_s06.py
-Ficheros leídos: 6
+def slide_limpiar_validar(d: Deck) -> None:
+    p = d.new("Limpiar y validar son dos pasos distintos", "Limpieza permisiva que repara · validación estricta que "
+              "decide", "2.4")
+    d.codigo(p, "cleaning/<b>budget_records.py</b> (l. 47; fechas l. 69; dedup l. 79) · cleaning/<b>schemas.py</b> · "
+                "<code>BudgetRecord</code> (l. 30) · cleaning/<b>policy.py</b> · <code>QUARANTINE_CHECKS</code> "
+                "(l. 40) · <code>DISCARD_CHECKS</code> (l. 45) · <code>lazy=True</code> (l. 73)")
+    d.code(p, (24, 66, 352, 160), """# 1 · limpiar: repara, no juzga
+df["signed_at"] = pd.to_datetime(df["signed_at"],
+                      errors="coerce", dayfirst=True)
+df = (df.sort_values(["budget_id", "signed_at"])
+        .drop_duplicates("budget_id", keep="last"))""", "budget_records.py")
+    d.code(p, (368, 66, 696, 160), """# 2 · validar: el contrato (Pandera)
+"total_amount": Column(float,
+    checks=[Check.ge(0), Check.le(10_000_000)]),
+"currency": Column(str, checks=Check.isin(
+    ["EUR", "USD", "GBP"])),
+strict=True, coerce=False""", "schemas.py")
+    d.code(p, (24, 170, 352, 252), """# 3 · la política: tres cubetas
+QUARANTINE_CHECKS = {"not_nullable", ...}
+DISCARD_CHECKS = {"greater_than_or_equal_to",
+                  "isin", "str_matches", ...}
+BudgetRecord.validate(df, lazy=True)""", "policy.py")
+    d.box(p, (368, 170, 696, 252),
+          "<table><tr><td class='k'>Reparar</td><td>sin pérdida de significado y sin humano</td></tr>"
+          "<tr><td><b>Cuarentena</b></td><td>grave pero útil tras revisión: no entra al RAG</td></tr>"
+          "<tr><td class='r'>Descartar</td><td>contaminación clara: fuera, con log</td></tr></table>",
+          kind="beige", role="table")
+    d.box(p, (24, 262, 696, 330),
+          '<div class="t">Para defender</div><code>errors="coerce"</code>: lo inválido pasa a nulo y la validación '
+          "decide · <code>lazy=True</code> recoge <b>todos</b> los errores, no solo el primero · «la versión más "
+          "reciente gana» es una regla de negocio escrita en código · el contrato es estricto siempre; lo que se "
+          "relaja es la política.",
+          kind="mint")
+
+
+def slide_demo_limpieza(d: Deck) -> None:
+    p = d.new("Demo: lo que sale de verdad", "Seis presupuestos de entrada, tres válidos de salida", "2.4")
+    d.codigo(p, "scripts/<b>demo_cleaning_s06.py</b> · <code>main</code> (l. 43) · se lanza con "
+                "<code>docker compose exec estimator python scripts/demo_cleaning_s06.py</code>")
+    d.code(p, (24, 66, 360, 330), """Ficheros leídos: 6  (/app/data/seed/budgets)
 UserWarning: Parsing dates in %Y-%m-%d format
   when dayfirst=True was specified.
 Filas tras limpieza + dedup: 5
@@ -579,43 +524,72 @@ Report:
   discarded_rows: 1
 
 Descartadas:
-  BUDGET-2024-0004   -50000
+       budget_id  total_amount
+BUDGET-2024-0004        -50000
 
 En cuarentena:
-  BUDGET-2024-0002   BetaNorte Distribución""", "Demo · salida real")
-    d.box(p, (372, 70, 690, 136),
-          '<div class="t">6 ficheros → 5 filas</div>'
-          "El dedup colapsó las dos versiones de <b>BUDGET-2024-0005</b> y se quedó con la v2 "
-          "(firmada después). Política en código, no en un acta.",
+       budget_id            client_name
+BUDGET-2024-0002 BetaNorte Distribución""", "Salida real")
+    d.box(p, (372, 66, 696, 136),
+          '<div class="t">6 ficheros → 5 filas</div>El dedup juntó las dos versiones de BUDGET-2024-0005 y se quedó '
+          "con la v2, la firmada después.",
           kind="mint")
-    d.box(p, (372, 144, 690, 228),
-          '<div class="t">¿Por qué va a cuarentena el 0002 y no el "TBD"?</div>'
-          "Su fecha es <code>12/03/2024</code>; las demás, <code>2024-05-02</code>. pandas deduce el formato de la "
-          "<b>primera</b> fila y la del 0002 no encaja → <code>NaT</code> → falla <code>not_nullable</code>. "
-          "El 0003 (\"TBD\") pasa porque <code>client_name</code> admite nulos.",
+    d.box(p, (372, 144, 696, 246),
+          '<div class="t">¿Por qué cuarentena el 0002 y no el «TBD»?</div>Su fecha es <code>12/03/2024</code> y la '
+          "del resto <code>2024-…</code>. pandas deduce el formato de la primera fila, la del 0002 no encaja → "
+          "<code>NaT</code> → falla <code>not_nullable</code>. El «TBD» pasa porque <code>client_name</code> admite "
+          "nulos.",
           kind="note")
-    d.box(p, (372, 236, 690, 300),
-          '<div class="t">La lección</div>'
-          "<code>dayfirst=True</code> no bastó: <b>la limpieza no pudo reparar esa fecha y la validación la cazó</b>. "
-          "Por eso son dos pasos distintos.",
+    d.box(p, (372, 254, 696, 330),
+          '<div class="t">La lección</div>La limpieza no pudo reparar esa fecha y la validación la cazó. Por eso son '
+          "dos pasos: uno repara, el otro decide.",
           kind="peach")
-    d.html(p, (30, 308, 690, 340),
-           '<div class="center"><b>Siguiente →</b> "Datos limpios y validados. <b>Pero todavía con PII en claro.</b> '
-           'Lo arreglamos ahora, y es lo más delicado del módulo."</div>')
 
 
-def slide_25_fallo(d: Deck) -> None:
-    p = d.new("Empezar por el fallo: Presidio en inglés",
-              "Por qué hay que configurar el español de forma explícita",
-              "2.5 · 1:38 · contarlo ANTES de abrir analyzer.py")
-    d.box(p, (40, 72, 330, 206),
-          '<div class="t">Lo que pasa por defecto</div>'
-          "Presidio monta spaCy <b>en inglés</b>. Sobre \"Laura Fernández\" o \"Javier Romero\" devuelve "
-          "<b>cero</b> entidades PERSON.<br/><br/>"
-          "Y <b>falla en silencio</b>: el pipeline parece funcionar y en producción alguien pregunta "
-          "\"¿qué dijo Laura Fernández?\" y el LLM responde con el nombre sin pseudonimizar.",
+# ===========================================================================
+# 2.5 · PII y GDPR
+# ===========================================================================
+
+def slide_filtraciones(d: Deck) -> None:
+    p = d.new("PII: tres formas de filtrar datos a través de un RAG", "El control de acceso no basta: el vector no "
+              "sabe qué es sensible", "2.5")
+    d.codigo(p, "app/ingestion/<b>pii/</b> · <code>analyzer.py</code> · <code>recognizers.py</code> · "
+                "<code>pseudonymizer.py</code> · <code>mapping_store.py</code> · la protección va <b>antes</b> del "
+                "embedding")
+    modos = [("Directa", "«¿Qué clientes nos contrataron migraciones a cloud?» → los nombres, literales en los "
+                         "chunks.", "peach"),
+             ("Por agregación", "Preguntas inocentes que juntas reconstruyen el mapa: el proyecto más caro de 2024, "
+                                "su sector, su stack.", "peach"),
+             ("Por inferencia", "Tras «[PERSON], CEO de [ORG]» quedan sector, fechas e importes: basta para "
+                                "identificar a alguien.", "peach")]
+    for i, (t, s, k) in enumerate(modos):
+        x = 24 + i * 226
+        d.box(p, (x, 66, x + 216, 186), f'<div class="t">{t}</div>{s}', kind=k)
+    d.box(p, (24, 196, 352, 330),
+          '<div class="t">GDPR mínimo</div><ul>'
+          "<li><b>Dato personal</b>: lo que identifica a una persona, también por combinación.</li>"
+          "<li><b>Pseudonimizar</b> sigue siendo dato personal (hay un mapeo); <b>anonimizar</b> es irreversible.</li>"
+          "<li><b>Minimización</b>: el estimador necesita patrones, no nombres reales.</li></ul>",
+          kind="lav")
+    d.box(p, (368, 196, 696, 330),
+          '<div class="t">Pseudonimizar, no tachar</div>Cambiar «Javier Romero» por <code>[PERSON]</code> rompe la '
+          "semántica; cambiarlo por otro nombre verosímil, y siempre el mismo, la conserva. Pruebas internas dan "
+          "caídas del 15-25 % en retrieval al tachar.",
+          kind="mint")
+
+
+def slide_presidio(d: Deck) -> None:
+    p = d.new("Empezar por el fallo: Presidio en inglés", "Por defecto no detecta «Laura Fernández», y no avisa",
+              "2.5")
+    d.codigo(p, "pii/<b>analyzer.py</b> · <code>build_analyzer</code> (l. 37) · pii/<b>recognizers.py</b> · "
+                "<code>BudgetIdRecognizer</code> (l. 28) · <code>ClientCodeRecognizer</code> (l. 46) · "
+                "<code>PRESIDIO_SPACY_MODEL</code> en <code>app/config.py</code>")
+    d.box(p, (24, 66, 330, 196),
+          '<div class="t">Lo que pasa por defecto</div>Presidio monta spaCy <b>en inglés</b>. Sobre nombres '
+          "españoles devuelve <b>cero</b> personas, y el pipeline parece funcionar. En producción alguien pregunta "
+          "por un cliente y el nombre sale en claro.",
           kind="peach")
-    d.code(p, (345, 72, 690, 206), """@lru_cache                       # spaCy tarda ~300 ms
+    d.code(p, (342, 66, 696, 230), """@lru_cache                     # spaCy tarda en cargar
 def build_analyzer() -> AnalyzerEngine:
     provider = NlpEngineProvider(nlp_configuration={
         "nlp_engine_name": "spacy",
@@ -626,204 +600,138 @@ def build_analyzer() -> AnalyzerEngine:
         supported_languages=["es"])
     engine.registry.add_recognizer(BudgetIdRecognizer())
     engine.registry.add_recognizer(ClientCodeRecognizer())
-    return engine""", "pii/analyzer.py · la corrección")
-    d.box(p, (40, 216, 330, 312),
-          '<div class="t">Recognizers del dominio</div>'
-          "<code>BUDGET-\\d{4}-\\d{4}</code> y <code>CLI-\\d{4}</code>, score 0.95 (regex muy específico).<br/>"
-          "Presidio trae PERSON, EMAIL o LOC de fábrica; nuestros ids, no. Sin recognizer propio se vectorizan en claro.",
+    return engine""", "analyzer.py · la corrección")
+    d.box(p, (24, 206, 330, 330),
+          '<div class="t">Reconocedores del dominio</div><code>BUDGET-\\d{4}-\\d{4}</code> y '
+          "<code>CLI-\\d{4}</code> con score 0,95. Presidio trae personas, emails o lugares de serie; nuestros "
+          "identificadores, no.",
           kind="lav")
-    d.box(p, (345, 216, 690, 312),
-          '<div class="t">Con la configuración en español</div>'
-          "<code>[PERSON Laura Fernández, LOC Madrid]</code> ✔<br/><br/>"
-          "El preflight lo comprueba con esa misma frase: "
-          "<code>detected PER entities: ['Laura Fernández']</code>.",
+    d.box(p, (342, 240, 696, 330),
+          '<div class="t">Comprobado en el pre-flight</div><code>detected PER entities: [\'Laura Fernández\']</code>. '
+          "Si esa línea sale en rojo, no sigas: la demo de PII no detectaría nombres.",
           kind="mint")
 
 
-def slide_25_demo(d: Deck) -> None:
-    p = d.new("Mismo valor → mismo pseudónimo, siempre",
-              "pii/pseudonymizer.py + mapping table en Postgres (pgvector instalado pero dormido)",
-              "2.5 · 1:45 · si los falsos positivos molestan: \"cambio a betanorte, está más limpio\"")
-    d.code(p, (30, 70, 340, 160), """self._generators = {
-    "PERSON": self._faker.name,
-    "EMAIL_ADDRESS": self._faker.ascii_company_email, ...}
-results.sort(key=lambda r: r.end, reverse=True)  # der→izq
-original_hash = self._hash(original_value)  # HMAC-SHA256""",
-           "Tres líneas aha")
-    d.code(p, (30, 168, 340, 222), """UniqueConstraint("entity_type", "original_hash",
-                 name="uq_mappings_entity_hash")
-# se guarda el hash, NUNCA el valor en claro""", "persistence/models.py · la mapping table")
-    d.box(p, (30, 230, 340, 312),
-          '<div class="t">Por qué así</div>'
-          "<ul><li>Generador <b>por tipo</b>: un nombre se cambia por un nombre, no por <code>[PERSON]</code>.</li>"
-          "<li>Reemplazo de derecha a izquierda: los offsets no se desplazan.</li>"
-          "<li>El UNIQUE hace la concurrencia segura sin locks.</li></ul>", kind="beige")
-    d.code(p, (350, 70, 690, 222), """$ python scripts/demo_pii_s06.py
-[09:15:02] Pánfilo del Barros: Buenas. Estamos revisando
-el presupuesto BUDGET-2026-3206 firmado en marzo, código
-de cliente Apolinar Montero Verdejo. ...
---- Mappings aplicados (20) ---
+def slide_demo_pii(d: Deck) -> None:
+    p = d.new("Demo: mismo valor, mismo pseudónimo", "La transcripción de BetaNorte, antes y después", "2.5")
+    d.codigo(p, "pii/<b>pseudonymizer.py</b> · <code>ConsistentPseudonymizer</code> (l. 60) · <code>_generators</code> "
+                "(l. 78) · derecha a izquierda (l. 103) · <code>_hash</code> (l. 130) · scripts/<b>demo_pii_s06.py</b> "
+                "(l. 52)")
+    d.code(p, (24, 66, 352, 160), """[09:15:02] Javier Romero: Buenas. Estamos revisando el
+presupuesto BUDGET-2024-0002 firmado en marzo, código de
+cliente CLI-0078. Quería preguntar por el escalado…
+[09:15:40] Diego Marín: Sí, lo tengo aquí.""", "Antes · data/seed/transcripts/…betanorte.txt")
+    d.code(p, (368, 66, 696, 160), """[09:15:02] Pánfilo del Barros: Buenas. Estamos revisando
+el presupuesto BUDGET-2023-5601 firmado en marzo, código
+de cliente Apolinar Montero Verdejo. Samu de Samper
+preguntar por el escalado…
+[09:15:40] Álvaro Girona, lo tengo aquí.""", "Después · salida real")
+    d.code(p, (24, 170, 352, 258), """--- Mappings aplicados (20) ---
   PERSON         → Purificación Rivero Arjona
-  EMAIL_ADDRESS  → dalila38@instalaciones.org
   ORGANIZATION   → REDACTED-7c65c1e5
-  LOCATION       → Teruel""", "Demo · salida real (transcripción BetaNorte)")
-    d.box(p, (350, 230, 690, 312),
-          '<div class="t">Falsos positivos (saldrán)</div>'
-          "Ejemplo real: el código de cliente se reemplazó por un nombre de persona. No es un bug, es el "
-          "trade-off de Presidio en español. En producción: subir el umbral, deny-list o "
-          "<code>es_core_news_lg</code>.<br/>"
-          '<span class="s">La demo usa un store en memoria: la tabla de Postgres sale vacía.</span>',
+  EMAIL_ADDRESS  → dalila38@instalaciones.org
+  URL            → REDACTED-e61a441c
+  LOCATION       → Teruel""", "Salida real (extracto)")
+    d.box(p, (368, 170, 696, 258),
+          '<div class="t">Por qué así</div><ul>'
+          "<li>Un generador <b>por tipo</b>: un nombre por un nombre, un email por un email.</li>"
+          "<li>Se reemplaza de derecha a izquierda: las posiciones no se desplazan.</li>"
+          "<li>Se guarda el <b>hash</b> (HMAC-SHA256), nunca el valor original.</li></ul>",
+          kind="mint")
+    d.box(p, (24, 266, 696, 330),
+          '<div class="t">Falsos positivos (saldrán)</div>«Quería» y «Sí» se tomaron por personas, y el código '
+          "<code>CLI-0078</code> acabó sustituido por un nombre: se detectó como persona y no como código de "
+          "cliente. Es el precio del NER en "
+          "español: en producción, subir el umbral, una lista de exclusión o <code>es_core_news_lg</code>.",
           kind="note")
 
 
-def slide_25_gdpr(d: Deck) -> None:
-    p = d.new("Derecho al olvido (GDPR art. 17): por qué la mapping table es arquitectura",
-              "Sin ella, borrar a un cliente es imposible: está embebido en miles de chunks",
-              "2.5 · 1:50 · defensa oral final del módulo")
-    steps = [
-        ("1", "Buscar en la mapping store todos los pseudónimos del solicitante (con sus variantes)."),
-        ("2", "Localizar en el índice los chunks con esos pseudónimos o sus documentos."),
-        ("3", "Eliminar esos chunks del índice vectorial."),
-        ("4", "Borrar sus entradas de la mapping store: si reaparece, recibe un pseudónimo nuevo."),
-        ("5", "Registrarlo en un audit log: atendido en plazo y forma."),
-    ]
-    y = 72
-    for n, s in steps:
-        d.box(p, (40, y, 420, y + 40), f'<b>{n}</b> · {s}', kind="lav", pad=7)
-        y += 46
-    d.box(p, (435, 72, 690, 176),
-          '<div class="t">Pseudonimizar, no anonimizar</div>'
-          "<code>[PERSON]</code> genérico tira la similitud un <b>15–25 %</b>. Un nombre verosímil y consistente "
-          "preserva la estructura semántica.", kind="mint")
-    d.box(p, (435, 184, 690, 296),
-          '<div class="t">Lo que NO frena</div>'
-          "La filtración <b>por inferencia</b> (estilo, jerga, dialecto → identidad): la señal está en el lenguaje, "
-          "no en los identificadores. Queda abierta como teoría.<br/>"
-          '<span class="s">El control de acceso de Rails no protege contra ninguno de los tres modos.</span>',
-          kind="peach")
+def slide_olvido(d: Deck) -> None:
+    p = d.new("Derecho al olvido (GDPR art. 17)", "Sin la mapping table, borrar a una persona es imposible",
+              "2.5")
+    d.codigo(p, "pii/<b>mapping_store.py</b> · <code>PostgresMappingStore</code> (l. 50) · <code>forget</code> "
+                "(l. 69) · persistence/<b>models.py</b> · <code>PseudonymMappingRow</code> (l. 40) · "
+                "<code>UniqueConstraint</code> (l. 43)")
+    steps = ["Buscar en la mapping store todos los pseudónimos de la persona (con sus variantes).",
+             "Localizar en el índice los chunks que los contienen.",
+             "Borrar esos chunks del índice vectorial.",
+             "Borrar sus entradas de la mapping store: si reaparece, recibe un pseudónimo nuevo.",
+             "Dejarlo en un registro de auditoría: atendido en plazo y forma."]
+    for i, s in enumerate(steps):
+        y = 66 + i * 54
+        d.box(p, (24, y, 420, y + 46), f"<b>{i + 1}</b> · {s}", kind="lav", pad=6)
+    d.code(p, (432, 66, 696, 196), """UniqueConstraint(
+    "entity_type", "original_hash",
+    name="uq_mappings_entity_hash")
 
+# se guarda el hash, NUNCA el valor""", "persistence/models.py")
+    d.box(p, (432, 206, 696, 330),
+          '<div class="t">Un almacén aparte</div>La tabla de mapeo vive separada del corpus, con su propio control '
+          "de acceso. La demo usa un almacén en memoria: por eso la tabla de Postgres sale vacía.",
+          kind="note")
+
+
+# ===========================================================================
+# Cierre
+# ===========================================================================
 
 def slide_cierre(d: Deck) -> None:
-    p = d.new("Cinco piezas: el corpus ya es defendible",
-              "Ante legal, comercial, técnico y regulatorio",
-              "Bloque 3 · 1:55–2:00 · cero coding · entregar el repo de referencia al final")
-    d.box(p, (40, 68, 690, 230),
-          "<table><tr><th>#</th><th>Pieza</th><th>Dónde vive</th><th>Article</th></tr>"
-          "<tr><td>1</td><td>Decisión arquitectónica (RAG, híbrido residual)</td><td><code>app/ingestion/architecture.py</code></td><td>1</td></tr>"
-          "<tr><td>2</td><td>Catálogo versionado, 3 fuentes auditadas</td><td><code>data/catalog/catalog.yaml</code> + <code>catalog/</code></td><td>2</td></tr>"
-          "<tr><td>3</td><td>Ingesta + Document canónico + endpoint asíncrono</td><td><code>loaders/ parsers/ orchestrator.py</code></td><td>3</td></tr>"
-          "<tr><td>4</td><td>Limpieza + Pandera + reparar/cuarentena/descartar</td><td><code>app/ingestion/cleaning/</code></td><td>4</td></tr>"
-          "<tr><td>5</td><td>Pseudonimización GDPR-grade + mapping table</td><td><code>app/ingestion/pii/</code> + <code>persistence/</code></td><td>5</td></tr></table>",
-          kind="beige")
-    d.box(p, (40, 240, 360, 312),
-          '<div class="t">Eso es data-driven AI</div>'
-          "La exclusión del XLSX tiene motivo, la cuarentena tiene motivo, la política de dedup tiene motivo, "
-          "el modelo de Presidio en español tiene motivo. Todo versionado en git.",
+    p = d.new("Cinco piezas: el corpus ya es defendible", "Ante legal, comercial, técnico y regulatorio", "Cierre")
+    d.codigo(p, "Todo en <code>estimator/app/ingestion/</code>: <code>architecture.py</code> · <code>catalog/</code> · "
+                "<code>loaders/</code> + <code>parsers/</code> + <code>orchestrator.py</code> · <code>cleaning/</code> · "
+                "<code>pii/</code>")
+    d.box(p, (24, 66, 696, 236),
+          "<table><tr><th>#</th><th>Pieza</th><th>Dónde vive</th></tr>"
+          "<tr><td>1</td><td>Decisión arquitectónica: RAG</td><td><code>architecture.py</code></td></tr>"
+          "<tr><td>2</td><td>Catálogo versionado, tres fuentes auditadas</td><td><code>data/catalog/catalog.yaml</code> "
+          "+ <code>catalog/</code></td></tr>"
+          "<tr><td>3</td><td>Ingesta con Document canónico y endpoint asíncrono</td><td><code>loaders/ parsers/ "
+          "orchestrator.py</code></td></tr>"
+          "<tr><td>4</td><td>Limpieza, Pandera y reparar / cuarentena / descartar</td><td><code>cleaning/</code></td></tr>"
+          "<tr><td>5</td><td>Pseudonimización y mapping table</td><td><code>pii/</code> + <code>persistence/</code></td>"
+          "</tr></table>",
+          kind="beige", role="table")
+    d.box(p, (24, 246, 352, 330),
+          '<div class="t">Eso es data-driven AI</div>La exclusión del Excel, la cuarentena, la regla del dedup y el '
+          "modelo en español tienen su motivo, y está escrito en el repo.",
           kind="mint")
-    d.box(p, (370, 240, 690, 312),
-          '<div class="t">Sesión 7 →</div>'
-          "<b>Chunking, embeddings y espacio vectorial.</b> Partimos los Documents, los embebemos y los metemos en "
-          "pgvector, que se activa con <b>una sola migración Alembic</b>.",
+    d.box(p, (368, 246, 696, 330),
+          '<div class="t">Sesión 7</div><b>Chunking, embeddings y espacio vectorial.</b> Partimos los Documents, los '
+          "embebemos y los guardamos en pgvector.",
           kind="lav")
-
-
-def slide_chuleta(d: Deck) -> None:
-    p = d.new("Chuleta de demos · local de Julián",
-              "Desde ai-engineering-fork-julian\\ai-engineering-s06 · todos los comandos llevan -p aieng-s06live",
-              "Apéndice · solo para el mentor")
-    d.code(p, (30, 66, 360, 330), """# Pre-flight (5 min antes)
-docker compose -p aieng-s06live ps
-curl localhost:8000/health
-docker compose -p aieng-s06live exec estimator \\
-    python scripts/preflight_s06.py        # 8/8
-
-# 2.1
-docker compose -p aieng-s06live exec estimator \\
-    python -m app.ingestion.architecture
-
-# 2.2
-docker compose -p aieng-s06live exec estimator \\
-    python -m app.ingestion.catalog.inspect data/seed
-docker compose -p aieng-s06live exec estimator \\
-    python -m app.ingestion.catalog.loader \\
-    data/catalog/catalog.yaml""", "Bloques 0–2.2")
-    d.code(p, (370, 66, 690, 330), """# 2.3  (curl va tal cual)
-curl -X POST localhost:8000/api/v1/ingestion/runs \\
-  -H 'Content-Type: application/json' \\
-  -d '{"source_name": "presupuestos_json"}'
-curl localhost:8000/api/v1/ingestion/jobs/<job_id>
-docker compose -p aieng-s06live logs -f estimator
-
-# 2.4
-docker compose -p aieng-s06live exec estimator \\
-    python scripts/demo_cleaning_s06.py
-
-# 2.5
-docker compose -p aieng-s06live exec estimator \\
-    python scripts/demo_pii_s06.py
-docker compose -p aieng-s06live exec estimator-postgres \\
-    psql -U estimator -d estimator
-
-# Swagger: http://localhost:8000/docs  · Rails: :3000""", "Bloques 2.3–2.5")
 
 
 # ===========================================================================
 
-def build(mentor: bool) -> None:
-    d = Deck(mentor)
+def build() -> None:
+    d = Deck()
     cover(d)
-    slide_about(d)
-    slide_agenda(d)
+    slide_hoy(d)
     slide_bloque0(d)
-    d.template(1, "Bloque 0 · 0:08 · [Slide 1] el concepto: tus datos + privacidad + IA = ventaja competitiva")
-    d.template(2, "Bloque 0 · 0:09 · [Slide 2] cada problema de la IA genérica tiene su pieza hoy")
-    d.template(3, "Bloque 0 · 0:10 · [Slide 3] RAG vs fine-tuning: fine-tuning es capa ortogonal, no alternativa")
-    slide_bloque1(d)
-    d.template(4, "Bloque 2 · 0:25 · [Slide 4] el viaje del dato: decidir → catálogo → ingesta → limpieza → PII")
-    d.template(5, "2.1 · 0:26 · [Slide 5] las cuatro restricciones tienen que estar en verde a la vez")
-    slide_21_code(d)
-    d.template(6, "2.1 · 0:34 · [Slide 6] el árbol sobre cuatro ejes · un solo eje en rojo fuerza RAG")
-    slide_21_defensa(d)
-    d.template(7, "2.2 · 0:40 · [Slide 7] los tres modos de fallo están plantados en nuestro corpus de demo")
-    slide_22_code(d)
-    d.template(8, "2.3 · 1:00 · [Slide 8] loader da bytes · parser entiende el formato · normalizer = cleaning/ + pii/")
-    slide_23_code(d)
-    d.template(9, "2.3 · 1:10 · [Slide 9] offline vs online: por eso la indexación es 202 + polling")
-    slide_23_demo(d)
+    slide_errores(d)
+    slide_preflight(d)
+    slide_restricciones(d)
+    slide_architecture(d)
+    slide_decision(d)
+    slide_antipatron(d)
+    slide_inspeccion(d)
+    slide_catalogo(d)
+    slide_capas(d)
+    slide_parsers(d)
+    slide_ingesta(d)
     slide_madurez(d)
-    d.template(10, "2.4 · 1:20 · [Slide 10] las cuatro familias de suciedad, plantadas en data/seed/budgets/")
-    slide_24_code(d)
-    slide_24_demo(d)
-    d.template(11, "2.5 · 1:35 · [Slide 11] ¿cuál es la más peligrosa? → la inferencia")
-    slide_25_fallo(d)
-    slide_25_demo(d)
-    slide_25_gdpr(d)
+    slide_suciedad(d)
+    slide_limpiar_validar(d)
+    slide_demo_limpieza(d)
+    slide_filtraciones(d)
+    slide_presidio(d)
+    slide_demo_pii(d)
+    slide_olvido(d)
     slide_cierre(d)
-    d.template(12)
-    d.template(13)
-    if mentor:
-        slide_chuleta(d)  # rutas y comandos del PC de Julián: nunca en la versión de alumnos
+    d.template(10)  # ROTI
+    d.template(11)  # gracias
     d.save()
 
 
-def export_pptx() -> None:
-    """Exporta el deck de alumnos a .pptx: una imagen a pantalla completa por diapo (idéntico al PDF)."""
-    from io import BytesIO
-    from pptx import Presentation
-    from pptx.util import Emu
-    pdf = fitz.open(OUTPUT_PUBLIC)
-    prs = Presentation()
-    prs.slide_width, prs.slide_height = Emu(12192000), Emu(6858000)   # 16:9
-    blank = prs.slide_layouts[6]
-    for page in pdf:
-        png = page.get_pixmap(dpi=220).tobytes("png")
-        slide = prs.slides.add_slide(blank)
-        slide.shapes.add_picture(BytesIO(png), 0, 0, width=prs.slide_width, height=prs.slide_height)
-    out = OUTPUT_PUBLIC.with_suffix(".pptx")
-    prs.save(out)
-    print(f"{out.name}: {len(prs.slides)} diapos")
-
-
 if __name__ == "__main__":
-    build(mentor=False)
-    export_pptx()
+    build()

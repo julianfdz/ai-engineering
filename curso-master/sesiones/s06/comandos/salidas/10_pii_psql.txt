@@ -1,0 +1,4 @@
+﻿ entity_type | count 
+-------------+-------
+(0 rows)
+

@@ -1,0 +1,19 @@
+﻿Ficheros leídos: 6  (/app/data/seed/budgets)
+/app/app/ingestion/cleaning/budget_records.py:60: UserWarning: Parsing dates in %Y-%m-%d format when dayfirst=True was specified. Pass `dayfirst=False` or specify a format to silence this warning.
+  df["signed_at"] = pd.to_datetime(
+Filas tras limpieza + dedup: 5
+
+Report:
+  input_rows: 5
+  valid_rows: 3
+  quarantined_rows: 1
+  discarded_rows: 1
+  failures_by_check: {'column_in_schema': 5, 'greater_than_or_equal_to(0)': 1, 'not_nullable': 1, "dtype('float64')": 1}
+
+Descartadas:
+       budget_id  total_amount
+BUDGET-2024-0004        -50000
+
+En cuarentena:
+       budget_id            client_name
+BUDGET-2024-0002 BetaNorte Distribución

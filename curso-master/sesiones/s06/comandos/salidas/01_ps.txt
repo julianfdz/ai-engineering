@@ -1,0 +1,6 @@
+﻿NAME                     STATUS
+s06-estimator            Up About a minute (healthy)
+s06-estimator-postgres   Up About a minute (healthy)
+s06-estimator-web        Up About a minute (healthy)
+s06-redis                Up About a minute (healthy)
+s06-web-postgres         Up About a minute (healthy)

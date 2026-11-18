@@ -1,0 +1,169 @@
+<!doctype html><html lang='es'><head><meta charset='utf-8'><title>S06 · comandos y salidas</title><style>
+@page { size: A4; margin: 14mm 13mm; }
+body { font-family: 'Segoe UI', Arial, sans-serif; color: #1d2330; font-size: 10pt; margin: 0; }
+h1 { font-size: 19pt; margin: 0 0 2mm; color: #2f2a8a; }
+.sub { color: #4a5568; margin-bottom: 4mm; font-size: 9.5pt; line-height: 1.45; }
+h2 { font-size: 13pt; color: #fff; background: #3f3fb0; padding: 2mm 3mm; margin: 6mm 0 3mm; border-radius: 1.5mm;
+     break-after: avoid; }
+.intro { font-size: 9.3pt; line-height: 1.45; margin: 0 0 3mm; background: #eef0ff; border-radius: 1.5mm;
+         padding: 2.2mm 3mm; }
+.paso { border: 0.3mm solid #cfd3ea; border-radius: 1.5mm; margin: 0 0 3.5mm; padding: 2.5mm 3mm;
+        break-inside: avoid; }
+.cab { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; }
+.tit { font-weight: 700; font-size: 10.8pt; font-family: Consolas, 'Segoe UI', monospace; color: #2f2a8a; }
+.diapo { font-size: 8pt; color: #6b7280; white-space: nowrap; }
+.para { font-size: 9.3pt; line-height: 1.42; margin: 1.2mm 0 0; }
+.lab { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin: 1.8mm 0 0.6mm; }
+pre { font-family: Consolas, 'Cascadia Mono', monospace; font-size: 7.6pt; line-height: 1.32; margin: 0;
+      padding: 1.8mm 2.2mm; border-radius: 1mm; white-space: pre-wrap; word-break: break-word; }
+pre.cmd { background: #1c1f2e; color: #f3f6fb; }
+pre.alt { background: #2b2f45; color: #dfe3f5; }
+pre.out { background: #f4f5f9; color: #1d2330; border: 0.25mm solid #e1e3ee; }
+.leer { margin-top: 1.6mm; font-size: 9.1pt; line-height: 1.42; background: #f1fbf5; border-left: 1mm solid #2f9e6a;
+        padding: 1.5mm 2.5mm; }
+.leer b.l { color: #1f7a50; }
+.leer ul { margin: 0.5mm 0 0 4mm; padding: 0; }
+code { font-family: Consolas, monospace; font-size: 0.92em; background: #eef0f7; padding: 0 0.6mm; border-radius: 0.6mm; }
+</style></head><body><h1>Sesión 6 · Los comandos de la sesión y su salida</h1><div class='sub'>Data-driven AI: análisis y normalización · Máster en AI Engineering (LIDR). Cada script y comando que se usa en el directo, en orden: <b>para qué sirve</b>, <b>cómo se lanza</b>, la <b>salida real</b> (ejecutada en local sobre la rama <code>session_06_live</code>) y <b>cómo leerla</b>. La referencia «diapo N» indica dónde aparece en las diapositivas.</div><h2>0 · Preparar el entorno</h2><div class='intro'>Todos los comandos se lanzan desde la <b>raíz del repositorio</b> (donde está <code>docker-compose.yml</code>), en la rama <code>session_06_live</code>. El código Python se ejecuta <b>dentro</b> del contenedor <code>estimator</code> con <code>docker compose exec</code>, así que no hace falta instalar nada en el ordenador. Si levantaste el stack con un nombre de proyecto propio (<code>docker compose -p mi-nombre up</code>), añade ese <code>-p mi-nombre</code> a cada <code>docker compose</code>. Ninguno de estos comandos llama a un modelo de IA: se pueden repetir sin coste.</div><div class='paso'><div class='cab'><div class='tit'>Levantar los servicios</div></div><div class='para'><b>Para qué sirve.</b> Arranca los cinco contenedores: el servicio de IA (<code>estimator</code>), su Postgres, Redis, y la web de Rails con el suyo. La primera vez construye las imágenes y tarda.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose up -d --build
+docker compose ps</pre><div class='lab'>Salida</div><pre class='out'>NAME                     STATUS
+s06-estimator            Up About a minute (healthy)
+s06-estimator-postgres   Up About a minute (healthy)
+s06-estimator-web        Up About a minute (healthy)
+s06-redis                Up About a minute (healthy)
+s06-web-postgres         Up About a minute (healthy)</pre><div class='leer'><b class='l'>Cómo leerla.</b> Espera a que los cinco digan <b>healthy</b> (los nombres de los contenedores pueden variar en tu equipo). Si alguno se queda en <i>starting</i> o se reinicia, mira <code>docker compose logs estimator</code>.</div></div><div class='paso'><div class='cab'><div class='tit'>Aplicar la migración de la sesión</div></div><div class='para'><b>Para qué sirve.</b> Crea las dos tablas nuevas de la S6: <code>ingestion_jobs</code> (el estado de cada ingesta) y <code>pseudonym_mappings</code> (la tabla de mapeo de la PII).</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator alembic upgrade head
+docker compose exec estimator alembic current</pre><div class='lab'>Salida</div><pre class='out'>INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+0001_session6_initial (head)</pre><div class='leer'><b class='l'>Cómo leerla.</b> <code>0001_session6_initial (head)</code> quiere decir que la base de datos está en la última versión.</div></div><h2>1 · Pre-flight: comprobar que todo está listo</h2><div class='paso'><div class='cab'><div class='tit'>scripts/preflight_s06.py</div><span class='diapo'>diapo 5</span></div><div class='para'><b>Para qué sirve.</b> Un script de comprobación previa: ocho chequeos que cazan los fallos de montaje típicos antes de ponerse a trabajar. Cada chequeo es una función; si falla, imprime el motivo. Sale con código 1 si alguno falla, así que también sirve en un CI.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/preflight_s06.py</pre><div class='lab'>Salida</div><pre class='out'>Pre-flight Sesión 06
+
+✅  Python version: 3.11.17
+✅  Required packages: 12 packages OK
+✅  spaCy es_core_news_md: loaded; detected PER entities: [&#x27;Laura Fernández&#x27;]
+✅  unstructured parsers: unstructured 0.22.29
+✅  Corpus seed present: 6 json + 3 txt + 1 xlsx
+✅  Catalog validates: version 1.0.0, 1 included
+✅  Estimator /health: 200 OK
+✅  Postgres + migration: tables OK: [&#x27;alembic_version&#x27;, &#x27;ingestion_jobs&#x27;, &#x27;pseudonym_mappings&#x27;]
+
+✅  All checks passed</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>Required packages</b>: pandas, pandera, presidio, spaCy, faker, unstructured… con versión mínima.</li><li><b>spaCy es_core_news_md</b>: <b>el más importante</b>. Comprueba que el modelo en español reconoce «Laura Fernández» como persona. Si falla, la pseudonimización no detectará nombres y nadie se enterará.</li><li><b>Corpus seed</b>: los 6 JSON, 3 TXT y 1 XLSX de <code>estimator/data/seed/</code>.</li><li><b>Catalog validates</b>: el catálogo YAML cumple su contrato (1 fuente incluida).</li><li><b>/health</b> y <b>Postgres + migration</b>: el servicio responde y las tablas existen.</li></ul>Si justo has editado código, el servicio se recarga y <code>/health</code> puede fallar unos segundos: vuelve a lanzarlo.</div></div><h2>2.1 · CAG, RAG o híbrido</h2><div class='paso'><div class='cab'><div class='tit'>python -m app.ingestion.architecture</div><span class='diapo'>diapo 7</span></div><div class='para'><b>Para qué sirve.</b> Convierte la decisión del Article 1 en código que se ejecuta. Describe el corpus del Proyecto 2 y el modelo (<code>PROYECTO_2</code> y <code>CURRENT_MODEL</code> en <code>app/ingestion/architecture.py</code>), evalúa las cuatro restricciones del CAG y recomienda una arquitectura.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python -m app.ingestion.architecture</pre><div class='lab'>Salida</div><pre class='out'>Corpus &#x27;Proyecto 2&#x27;: 250,000 tokens, refresh cada 7 días, trazabilidad=True, control_acceso=True
+Modelo &#x27;gpt-4o-mini&#x27;: ventana 128,000 tokens, prefix_caching=True
+
+Viabilidad CAG: NO viable
+  Restricciones en rojo: context_window, latency, lost_in_the_middle
+Recomendación arquitectónica: RAG</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>NO viable</b>: basta con que una restricción esté en rojo (<code>viable</code> es un <code>all([...])</code>).</li><li><b>context_window</b>: 250.000 tokens no caben en el 70 % útil de 128.000.</li><li><b>latency</b> y <b>lost_in_the_middle</b>: por encima de 100.000 tokens el código asume que la latencia se dispara y el centro del contexto se atiende peor.</li><li><b>cost</b> no sale en rojo: hay caché de prefijo y el corpus cambia cada 7 días.</li></ul></div></div><div class='paso'><div class='cab'><div class='tit'>Prueba tú: cambiar el escenario</div><span class='diapo'>diapo 8</span></div><div class='para'><b>Para qué sirve.</b> Las funciones son puras: puedes evaluar tu propio corpus sin tocar el fichero. Abre un intérprete dentro del contenedor con <code>docker compose exec estimator python</code> y pega:</div><div class='lab'>Comando</div><pre class='cmd'>from app.ingestion.architecture import *
+for name, tok, ref, citar, acceso in [
+        (&quot;Pequeño y estable&quot;, 60_000, 30, False, False),
+        (&quot;Pequeño pero hay que citar&quot;, 60_000, 30, True, False),
+        (&quot;Proyecto 2&quot;, 250_000, 7, True, True)]:
+    c = CorpusProfile(name, tok, ref, citar, acceso)
+    v = assess_cag_viability(c, CURRENT_MODEL)
+    print(name, v.viable, v.failing_constraints(), recommend_architecture(c, CURRENT_MODEL))</pre><div class='lab'>Salida</div><pre class='out'>Pequeño y estable           60,000 tokens · citar=False · acceso=False → viable=True  rojo=[] → CAG
+Pequeño pero hay que citar  60,000 tokens · citar=True  · acceso=False → viable=True  rojo=[] → Hybrid
+Proyecto 2                 250,000 tokens · citar=True  · acceso=True  → viable=False rojo=[&#x27;context_window&#x27;,
+                                                         &#x27;latency&#x27;, &#x27;lost_in_the_middle&#x27;] → RAG</pre><div class='leer'><b class='l'>Cómo leerla.</b> Fíjate en el segundo caso: las cuatro restricciones técnicas pasan, pero <b>hay que citar la fuente</b> y un CAG no sabe de qué documento sale cada dato. Por eso recomienda <b>Hybrid</b>: lo estable por CAG, lo que hay que citar por RAG. (Salida resumida; el <code>print</code> real muestra los mismos valores.)</div></div><h2>2.2 · El catálogo de fuentes</h2><div class='paso'><div class='cab'><div class='tit'>python -m app.ingestion.catalog.inspect</div><span class='diapo'>diapo 10</span></div><div class='para'><b>Para qué sirve.</b> El primer paso del censo: mira el disco y devuelve solo lo que se puede <b>medir</b> sin opinar. Por cada carpeta: número de ficheros, tamaño, fecha de la última modificación y formatos. Lo subjetivo (owner, calidad, sensibilidad) lo decide una persona en el YAML.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python -m app.ingestion.catalog.inspect data/seed</pre><div class='lab'>Salida</div><pre class='out'>Inspection of /app/data/seed
+
+budgets                  6 files     0.00 MB  latest=2026-10-14T13:18:12.524157+00:00 formats=json
+transcripts              3 files     0.00 MB  latest=2026-10-14T13:18:12.525159+00:00 formats=txt
+seed                     1 files     0.01 MB  latest=2024-01-12T09:00:00+00:00 formats=xlsx</pre><div class='leer'><b class='l'>Cómo leerla.</b> La fila <b>seed</b> es el Excel de tarifas suelto en la raíz: <b>latest=2024-01-12</b>. Si su owner dice que se actualiza cada año, hace casi dos años que no se cumple: es una <b>fuente podrida</b>. (Las fechas de <code>budgets</code> y <code>transcripts</code> son las de cuando se descargó el repositorio.)</div></div><div class='paso'><div class='cab'><div class='tit'>python -m app.ingestion.catalog.loader</div><span class='diapo'>diapo 11</span></div><div class='para'><b>Para qué sirve.</b> Carga <code>data/catalog/catalog.yaml</code> y lo valida contra los modelos Pydantic de <code>app/ingestion/catalog/models.py</code>. Úsalo antes de hacer commit de un cambio en el catálogo: si el YAML rompe el contrato, falla aquí y no en mitad de una ingesta.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python -m app.ingestion.catalog.loader data/catalog/catalog.yaml</pre><div class='lab'>Salida</div><pre class='out'>&lt;frozen runpy&gt;:128: RuntimeWarning: &#x27;app.ingestion.catalog.loader&#x27; found in sys.modules after import of package &#x27;app.ingestion.catalog&#x27;, but prior to execution of &#x27;app.ingestion.catalog.loader&#x27;; this may result in unpredictable behaviour
+Catalog version: 1.0.0
+Sources total:  3
+Sources included: 1
+  - presupuestos_json (json) — &#x27;Presupuestos firmados 2024 en formato JSON. Cada fichero un presupuesto. Fuente principal para el módulo de retrieval del Proyecto 2.\n&#x27;</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Tres fuentes auditadas y <b>una sola incluida</b>: <code>presupuestos_json</code>. Las transcripciones están en <i>review</i> y el Excel en <i>exclude</i>.</li><li>El <code>RuntimeWarning</code> de la primera línea es inofensivo: sale por ejecutar con <code>-m</code> un módulo que el paquete ya importó.</li></ul></div></div><div class='paso'><div class='cab'><div class='tit'>Prueba tú: romper el catálogo a propósito</div></div><div class='para'><b>Para qué sirve.</b> La regla «si no es include, el motivo es obligatorio» está en el modelo, no en un documento. Para verla saltar, en <code>docker compose exec estimator python</code>:</div><div class='lab'>Comando</div><pre class='cmd'>import yaml, pathlib
+from app.ingestion.catalog.models import DataCatalog
+raw = yaml.safe_load(pathlib.Path(&quot;data/catalog/catalog.yaml&quot;).read_text(encoding=&quot;utf-8&quot;))
+raw[&quot;sources&quot;][2][&quot;decision_reason&quot;] = &quot;&quot;        # el Excel, sin motivo
+DataCatalog.model_validate(raw)</pre><div class='lab'>Salida</div><pre class='out'>1 validation error for DataCatalog
+sources.2
+  Value error, decision=exclude requires a non-empty decision_reason [type=value_error, ...]</pre><div class='leer'><b class='l'>Cómo leerla.</b> Excluir una fuente sin escribir por qué no pasa la validación. Así el catálogo no se degrada en silencio con el tiempo.</div></div><h2>2.3 · Ingesta: el endpoint asíncrono</h2><div class='intro'>La ingesta es el pipeline <b>offline</b>: procesar una fuente puede tardar, así que el endpoint no espera. Responde <b>202</b> con un <code>job_id</code> y el cliente pregunta por el estado. Los comandos van con <code>curl</code> (macOS, Linux o Git Bash); debajo de cada uno está el equivalente para PowerShell. También se puede hacer desde el Swagger: <code>http://localhost:8000/docs</code>, sección <i>ingestion</i>, «Try it out».</div><div class='paso'><div class='cab'><div class='tit'>POST /api/v1/ingestion/runs</div><span class='diapo'>diapo 14</span></div><div class='para'><b>Para qué sirve.</b> Lanza la ingesta de una fuente del catálogo. Por dentro: comprueba que la fuente existe y es <i>include</i>, crea una fila en <code>ingestion_jobs</code> y deja el trabajo en segundo plano (loader → parser → Documents).</div><div class='lab'>Comando</div><pre class='cmd'>curl -s -X POST http://localhost:8000/api/v1/ingestion/runs \
+  -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;source_name&quot;: &quot;presupuestos_json&quot;}&#x27;</pre><div class='lab'>En Windows (PowerShell)</div><pre class='alt'>$r = Invoke-RestMethod -Method Post -Uri http://localhost:8000/api/v1/ingestion/runs `
+  -ContentType &#x27;application/json&#x27; -Body &#x27;{&quot;source_name&quot;:&quot;presupuestos_json&quot;}&#x27;
+$r</pre><div class='lab'>Salida</div><pre class='out'>job_id      : 95f56fd1-404c-4766-bc29-2ed69412ed15
+source_name : presupuestos_json
+status      : pending</pre><div class='leer'><b class='l'>Cómo leerla.</b> <b>pending</b> no es un error: el trabajo acaba de empezar. Copia el <code>job_id</code> para el siguiente paso.</div></div><div class='paso'><div class='cab'><div class='tit'>GET /api/v1/ingestion/jobs/{job_id}</div></div><div class='para'><b>Para qué sirve.</b> Consulta el estado del job: <i>pending</i>, <i>running</i>, <i>completed</i> o <i>failed</i>.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s http://localhost:8000/api/v1/ingestion/jobs/&lt;job_id&gt;</pre><div class='lab'>En Windows (PowerShell)</div><pre class='alt'>Invoke-RestMethod &quot;http://localhost:8000/api/v1/ingestion/jobs/$($r.job_id)&quot; | Format-List</pre><div class='lab'>Salida</div><pre class='out'>job_id          : 95f56fd1-404c-4766-bc29-2ed69412ed15
+source_name     : presupuestos_json
+status          : completed
+documents_count : 6
+error_message   : 
+started_at      : 2026-11-18T19:01:28.567096Z
+finished_at     : 2026-11-18T19:01:28.612883Z</pre><div class='leer'><b class='l'>Cómo leerla.</b> <b>completed</b> con <b>documents_count: 6</b>: los seis JSON de presupuestos se convirtieron en seis Documents. Con este volumen tarda unos milisegundos; con miles de PDF, minutos.</div></div><div class='paso'><div class='cab'><div class='tit'>Las dos ramas de error</div></div><div class='para'><b>Para qué sirve.</b> El endpoint respeta el catálogo: una fuente excluida no se procesa aunque el fichero esté en disco.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s -X POST http://localhost:8000/api/v1/ingestion/runs \
+  -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;source_name&quot;: &quot;rate_card_xlsx&quot;}&#x27;
+curl -s -X POST http://localhost:8000/api/v1/ingestion/runs \
+  -H &#x27;Content-Type: application/json&#x27; -d &#x27;{&quot;source_name&quot;: &quot;no_existe&quot;}&#x27;</pre><div class='lab'>Salida</div><pre class='out'>HTTP 400
+{&quot;detail&quot;:{&quot;reason&quot;:&quot;source_not_included&quot;,&quot;source_name&quot;:&quot;rate_card_xlsx&quot;,&quot;decision&quot;:&quot;exclude&quot;,&quot;decision_reason&quot;:&quot;actuality=1 — fichero del 12/01/2024 con tarifas obsoletas. Indexar esta fuente alimentaría respuestas con precios de hace más de un año. Si operaciones cierra la revisión 2025, levantar a `review`.\n&quot;}}
+
+HTTP 404
+{&quot;detail&quot;:{&quot;reason&quot;:&quot;unknown_source&quot;,&quot;source_name&quot;:&quot;no_existe&quot;}}</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>400 source_not_included</b>: la fuente existe pero es <i>exclude</i>. La respuesta trae el motivo escrito en el YAML.</li><li><b>404 unknown_source</b>: no está en el catálogo.</li></ul></div></div><div class='paso'><div class='cab'><div class='tit'>Ver los logs de la ingesta</div></div><div class='para'><b>Para qué sirve.</b> Cada ingesta deja eventos estructurados (<code>ingestion.started</code>, <code>ingestion.completed</code>) con el <code>job_id</code>, la fuente y el número de documentos.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose logs --tail 40 estimator</pre><div class='lab'>Salida</div><pre class='out'>s06-estimator  | 2026-11-18T19:01:28.616012Z [info     ] ingestion.completed            documents_count=6 job_id=95f56fd1-404c-4766-bc29-2ed69412ed15 source_name=presupuestos_json
+s06-estimator  | INFO:     172.20.0.1:58140 - &quot;GET /api/v1/ingestion/jobs/95f56fd1-404c-4766-bc29-2ed69412ed15 HTTP/1.1&quot; 200 OK
+s06-estimator  | INFO:     172.20.0.1:58140 - &quot;POST /api/v1/ingestion/runs HTTP/1.1&quot; 400 Bad Request
+s06-estimator  | INFO:     172.20.0.1:58140 - &quot;POST /api/v1/ingestion/runs HTTP/1.1&quot; 404 Not Found
+s06-estimator  | INFO:     172.20.0.5:35582 - &quot;POST /api/v1/ingestion/runs HTTP/1.1&quot; 202 Accepted
+s06-estimator  | 2026-11-18T19:01:37.427258Z [info     ] ingestion.started              format=json job_id=fc6e04f7-b4fa-48b8-9d04-93c30ff0e510 source_name=presupuestos_json
+s06-estimator  | 2026-11-18T19:01:37.457046Z [info     ] ingestion.completed            documents_count=6 job_id=fc6e04f7-b4fa-48b8-9d04-93c30ff0e510 source_name=presupuestos_json
+s06-estimator  | INFO:     172.20.0.5:33066 - &quot;GET /api/v1/ingestion/jobs/fc6e04f7-b4fa-48b8-9d04-93c30ff0e510 HTTP/1.1&quot; 200 OK</pre><div class='leer'><b class='l'>Cómo leerla.</b> Se ve el ciclo completo: el 202 del POST, el inicio y el fin del job con <code>documents_count=6</code>, y las peticiones que acabaron en 400 y 404.</div></div><div class='paso'><div class='cab'><div class='tit'>Opcional: el mismo contrato desde Rails</div></div><div class='para'><b>Para qué sirve.</b> La web de Rails tiene un cliente HTTP de ejemplo (<code>estimator-web/app/services/estimator_ai/ingestion_client.rb</code>). Solo ilustra el contrato: cualquier cliente HTTP sirve.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator-web bin/rails runner &#x27;c = EstimatorAi::IngestionClient.new; j = c.trigger_ingestion(source_name: &quot;presupuestos_json&quot;); p j; sleep 2; p c.job_status(j.fetch(&quot;job_id&quot;))&#x27;</pre><div class='lab'>Salida</div><pre class='out'>{&quot;job_id&quot; =&gt; &quot;fc6e04f7-b4fa-48b8-9d04-93c30ff0e510&quot;, &quot;source_name&quot; =&gt; &quot;presupuestos_json&quot;, &quot;status&quot; =&gt; &quot;pending&quot;}
+{&quot;job_id&quot; =&gt; &quot;fc6e04f7-b4fa-48b8-9d04-93c30ff0e510&quot;, &quot;source_name&quot; =&gt; &quot;presupuestos_json&quot;, &quot;status&quot; =&gt; &quot;completed&quot;, &quot;documents_count&quot; =&gt; 6, &quot;error_message&quot; =&gt; nil, &quot;started_at&quot; =&gt; &quot;2026-11-18T19:01:37.421876Z&quot;, &quot;finished_at&quot; =&gt; &quot;2026-11-18T19:01:37.454312Z&quot;}</pre><div class='leer'><b class='l'>Cómo leerla.</b> Las mismas dos llamadas, ahora desde Ruby: primero <i>pending</i>, dos segundos después <i>completed</i>.</div></div><h2>2.4 · Limpieza y validación</h2><div class='paso'><div class='cab'><div class='tit'>Mirar los datos antes de limpiarlos</div><span class='diapo'>diapo 16</span></div><div class='para'><b>Para qué sirve.</b> Antes de ejecutar nada, conviene ver qué suciedad traen los presupuestos. Los cuatro casos:</div><div class='lab'>Comando</div><pre class='cmd'>cat estimator/data/seed/budgets/BUDGET-2024-0002.json   # en PowerShell: Get-Content</pre><div class='lab'>Salida</div><pre class='out'>BUDGET-2024-0002:  &quot;currency&quot;: &quot;eur&quot;,  &quot;signed_at&quot;: &quot;12/03/2024&quot;     ← formato distinto al resto
+BUDGET-2024-0003:  &quot;client_name&quot;: &quot;TBD&quot;,  &quot;contact&quot;: &quot;N/A&quot;,  &quot;contact_email&quot;: &quot;&quot;   ← nulos disfrazados
+BUDGET-2024-0004:  &quot;total_amount&quot;: -50000                              ← fuera de rango
+BUDGET-2024-0005:  dos ficheros, -v1 y -v2                             ← duplicado divergente</pre><div class='leer'><b class='l'>Cómo leerla.</b> Son las cuatro familias de suciedad: formato heterogéneo, nulos disfrazados, fuera de rango y duplicados. (Extracto de los campos relevantes de cada fichero.)</div></div><div class='paso'><div class='cab'><div class='tit'>scripts/demo_cleaning_s06.py</div><span class='diapo'>diapo 18</span></div><div class='para'><b>Para qué sirve.</b> Ejecuta el paso 2.4 completo sobre los seis presupuestos: <code>clean_budget_records</code> (repara lo reparable), luego <code>validate_with_policy</code> (valida con Pandera y reparte cada fila en válida, cuarentena o descartada) e imprime el informe.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/demo_cleaning_s06.py</pre><div class='lab'>Salida</div><pre class='out'>Ficheros leídos: 6  (/app/data/seed/budgets)
+/app/app/ingestion/cleaning/budget_records.py:60: UserWarning: Parsing dates in %Y-%m-%d format when dayfirst=True was specified. Pass `dayfirst=False` or specify a format to silence this warning.
+  df[&quot;signed_at&quot;] = pd.to_datetime(
+Filas tras limpieza + dedup: 5
+
+Report:
+  input_rows: 5
+  valid_rows: 3
+  quarantined_rows: 1
+  discarded_rows: 1
+  failures_by_check: {&#x27;column_in_schema&#x27;: 5, &#x27;greater_than_or_equal_to(0)&#x27;: 1, &#x27;not_nullable&#x27;: 1, &quot;dtype(&#x27;float64&#x27;)&quot;: 1}
+
+Descartadas:
+       budget_id  total_amount
+BUDGET-2024-0004        -50000
+
+En cuarentena:
+       budget_id            client_name
+BUDGET-2024-0002 BetaNorte Distribución</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>6 ficheros → 5 filas</b>: el dedup juntó las dos versiones de BUDGET-2024-0005 y se quedó con la de <code>signed_at</code> más reciente (la v2).</li><li><b>Descartada</b> la 0004: importe negativo, falla <code>greater_than_or_equal_to(0)</code>.</li><li><b>Cuarentena</b> la 0002: pandas dedujo el formato <code>%Y-%m-%d</code> de las demás filas, <code>12/03/2024</code> no encaja y queda como fecha vacía (<code>NaT</code>), que falla <code>not_nullable</code>. Es lo que avisa el <code>UserWarning</code>.</li><li>La 0003 («TBD») pasa: el «TBD» se convierte en nulo, pero <code>client_name</code> admite nulos.</li><li><code>column_in_schema: 5</code> y <code>dtype('float64')</code> son fallos de <b>columna</b>, no de fila (ver el siguiente paso): no mandan ninguna fila a cuarentena.</li></ul></div></div><div class='paso'><div class='cab'><div class='tit'>Prueba tú: ver cada fallo de Pandera</div></div><div class='para'><b>Para qué sirve.</b> Para entender el informe, mira la tabla de fallos que devuelve Pandera con <code>lazy=True</code>. En <code>docker compose exec estimator python</code>:</div><div class='lab'>Comando</div><pre class='cmd'>import json, pathlib, pandera.pandas as pa
+from app.ingestion.cleaning import clean_budget_records
+from app.ingestion.cleaning.schemas import BudgetRecord
+recs = [json.loads(p.read_text(encoding=&quot;utf-8&quot;))
+        for p in sorted(pathlib.Path(&quot;data/seed/budgets&quot;).glob(&quot;*.json&quot;))]
+df = clean_budget_records(recs)
+try:
+    BudgetRecord.validate(df, lazy=True)
+except pa.errors.SchemaErrors as e:
+    print(e.failure_cases[[&quot;column&quot;, &quot;check&quot;, &quot;index&quot;, &quot;failure_case&quot;]])</pre><div class='lab'>Salida</div><pre class='out'>      column                       check index  failure_case
+        None            column_in_schema  None        phases
+        None            column_in_schema  None       contact
+        None            column_in_schema  None contact_email
+        None            column_in_schema  None         notes
+        None            column_in_schema  None  content_hash
+total_amount greater_than_or_equal_to(0)     3        -50000
+   signed_at                not_nullable     1           NaN
+total_amount            dtype(&#x27;float64&#x27;)  None         int64</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><code>lazy=True</code> recoge <b>todos</b> los fallos de una vez; sin él, Pandera pararía en el primero y la política no podría repartir las filas.</li><li>Los de <code>index None</code> son de columna: <code>strict=True</code> señala las columnas que el esquema no declara, y <code>total_amount</code> llega como entero en vez de float.</li><li>Los que tienen índice (3 y 1) son los que la política reparte: la fila 3 (0004) se descarta y la 1 (0002) va a cuarentena.</li></ul></div></div><h2>2.5 · PII y pseudonimización</h2><div class='paso'><div class='cab'><div class='tit'>Mirar la transcripción original</div></div><div class='para'><b>Para qué sirve.</b> La demo pseudonimiza una transcripción de reunión con nombres, emails, un id de presupuesto y un código de cliente. Así empieza:</div><div class='lab'>Comando</div><pre class='cmd'>head -c 700 estimator/data/seed/transcripts/transcripcion_2025-02-03_betanorte.txt</pre><div class='lab'>En Windows (PowerShell)</div><pre class='alt'>Get-Content estimator\data\seed\transcripts\transcripcion_2025-02-03_betanorte.txt -TotalCount 4</pre><div class='lab'>Salida</div><pre class='out'>[09:15:02] Javier Romero: Buenas. Estamos revisando el presupuesto BUDGET-2024-0002 firmado en marzo,
+código de cliente CLI-0078. Quería preguntar por el escalado de la integración con el ERP.
+[09:15:40] Diego Marín: Sí, lo tengo aquí. La fase de backend está cerrada. ¿Qué dudas tienes?
+[09:16:18] Javier Romero: Nuestra responsable de logística, Pilar Alonso, quiere meter el almacén de
+Zaragoza en el alcance. […] y la mando también a j.romero@betanorte.com y al alias de operaciones
+que me diste, ops-betanorte@betanorte.com.</pre><div class='leer'><b class='l'>Cómo leerla.</b> Los nombres y empresas del repositorio son ficticios.</div></div><div class='paso'><div class='cab'><div class='tit'>scripts/demo_pii_s06.py</div><span class='diapo'>diapo 21</span></div><div class='para'><b>Para qué sirve.</b> Construye el analizador de Presidio en español (<code>build_analyzer</code>: <code>es_core_news_md</code> + los reconocedores de <code>BUDGET-…</code> y <code>CLI-…</code>) y pasa la transcripción por el <code>ConsistentPseudonymizer</code>. Imprime los primeros 400 caracteres del resultado y los mapeos.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/demo_pii_s06.py</pre><div class='lab'>Salida</div><pre class='out'>Transcripción: transcripcion_2025-02-03_betanorte.txt
+
+--- Texto pseudonimizado (primeros 400 chars) ---
+[09:15:02] Pánfilo del Barros: Buenas. Estamos revisando el presupuesto BUDGET-2023-5601 firmado en marzo, código de cliente Apolinar Montero Verdejo. Samu de Samper preguntar por el escalado de la integración con el ERP.
+[09:15:40] Álvaro Girona, lo tengo aquí. La fase de backend está cerrada. ¿Qué dudas tienes?
+[09:16:18] Pánfilo del Barros: Nuestra responsable de logística, Mariano Uriarte Míng
+
+--- Mappings aplicados (20) ---
+  PERSON         → Purificación Rivero Arjona
+  ORGANIZATION   → REDACTED-7c65c1e5
+  PERSON         → Ágata Mateos Tapia
+  EMAIL_ADDRESS  → dalila38@instalaciones.org
+  PERSON         → Olalla de Menéndez
+  URL            → REDACTED-e61a441c
+  EMAIL_ADDRESS  → agustina81@rovira.net
+  ORGANIZATION   → REDACTED-71545a13
+  URL            → REDACTED-e61a441c
+  URL            → REDACTED-0ff18e02
+  PERSON         → Zoraida de Bueno
+  LOCATION       → Teruel
+
+Mismo valor original → mismo pseudónimo en todo el documento (consistencia por valor, no por chunk).</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Cada dato se cambia por otro <b>del mismo tipo</b>: un nombre por un nombre, un email por un email, un <code>BUDGET-…</code> por otro. Así el texto sigue teniendo sentido para el embedding.</li><li><b>Consistencia</b>: «Javier Romero» es «Pánfilo del Barros» en las dos líneas en que aparece.</li><li>Los tipos sin generador (<code>ORGANIZATION</code>, <code>URL</code>) se tapan con <code>REDACTED-xxxxxxxx</code>.</li><li><b>Falsos positivos</b>: «Quería» y «Sí» se tomaron por personas, y <code>CLI-0078</code> se detectó como persona en vez de como código de cliente. Es el precio del NER en español; en producción se sube el umbral, se añade una lista de exclusión o se usa <code>es_core_news_lg</code>.</li><li>El <code>BUDGET-…</code> nuevo es aleatorio: cambia en cada ejecución. Los nombres salen siempre iguales porque Faker usa una semilla fija.</li></ul></div></div><div class='paso'><div class='cab'><div class='tit'>La mapping table en Postgres</div><span class='diapo'>diapo 22</span></div><div class='para'><b>Para qué sirve.</b> Comprueba cuántos mapeos hay guardados por tipo de entidad en la tabla <code>pseudonym_mappings</code>.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator-postgres psql -U estimator -d estimator \
+  -c &quot;SELECT entity_type, count(*) FROM pseudonym_mappings GROUP BY 1&quot;</pre><div class='lab'>Salida</div><pre class='out'> entity_type | count 
+-------------+-------
+(0 rows)</pre><div class='leer'><b class='l'>Cómo leerla.</b> <b>0 filas</b> es lo esperado: la demo usa <code>InMemoryMappingStore</code>, que guarda en memoria y se pierde al acabar. En el pipeline real se usa <code>PostgresMappingStore</code> y ahí se guarda el <b>hash</b> (HMAC-SHA256) de cada valor, nunca el valor original. Esa tabla es la que hace posible el derecho al olvido.</div></div></body></html>

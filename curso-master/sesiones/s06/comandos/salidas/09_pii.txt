@@ -1,0 +1,22 @@
+﻿Transcripción: transcripcion_2025-02-03_betanorte.txt
+
+--- Texto pseudonimizado (primeros 400 chars) ---
+[09:15:02] Pánfilo del Barros: Buenas. Estamos revisando el presupuesto BUDGET-2023-5601 firmado en marzo, código de cliente Apolinar Montero Verdejo. Samu de Samper preguntar por el escalado de la integración con el ERP.
+[09:15:40] Álvaro Girona, lo tengo aquí. La fase de backend está cerrada. ¿Qué dudas tienes?
+[09:16:18] Pánfilo del Barros: Nuestra responsable de logística, Mariano Uriarte Míng
+
+--- Mappings aplicados (20) ---
+  PERSON         → Purificación Rivero Arjona
+  ORGANIZATION   → REDACTED-7c65c1e5
+  PERSON         → Ágata Mateos Tapia
+  EMAIL_ADDRESS  → dalila38@instalaciones.org
+  PERSON         → Olalla de Menéndez
+  URL            → REDACTED-e61a441c
+  EMAIL_ADDRESS  → agustina81@rovira.net
+  ORGANIZATION   → REDACTED-71545a13
+  URL            → REDACTED-e61a441c
+  URL            → REDACTED-0ff18e02
+  PERSON         → Zoraida de Bueno
+  LOCATION       → Teruel
+
+Mismo valor original → mismo pseudónimo en todo el documento (consistencia por valor, no por chunk).
