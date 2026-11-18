@@ -1,3 +1,12 @@
+# ── Sesión 6 · 2.3 · loader: cómo llego a los ficheros ────────────────────────
+#
+#   Capa 1 de la ingesta. Entrega bytes y la ruta; no sabe qué hay dentro.
+#   Mañana puede ser Drive, S3 o una API: se cambia el loader y lo demás no se toca.
+#
+#   · iter_blobs: recorre la ubicación de la fuente y filtra por formato.
+#   · LoadedBlob: los bytes del fichero y su ruta relativa.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Filesystem loader.
 
 Resolves the ``CatalogSource.location`` against the project's

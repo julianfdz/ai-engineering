@@ -1,3 +1,14 @@
+# ── Sesión 6 · 2.5 · pseudonimización reversible y consistente ────────────────
+#
+#   Sustituye cada dato personal por uno falso pero verosímil, y siempre por el mismo:
+#   «Javier Romero» será el mismo nombre falso en todos los documentos.
+#
+#   · _generators: un generador de Faker por tipo (un nombre por un nombre, no [PERSON]).
+#   · Reemplaza de derecha a izquierda para que los offsets no se desplacen.
+#   · _hash: HMAC-SHA256 con sal. En la mapping table se guarda el hash, nunca el original.
+#   · Tipos sin generador (ORGANIZATION, URL) → REDACTED-xxxxxxxx.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Consistent pseudonymizer — same input → same pseudonym, every time.
 
 The flow is:

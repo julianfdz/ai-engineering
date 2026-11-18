@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.5 · Presidio configurado en español ──────────────────────────
+#
+#   Por defecto Presidio usa spaCy en inglés y no detecta «Laura Fernández»: falla en
+#   silencio. Este es el único sitio donde se conecta al modelo en español.
+#
+#   · build_analyzer: es_core_news_md y supported_languages=['es'].
+#   · @lru_cache: cargar spaCy tarda; se construye una vez.
+#   · Registra los reconocedores propios del dominio (BUDGET_ID, CLIENT_CODE).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Presidio AnalyzerEngine factory configured for Spanish text.
 
 The default Presidio configuration ships with English spaCy models. On Hispanic

@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+# ── Sesión 6 · 2.4 · demo de limpieza y validación ────────────────────────────
+#
+#   Lee los 6 presupuestos de data/seed/budgets, los limpia, los valida y muestra
+#   en qué cubeta acaba cada fila.
+#
+#   · 6 ficheros → 5 filas: el dedup se queda con la v2 de BUDGET-2024-0005.
+#   · Descartado: BUDGET-2024-0004 (importe -50000).
+#   · Cuarentena: BUDGET-2024-0002 (su fecha 12/03/2024 no se pudo reparar).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Sub-block 2.4 demo — cleaning + Pandera validation over the seed budgets.
 
 Runnable form of the live demo (no REPL typing): loads every budget JSON from

@@ -1,3 +1,14 @@
+# ── Sesión 6 · 2.3 · el endpoint de ingesta: asíncrono (202 + job_id) ─────────
+#
+#   Indexar tarda: la petición no espera. Devuelve 202 con un job_id y el cliente
+#   pregunta por el estado. Es el pipeline OFFLINE.
+#
+#   · create_ingestion_run: valida contra el catálogo y lanza un BackgroundTask.
+#   · 404 unknown_source si la fuente no existe; 400 source_not_included si no es include.
+#   · get_ingestion_job: el estado del job (pending, running, completed, failed).
+#   · Router fino: la lógica vive en orchestrator.py.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """POST /api/v1/ingestion/runs   +   GET /api/v1/ingestion/jobs/{job_id}.
 
 The router is intentionally thin: it validates the source against the catalog,

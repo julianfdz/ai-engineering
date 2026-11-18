@@ -1,3 +1,14 @@
+# ── Sesión 6 · 2.4 · limpiar: reparar sin juzgar ──────────────────────────────
+#
+#   Primer paso de la limpieza: normaliza lo reparable sin decidir si el registro
+#   entra o no. Eso lo decide la validación (schemas.py + policy.py).
+#
+#   · NULL_PLACEHOLDERS: «TBD», «N/A», «-»… pasan a nulo de verdad.
+#   · Monedas a mayúsculas, fechas y números con errors='coerce' (lo inválido → NaT/NaN).
+#   · Dedup: por budget_id se queda la versión con signed_at más reciente.
+#   · Esa regla es una decisión de negocio, escrita en código.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Reparable cleaning for the budget tabular view.
 
 Five steps, applied to a DataFrame whose schema we treat as **raw**:

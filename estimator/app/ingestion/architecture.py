@@ -1,3 +1,14 @@
+# ── Sesión 6 · 2.1 · CAG, RAG o híbrido: la decisión, en código ───────────────
+#
+#   Las dos estructuras del Article 1 convertidas en un módulo ejecutable:
+#   python -m app.ingestion.architecture imprime la decisión para el Proyecto 2.
+#
+#   · CAGViability: las cuatro restricciones del CAG. viable es un all([...]): AND, no OR.
+#   · assess_cag_viability: deriva las cuatro desde el perfil del corpus y del modelo.
+#   · recommend_architecture: los cuatro ejes (volumen, frecuencia, trazabilidad, acceso).
+#   · PROYECTO_2: 250.000 tokens frente a una ventana de 128.000 → RAG.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Architecture decision: CAG, RAG or hybrid? (Article 1 of the module).
 
 This module is the executable form of the sub-block 2.1 decision. It is *not*

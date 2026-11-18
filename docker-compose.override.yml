@@ -1,0 +1,19 @@
+# Override LOCAL (no se commitea): nombres de contenedor propios para no chocar
+# con los de la S14 (estimator, estimator-web... siguen existiendo parados) y
+# montaje de scripts/ y evals/ para poder lanzar el preflight y las demos.
+# Los nombres de SERVICIO no cambian: los comandos del guion funcionan igual
+# añadiendo -p aieng-s06live.
+services:
+  estimator:
+    container_name: s06-estimator
+    volumes:
+      - ./estimator/scripts:/app/scripts
+      - ./estimator/evals:/app/evals
+  redis:
+    container_name: s06-redis
+  estimator-postgres:
+    container_name: s06-estimator-postgres
+  estimator-web:
+    container_name: s06-estimator-web
+  postgres:
+    container_name: s06-web-postgres

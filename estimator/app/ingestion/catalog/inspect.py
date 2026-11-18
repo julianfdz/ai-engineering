@@ -1,3 +1,14 @@
+# ── Sesión 6 · 2.2 · inspeccionar las fuentes: hechos, no opiniones ───────────
+#
+#   Primer paso del censo: mira el disco y devuelve lo que se puede medir sin opinar:
+#   nº de ficheros, tamaño, última modificación y formatos de cada carpeta.
+#
+#   · FolderFacts: los datos medibles de una fuente.
+#   · inspect_root: una fila por carpeta, más los ficheros sueltos de la raíz.
+#   · La fecha de última modificación destapa fuentes abandonadas (rate_card de 2024).
+#   · Owner, sensibilidad y calidad NO salen de aquí: los decide una persona en el YAML.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Facts-only inspection of a raw data folder.
 
 Produces *facts* (file_count, total_size_mb, latest_modified, formats_detected)

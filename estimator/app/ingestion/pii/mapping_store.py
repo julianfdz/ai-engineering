@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.5 · la mapping table: dónde vive cada pseudónimo ─────────────
+#
+#   Guarda qué pseudónimo corresponde a cada valor original (por su hash). Es la pieza
+#   que hace posible el derecho al olvido.
+#
+#   · PostgresMappingStore: persistente, en la tabla pseudonym_mappings.
+#   · InMemoryMappingStore: el de la demo y los tests (por eso la tabla sale vacía).
+#   · forget: borra la entrada de un valor y rompe el vínculo con la persona real.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """The mapping store — persistent backing for consistent pseudonymization.
 
 Two implementations:

@@ -1,3 +1,12 @@
+# ── Sesión 6 · 2.5 · reconocedores propios del dominio ────────────────────────
+#
+#   Presidio trae PERSON, EMAIL o LOCATION de serie, pero no nuestros identificadores.
+#
+#   · BudgetIdRecognizer: BUDGET-AAAA-NNNN, score 0.95 (regex muy específico).
+#   · ClientCodeRecognizer: CLI-NNNN.
+#   · Sin ellos, los ids internos se vectorizarían en claro.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Domain-specific Presidio recognizers.
 
 Presidio detects PERSON, EMAIL, LOCATION, etc. out of the box, but the Proyecto

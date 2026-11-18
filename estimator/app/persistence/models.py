@@ -1,3 +1,12 @@
+# ── Sesión 6 · 2.5 · las tablas de la sesión ──────────────────────────────────
+#
+#   Dos tablas en la migración 0001: pseudonym_mappings e ingestion_jobs.
+#
+#   · PseudonymMappingRow: UNIQUE (entity_type, original_hash) → sin locks ni duplicados.
+#   · Se guarda el hash del valor original, nunca el valor en claro.
+#   · IngestionJobRow: el estado de cada ingesta asíncrona.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """SQLAlchemy ORM models for Session 6.
 
 Two tables, both narrow and write-rare:

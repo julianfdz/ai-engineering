@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.3 · el Document canónico: el contrato de la ingesta ──────────
+#
+#   Todo lo que sale de la ingesta es un Document, venga de JSON, TXT, XLSX o PDF.
+#   El chunking de la Sesión 7 solo trabaja con Documents.
+#
+#   · Document: id + text + metadata. extra='forbid': un campo no declarado hace fallar.
+#   · DocumentMetadata: fuente, versión del catálogo, fecha de ingesta, linaje y PII.
+#   · Lo específico de un formato (speaker, timestamp…) va en metadata.extra.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """The canonical ``Document`` model.
 
 Designed flat on purpose: a single ``DocumentMetadata`` sub-object holds the

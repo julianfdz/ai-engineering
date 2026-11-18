@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.3 · parser de transcripciones TXT: dos modos ─────────────────
+#
+#   Las transcripciones conviven en dos formatos según el año. El parser detecta cuál
+#   es y no se inventa lo que no hay.
+#
+#   · _parse_tagged: líneas «[hh:mm:ss] Speaker:» → un Document por turno con speaker.
+#   · _parse_legacy: texto sin etiquetas → un Document por bloque, SIN speaker.
+#   · _has_speaker_tags decide el modo: mejor admitir que no se sabe que inventarlo.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Parser for transcript .txt files.
 
 The Proyecto 2 corpus contains two coexisting formats. The parser detects the

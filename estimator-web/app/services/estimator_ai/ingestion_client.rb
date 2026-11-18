@@ -1,3 +1,12 @@
+# ── Sesión 6 · 2.3 · un cliente HTTP de la ingesta (Rails) ────────────────────
+#
+#   Solo ilustra el contrato del endpoint: cualquier cliente HTTP vale (curl, httpx,
+#   fetch). El servicio Python es el que manda.
+#
+#   · trigger_ingestion: POST /api/v1/ingestion/runs → job_id.
+#   · job_status: GET /api/v1/ingestion/jobs/{job_id}.
+# ──────────────────────────────────────────────────────────────────────────────
+
 require "faraday"
 
 # NOTE: This client is purely ILLUSTRATIVE. The Session 6 endpoints are an HTTP

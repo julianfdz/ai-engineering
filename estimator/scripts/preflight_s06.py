@@ -1,4 +1,15 @@
 #!/usr/bin/env python3
+# ── Sesión 6 · Antes de empezar · comprobación previa ─────────────────────────
+#
+#   Ocho comprobaciones que cazan los fallos de montaje típicos antes de la clase.
+#   Imprime ✅ / ❌ por línea y sale con código 1 si alguna falla.
+#
+#   · Paquetes con versión mínima: pandas, pandera, presidio, spaCy, faker, unstructured…
+#   · spaCy en español: tiene que detectar «Laura Fernández» como persona (PER).
+#   · Corpus semilla, catálogo válido, /health del servicio y tablas de la migración.
+#   · Sin el modelo de spaCy en español, Presidio falla EN SILENCIO (lo vemos en 2.5).
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Session 6 pre-flight verification.
 
 Run this script BEFORE the live session to catch the usual setup pitfalls:

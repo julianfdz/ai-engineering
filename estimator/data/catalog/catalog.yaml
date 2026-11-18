@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.2 · el catálogo de fuentes del Proyecto 2 ────────────────────
+#
+#   Este YAML ES código: lo lee la ingesta para saber qué procesar y qué no.
+#   Su git log es el historial de quién incluyó o excluyó cada fuente y por qué.
+#
+#   · presupuestos_json → include: la única que entra hoy.
+#   · transcripciones_txt → review: un fichero de 2023 sin speaker tags rompe el parser.
+#   · rate_card_xlsx → exclude: actuality=1, tarifas de enero de 2024 (fuente podrida).
+# ──────────────────────────────────────────────────────────────────────────────
+
 # Catálogo de fuentes — Proyecto 2 (Sesión 06 · 2026-05-22)
 #
 # Este fichero ES código: lo carga `app.ingestion.catalog.loader.load_catalog`

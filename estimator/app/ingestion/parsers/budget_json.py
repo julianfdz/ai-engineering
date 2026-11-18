@@ -1,3 +1,12 @@
+# ── Sesión 6 · 2.3 · parser de presupuestos JSON ──────────────────────────────
+#
+#   Un JSON no hay que extraerlo: hay que decidir cómo se representa como texto.
+#
+#   · _render_budget_markdown: convierte el presupuesto en Markdown estructurado.
+#   · Por qué no json.dumps: el embedding de la S7 entiende mejor prosa que llaves y comillas.
+#   · Los metadatos del catálogo se añaden a cada Document que sale de aquí.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Parser for the Proyecto 2 budget JSON schema.
 
 The key design choice: we render each budget to **structured markdown**, not

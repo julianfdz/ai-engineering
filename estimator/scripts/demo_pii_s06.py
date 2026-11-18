@@ -1,4 +1,14 @@
 #!/usr/bin/env python3
+# ── Sesión 6 · 2.5 · demo de pseudonimización ─────────────────────────────────
+#
+#   Pseudonimiza la transcripción de BetaNorte con Presidio en español y muestra el
+#   texto resultante y los mapeos aplicados.
+#
+#   · Usa InMemoryMappingStore: no escribe en Postgres.
+#   · Los BUDGET-… nuevos son aleatorios: cambian en cada ejecución.
+#   · Saldrán falsos positivos («Quería», «Sí» como persona): es el precio del NER en español.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Sub-block 2.5 demo — pseudonymization with Presidio (Spanish) + mapping table.
 
 Runnable form of the live demo (no REPL typing). Builds ``build_analyzer()``

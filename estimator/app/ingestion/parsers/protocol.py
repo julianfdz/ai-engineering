@@ -1,3 +1,12 @@
+# ── Sesión 6 · 2.3 · el contrato de todos los parsers ─────────────────────────
+#
+#   Capa 2 de la ingesta: un parser por formato, todos con la misma firma.
+#
+#   · Parser es un Protocol (tipado estructural), no una clase base que heredar.
+#   · parse(blob, context) devuelve Documents.
+#   · ParseContext lleva la fuente del catálogo, su versión y la hora de ingesta.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """The :class:`Parser` protocol and the :class:`ParseContext` passed to it.
 
 Why a Protocol instead of an abstract base class? Two reasons:

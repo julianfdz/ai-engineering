@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.2 · cargar y validar el catálogo ─────────────────────────────
+#
+#   Deliberadamente trivial: yaml.safe_load + model_validate. Todo el peso está en el
+#   modelo, que es lo que se testea.
+#
+#   · load_catalog: lee el YAML y devuelve un DataCatalog validado.
+#   · python -m app.ingestion.catalog.loader data/catalog/catalog.yaml lo valida a mano.
+#   · Úsalo antes de hacer commit de un cambio en el catálogo.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Load and validate the YAML catalog.
 
 Reads a YAML file with ``yaml.safe_load``, validates it against

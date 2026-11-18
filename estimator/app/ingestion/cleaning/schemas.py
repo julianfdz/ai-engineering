@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.4 · validar: el contrato de contenido con Pandera ────────────
+#
+#   Lo que Pydantic hace con un objeto, Pandera lo hace con un DataFrame entero:
+#   columna a columna y fila a fila, diciendo qué fila falla y por qué.
+#
+#   · budget_id y client_code con patrón: es el contrato con el sistema de origen.
+#   · total_amount entre 0 y 10.000.000; currency solo EUR, USD o GBP.
+#   · strict=True: rechaza columnas no declaradas. coerce=False: la limpieza ya convirtió.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Pandera v2 schema for the cleaned budget DataFrame.
 
 Note the Pandera v2 import path: ``import pandera.pandas as pa``. In v1 it was

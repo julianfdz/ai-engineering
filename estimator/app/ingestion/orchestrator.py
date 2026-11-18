@@ -1,3 +1,13 @@
+# ── Sesión 6 · 2.3 · el orquestador: une catálogo, loader y parser ────────────
+#
+#   Ejecuta la ingesta de UNA fuente y deja constancia en la tabla ingestion_jobs.
+#
+#   · ingest_source: si la fuente no existe o no es include → IngestionRejected.
+#   · Para cada fichero: loader → parser → Documents.
+#   · Marca el job running / completed / failed y emite logs estructurados.
+#   · Respeta el catálogo: exclude y review no se procesan aunque el fichero esté.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Orchestrator: glues catalog + loader + parser into a single ingestion run.
 
 The contract is intentionally narrow:

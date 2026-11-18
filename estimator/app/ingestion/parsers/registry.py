@@ -1,3 +1,11 @@
+# ── Sesión 6 · 2.3 · registro de parsers por formato ──────────────────────────
+#
+#   Une cada formato del catálogo con su parser.
+#
+#   · default_registry: JSON y TXT registrados.
+#   · Añadir un formato nuevo (XLSX, DOCX, PDF) es una línea de register().
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Tiny parser registry — maps a format string to a :class:`Parser` instance.
 
 The registry is a simple dict in disguise. We keep it as a class to make the

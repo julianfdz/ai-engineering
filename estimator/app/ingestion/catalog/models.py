@@ -1,3 +1,14 @@
+# ── Sesión 6 · 2.2 · el catálogo como contrato Pydantic ───────────────────────
+#
+#   El esquema del catalog.yaml. Si un cambio en el YAML rompe el contrato, falla al
+#   cargar, antes de que la ingesta procese nada.
+#
+#   · CatalogDecision: tres decisiones, include / review / exclude (review es la tercera vía).
+#   · QualityScore: cuatro dimensiones de 1 a 5. No se promedian: cada una es necesaria.
+#   · _decision_requires_reason_when_not_include: si no es include, el motivo es obligatorio.
+#   · included_sources(): lo único que la ingesta acepta procesar.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Pydantic v2 models for the data-source catalog.
 
 The catalog is the contract between *what exists in the wild* and *what the

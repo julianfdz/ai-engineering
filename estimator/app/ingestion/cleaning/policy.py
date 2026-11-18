@@ -1,3 +1,14 @@
+# ── Sesión 6 · 2.4 · la política: reparar, cuarentena o descartar ─────────────
+#
+#   Cuando la validación falla, cada fila va a una de tres cubetas según el check
+#   que no ha pasado. La política está escrita, no implícita.
+#
+#   · validate_with_policy: valida con lazy=True para recoger TODOS los errores.
+#   · QUARANTINE_CHECKS: grave pero recuperable tras revisión humana.
+#   · DISCARD_CHECKS: contaminación clara (importe negativo, id mal formado).
+#   · El report (input / valid / quarantined / discarded) es observabilidad.
+# ──────────────────────────────────────────────────────────────────────────────
+
 """Validation policy router: reparar / cuarentena / descartar.
 
 The Pandera schema can raise on the first failing check, but in production we
