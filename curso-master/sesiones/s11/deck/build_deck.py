@@ -344,24 +344,17 @@ def slide_conflicto(d: Deck) -> None:
     d.codigo(p, "rag/quality/<b>synthesis.py</b> · <code>is_contradiction</code> (l. 43) · "
                 "<code>_deterministic_range</code> (l. 48) · rag/<b>task_hours.py</b> (l. 172) · "
                 "data/<b>task_corpus_contradictions.json</b> · <b>Interfaz:</b> Calidad → Fuentes en conflicto")
-    d.box(p, (24, 66, 352, 150),
+    d.box(p, (24, 66, 400, 132),
           '<div class="t">El fixture</div>«Real-time notifications delivery service»: <b>40 h</b> en una tienda '
           "(solo email) y <b>90 h</b> en una fintech regulada (push, email, SMS, colas, recibos).",
           kind="beige")
-    d.box(p, (24, 158, 352, 330),
-          "<table><tr><th>Vecino</th><th>Horas</th><th>Distancia</th></tr>"
-          "<tr><td>fintech (fixture)</td><td><b>90</b></td><td>0,32</td></tr>"
-          "<tr><td>tienda (fixture)</td><td><b>40</b></td><td>0,34</td></tr>"
-          "<tr><td>corpus base</td><td>15</td><td>0,35</td></tr>"
-          "<tr><td>corpus base</td><td>23</td><td>0,35</td></tr>"
-          "<tr><td>corpus base</td><td>23</td><td>0,35</td></tr></table>",
-          kind="beige", role="table")
-    d.box(p, (368, 66, 696, 200),
+    d.image(p, (24, 140, 400, 330), "s11-ui-conflict.png")
+    d.box(p, (412, 66, 696, 200),
           '<div class="huge" style="color:#a33a1e">⚠ 15–90 h</div><div class="t">fuentes en conflicto</div>'
           "Consenso 39 h · fiabilidad 0,19 · dispersión <b>0,71</b> (umbral 0,35). "
           "«historical sources disagree (15h vs 90h across 5 analogs)».",
           kind="peach")
-    d.box(p, (368, 210, 696, 330),
+    d.box(p, (412, 210, 696, 330),
           '<div class="t">Por qué 15 y no 40</div>El rango es el mínimo y el máximo de los vecinos, y la síntesis no '
           "sabe cuáles son el fixture. Promediar 40 y 90 esconde una decisión de <b>alcance</b> que es del humano: "
           "el rango la deja a la vista.",
@@ -401,24 +394,31 @@ def slide_dos_modos(d: Deck) -> None:
     d.codigo(p, "scripts/<b>eval_generation_s11.py</b> · <code>run_gate</code> (l. 243) · "
                 "<code>run_monitor</code> (l. 272) · <code>BASELINE</code> (l. 72) · "
                 "<code>REGRESSION_TOLERANCE</code> (l. 78)")
-    d.box(p, (24, 66, 352, 250),
+    d.box(p, (24, 66, 352, 160),
           '<div class="t">Puerta de regresión (offline)</div><ul>'
-          "<li>Golden set <b>con</b> <code>ground_truth</code>.</li>"
-          "<li>Las 4 métricas + citas, contra el baseline.</li>"
-          "<li>Si una cae más de <b>0,05</b> o aparece una cita colgante → <b>BLOCK</b>, <code>exit 1</code>.</li>"
-          "<li>Va antes de desplegar, en CI.</li></ul>",
+          "<li>Golden set <b>con</b> <code>ground_truth</code>: las 4 métricas + citas contra el baseline.</li>"
+          "<li>Si una cae más de <b>0,05</b> o hay una cita colgante → <b>BLOCK</b>, <code>exit 1</code>. "
+          "Antes de desplegar, en CI.</li></ul>",
           kind="lav")
-    d.box(p, (368, 66, 696, 250),
+    d.box(p, (368, 66, 696, 160),
           '<div class="t">Monitor de producción (sin referencia)</div><ul>'
-          "<li>Tráfico real: no hay respuesta correcta.</li>"
-          "<li>Solo <b>faithfulness</b> y <b>answer_relevancy</b>.</li>"
-          "<li>Sobre una muestra; es una lectura de salud, sin puerta.</li>"
-          "<li>Va después de desplegar.</li></ul>",
+          "<li>Tráfico real: no hay respuesta correcta. Solo <b>faithfulness</b> y <b>answer_relevancy</b>.</li>"
+          "<li>Una lectura de salud sobre una muestra, sin puerta. Después de desplegar.</li></ul>",
           kind="mint")
-    d.box(p, (24, 260, 696, 330),
-          "<table><tr><th>Métrica</th><th>Baseline</th><th>Suelo</th><th>Métrica</th><th>Baseline</th><th>Suelo</th></tr>"
-          "<tr><td>faithfulness</td><td>0,552</td><td>0,502</td><td>answer_relevancy</td><td>0,033</td><td>−0,017</td></tr>"
-          "<tr><td>context_precision</td><td>1,000</td><td>0,950</td><td>context_recall</td><td>0,114</td><td>0,064</td></tr></table>",
+    d.box(p, (24, 170, 696, 330),
+          "<table><tr><th>Métrica</th><th>Baseline</th><th>Suelo</th><th>config full · 2 consultas</th>"
+          "<th>Puerta</th><th>Monitor</th></tr>"
+          "<tr><td>faithfulness</td><td>0,552</td><td>0,502</td><td><b>0,551</b></td><td class='k'>PASS</td>"
+          "<td>0,535</td></tr>"
+          "<tr><td>answer_relevancy</td><td>0,033</td><td>−0,017</td><td><b>0,039</b></td><td class='k'>PASS</td>"
+          "<td>0,039</td></tr>"
+          "<tr><td>context_precision</td><td>1,000</td><td>0,950</td><td><b>1,000</b></td><td class='k'>PASS</td>"
+          "<td>—</td></tr>"
+          "<tr><td>context_recall</td><td>0,114</td><td>0,064</td><td><b>0,312</b></td><td class='k'>PASS</td>"
+          "<td>—</td></tr>"
+          "<tr><td>citas colgantes</td><td>0</td><td>0</td><td><b>0</b></td><td class='k'>PASS</td><td>0</td></tr>"
+          "<tr><td colspan='6'><b>GATE: DEPLOY · exit 0</b> · el gate marcó 28 líneas degradadas · "
+          "2 de las 5 consultas del golden set: orientativo, no comparable 1:1 con el baseline</td></tr></table>",
           kind="beige", role="table")
 
 

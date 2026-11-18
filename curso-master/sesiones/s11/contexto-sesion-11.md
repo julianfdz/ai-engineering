@@ -105,8 +105,23 @@ Ficheros: `Rag::QualityController`, `EstimatorAi::QualityClient`, `app/views/rag
 | Documento repetido | job `completed` con 0 procesados |
 | Web | home, Calidad (4 pestañas y sus formularios), Corpus, Añadir información, wizard y Ajustes: 200 |
 
-El proyecto KYC se borró después de probarlo (`DELETE FROM documents WHERE source_path LIKE 'corpus-expansion::%'`)
-para hacer la demo en directo desde 1.607.
+### Re-verificado el 18/11 con saldo nuevo
+
+| Demo | Resultado |
+|---|---|
+| Gate por la web | ancla 2/1/1 · con juez 1/2/1 · juez con evidencia «120 h» 0/3/1 (igual que el 17/11) |
+| Conflicto | 15–90 h, consenso 39 h, dispersión 0,71, vecinos 90/40/15/23/23 |
+| Augmentation | 1.061 tokens sin augmentation (8 fuentes), mismo orden |
+| Corpus por la web | KYC de 0,465 a **0,167**, 1.607 → 1.610; repetido → `documents_skipped=1` |
+| **Puerta del Bloque 5** (`--gate --config full --limit 2`) | faithfulness 0,551 · answer_relevancy 0,039 · context_precision 1,000 · context_recall 0,312 · 0 colgantes → **GATE: DEPLOY, exit 0** · 28 líneas degradadas por el gate |
+| **Monitor** (mismas muestras) | faithfulness 0,535 · answer_relevancy 0,039 · 0 colgantes |
+| Tiempos | recoger 5,5 min (2 × gpt-5 + juez), puntuar 83 s la puerta y 65 s el monitor |
+
+La recogida está commiteada en `estimator/evals/s11_full.json` como plan B. Con 2 de las 5 consultas la tabla es
+orientativa: el baseline se hizo con las 5.
+
+Después de cada prueba se borró lo añadido (`DELETE FROM documents WHERE source_path LIKE 'corpus-expansion::%'`) y
+el historial de la web (`Rag::IndexRun.delete_all`) para hacer la demo en directo desde 1.607 y con la lista vacía.
 
 ## 6. Diferencias con el guion de LIDR
 
@@ -145,7 +160,7 @@ para hacer la demo en directo desde 1.607.
 |---|---|---|
 | Deck de Julián | [`Sesion11-Julian-Fernandez.pdf`](Sesion11-Julian-Fernandez.pdf) | 23 diapos: portada, 20 de contenido con franja «En el código» y cifras de la ejecución local, ROTI y gracias |
 | Generador | [`deck/build_deck.py`](deck/build_deck.py) | motor de la S7 + franja de la S5; `python build_deck.py` |
-| Capturas | `curso-master/assets/s11-ui-*.png` | Calidad → Gate, Interruptores y Corpus |
+| Capturas | `curso-master/assets/s11-ui-*.png` | Calidad → Gate, Fuentes en conflicto, Interruptores y Corpus |
 | Línea de formación | [`guion-julian.md`](guion-julian.md) | diapo a diapo: qué contar, qué fichero abrir y en qué línea, qué lanzar en PowerShell y qué enseñar en la web |
 | Guion de LIDR | [`guion-directo.md`](guion-directo.md) | copia del Notion con una nota local al principio |
 
@@ -154,10 +169,8 @@ LIDR solo abren con la cuenta de LIDR.
 
 ## 8. Pendiente
 
-- [ ] **Saldo de OpenAI.** El 17/11 a las 22:15 la clave (la misma en la S1, S5, S10 y S11) devolvía
-  `429 credit_balance_exhausted`. Sin saldo no funcionan: el juez, las horas por tarea, la augmentation (necesita
-  embeddings para recuperar), la ampliación del corpus ni la evaluación. Recargar o cambiar la clave en
-  `estimator\.env` y recrear el servicio (`docker compose -p aieng-s11live up -d --force-recreate estimator`).
-- [ ] Con saldo: recoger y puntuar el tablero del Bloque 5 (`--gate --config full --limit 2` y, si da tiempo, las
-  cuatro configs) para tener la tabla precalculada.
-- [ ] Con saldo: captura de Calidad → Fuentes en conflicto para el deck.
+- [x] Saldo de OpenAI: recargado el 18/11 (la clave es la misma; no hizo falta recrear el contenedor).
+- [x] Tablero del Bloque 5 precalculado (config `full`, 2 consultas) y en la diapo 15.
+- [x] Captura de Calidad → Fuentes en conflicto (`assets/s11-ui-conflict.png`) en la diapo 13.
+- [ ] `--compare` de las cuatro configs: no se ha lanzado (4 × 5 consultas con gpt-5, unos 50 min). No hace falta
+  para la clase.

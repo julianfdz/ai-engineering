@@ -269,10 +269,17 @@ estimator\.ragas-venv\Scripts\python.exe estimator\scripts\eval_generation_s11.p
 estimator\.ragas-venv\Scripts\python.exe estimator\scripts\eval_generation_s11.py --monitor --score-file estimator\evals\s11_full.json
 ```
 
+- Resultado del ensayo del 18/11 (está en la diapo 15): faithfulness 0,551 · answer_relevancy 0,039 ·
+  context_precision 1,000 · context_recall 0,312 · 0 colgantes → **GATE: DEPLOY**, `exit=0`; el gate marcó 28
+  líneas degradadas. Monitor: faithfulness 0,535 · answer_relevancy 0,039.
+- Tiempos medidos: recoger 2 consultas **5,5 min** (cada una, una generación con gpt-5 de 1,5–2,5 min + el juez);
+  puntuar la puerta 1,5 min y el monitor 1 min. Lanza la recogida al **empezar el Bloque 4** en una segunda
+  PowerShell y puntúa en el Bloque 5.
+- Plan B si no da tiempo o falla la API: la recogida del ensayo está en `estimator\evals\s11_full.json`
+  (commiteada); basta con los dos comandos de puntuar.
 - 🖥️ El cambio en vivo: **Calidad → Interruptores**, apaga «Augmentation» → la siguiente estimación ya no comprime.
-  Devuélvelo a «Por defecto» al acabar.
-- Tiempos: cada consulta del golden set es una generación con gpt-5 (`reasoning_effort=high`), del orden de un
-  par de minutos. Lánzalo al empezar el bloque y sigue con Goodhart mientras corre.
+  Devuélvelo a «Por defecto» al acabar. **No toques los interruptores mientras corre la recogida**: la evaluación
+  lee Redis y mezclarías configs.
 
 ### Diapo 17 · Goodhart
 
