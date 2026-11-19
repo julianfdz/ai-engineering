@@ -37,7 +37,7 @@ docker compose -p aieng-s06live exec estimator python scripts/preflight_s06.py
 
 Si sale ❌ en `/health` justo después de tocar código, es la recarga del servicio: repetir en 10 s.
 
-**Ventanas:** VS Code con los 26 ficheros (abajo), el deck, el PDF de comandos y el Swagger
+**Ventanas:** VS Code con los 25 ficheros (abajo), el deck, el PDF de comandos y el Swagger
 (<http://localhost:8000/docs>). La web de Rails no tiene nada de la S6.
 
 **VS Code, en orden de clase:** `scripts/preflight_s06.py`, `app/ingestion/architecture.py`,

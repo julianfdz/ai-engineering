@@ -1061,7 +1061,7 @@ Edición 2026-10 (19/11/2026, TA Sisley Jiménez), rehecho el 18/11 con el forma
   qué sirve, la salida real del 18/11 y cómo leerla, más tres «Prueba tú» (escenarios de `architecture.py`, romper
   el catálogo y ver los fallos de Pandera). Se regenera con `comandos/build_comandos.py`.
 - **Guion personal**: [guion-julian.md](guion-julian.md), diapo a diapo con los comandos de PowerShell probados.
-- **Cabeceras**: los 26 ficheros que se abren en clase llevan arriba una cabecera «Sesión 6 · …» (rama
+- **Cabeceras**: los 25 ficheros que se abren en clase llevan arriba una cabecera «Sesión 6 · …» (rama
   `session_06_live_local` del fork).
 - **Edición 2609 (14/10)**: el deck de 30 diapos, el pptx y el guion de entonces están en `anterior-2609/`.
 - **Píldoras**:
