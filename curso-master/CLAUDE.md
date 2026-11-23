@@ -15,6 +15,7 @@ con su `cd`.
 | **No usar su ordenador**: nada de computer-use ni clics en sus apps. Abrir con `code`, `start` o `Start-Process` sí vale; lo que haya que pulsar dentro, se le indica. | Trabaja a la vez y le roba el foco. |
 | **No gastar en OpenAI sin decirlo.** Primero, demos que no llaman a un LLM y salidas reales ya guardadas. Si algo cuesta, se dice cuánto y se espera el sí. Recargar saldo es cosa suya. | No quiere sorpresas en la factura. |
 | El material de alumnos (deck, PDF de comandos, cabeceras) va **sin comentarios internos** ni bromas. | Lo ven los alumnos. |
+| Las **diapos originales de LIDR no se tocan**: ni orden, ni texto, ni diseño. Solo se les puede añadir la franja «En el código» / «En los tests». Lo nuestro va en una diapo nueva **justo detrás** de la original que amplía. | Julián prepara las clases con las grabaciones de otras ediciones, que usan las originales; si cambian, él y los alumnos pierden el hilo. |
 | Sin tareas programadas ni servicios automáticos. | No los quiere. |
 | Al terminar, **commit y push de todo** (rama local de la sesión y `main`). | «Súbelo todo». |
 
@@ -48,16 +49,25 @@ con su `cd`.
    `# ── Sesión N · <título> ──…` en español, que explica para qué sirve. Va en un commit en la rama local.
    Después se recalculan las líneas que se citan, porque la cabecera las desplaza.
 5. **Deck** (`sNN/deck/build_deck.py`, que sale en `SesionNN-Julian-Fernandez.pdf`).
-   - **Motor:** el de la S5 (`s05/deck/build_deck.py`, que a su vez usa el de la S7), con PyMuPDF sobre la
-     plantilla de LIDR. ROTI y «Gracias» salen de la plantilla.
+   - **Motor:** el de la S2 o la S5 (`s02/deck/build_deck.py` añade la franja de tests; los dos usan el de la
+     S7), con PyMuPDF sobre la plantilla de LIDR. ROTI y «Gracias» salen de la plantilla.
+   - **Diapos originales:** las Google Slides oficiales de la sesión (enlace en el Notion), exportadas a PDF como
+     `deck/plantilla-lidr-sNN.pdf`, entran **sin tocar** y en su orden; las nuestras, detrás de la que amplían
+     (como en la S7). Si no hay acceso (piden la cuenta de LIDR), se dice y se monta el deck propio.
    - **Franja «En el código»:** en cada diapo de contenido, grande (11 pt), con `ruta`, función y línea,
      **verificadas con grep** contra la rama. Si la demo es en la web, empieza por «Interfaz: …».
+   - **Franja «En los tests»** (debajo, en verde): el test que comprueba lo que cuenta la diapo, con fichero,
+     nombre y línea. Más una diapo con todos los tests de la sesión y qué bloque cubre cada uno.
    - **Capturas:** reales, en `curso-master/assets/sNN-*.png`.
    - **Revisión:** renderizar las páginas y mirarlas antes de darlo por bueno.
 6. **PDF de comandos para alumnos** (`sNN/comandos/build_comandos.py`): genera un HTML y Edge headless lo pasa a
    PDF con `--print-to-pdf`; sale en `SNN-comandos-y-salidas.pdf`.
    - **Cada paso:** «Para qué sirve», el comando (genérico, sin nuestro `-p`, con alternativa en PowerShell), la
-     salida real y «Cómo leerla».
+     salida real, «Cómo leerla» y «Lo comprueba» (el comando del test relacionado). Una sección propia para
+     ejecutar los tests. Tono formal: es un documento de referencia, no una chuleta ni habla a Julián.
+   - **Salidas de pago, una sola vez:** cada respuesta completa se guarda en `salidas/NN_*.json` y no se repite;
+     con ellas se genera además una página `historico-sNN.html` para enseñarlas en clase.
+   - **Probar también los comandos de PowerShell** (con una petición que dé 422, que es gratis).
    - **«Prueba tú»:** ejercicios ejecutados de verdad, con su salida.
    - **Peso:** el despliegue va breve; los ejemplos y su comentario, desarrollados.
 7. **Guion propio** (`sNN/guion-julian.md`): diapo a diapo, con los comandos de PowerShell probados con
@@ -94,6 +104,8 @@ con su `cd`.
 - **Rails muere con `ruby\r`:** los `bin/*` están en CRLF; pasarlos a LF.
 - **`UnicodeEncodeError` (cp1252) en Python:** usar `PYTHONUTF8=1`.
 - **PowerShell 5.1 rompe tildes y comillas al llamar a `curl`:** usar `curl.exe --form-string` y textos sin tildes.
+- **`Get-Content -Raw` + `ConvertTo-Json` en PowerShell 5.1** mete propiedades ocultas (`PSPath`…) en el JSON:
+  leer con `[IO.File]::ReadAllText(...)` y enviar el body como bytes UTF-8.
 - **El `/health` falla justo después de tocar código:** es la recarga de uvicorn; repetir a los 10 s.
 - **Choques de nombres y puertos:** no levantar dos stacks de la misma era a la vez (los `container_name` y los
   puertos son fijos).

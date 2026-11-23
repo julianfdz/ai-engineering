@@ -1,0 +1,8 @@
+{
+  "http": 200,
+  "score": 0.625,
+  "issues": [
+    "Missing totals section ('Total hours' / 'Total cost')",
+    "Total hours mismatch: declared 265 vs sum of rows 280"
+  ]
+}

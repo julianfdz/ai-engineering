@@ -1,0 +1,16 @@
+{
+  "http": 200,
+  "score": 0.375,
+  "issues": [
+    "Missing H2 project title",
+    "Missing breakdown table with 'Task | Hours | Cost' header",
+    "Missing totals section ('Total hours' / 'Total cost')"
+  ],
+  "usage": {
+    "input_tokens": 7228,
+    "output_tokens": 1034,
+    "total_tokens": 8262,
+    "preprocessing_input_tokens": 0,
+    "preprocessing_output_tokens": 0
+  }
+}

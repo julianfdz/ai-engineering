@@ -1,0 +1,17 @@
+{
+  "http": 200,
+  "score": 0.75,
+  "issues": [
+    "Total hours mismatch: declared 348 vs sum of rows 336",
+    "Total cost mismatch: declared 21750 EUR vs sum of rows 21000 EUR"
+  ],
+  "latency_ms": 21889,
+  "usage": {
+    "input_tokens": 1758,
+    "output_tokens": 624,
+    "total_tokens": 2382,
+    "preprocessing_input_tokens": 7190,
+    "preprocessing_output_tokens": 395
+  },
+  "extracted_requirements": "## Functional Requirements\n- Develop a custom reservation system for fifteen restaurants.\n- Support multi-country operations with multi-language capabilities (Spanish, Catalan, Portuguese, English).\n- Allow customers to book tables through a mobile-friendly web interface.\n- Enable retrospective entry of walk-in customers into the system for loyalty point accrual.\n- Manage reservations efficiently, allowing for reassignment of tables as necessary.\n- Integrate with existing loyalty program to read customer tiers and accrue points based on reservations.\n- Provide analytics and reporting features for various user roles.\n- Enable configurable deposit rules and no-show fee management per restaurant.\n- Facilitate data migration from the current Barcelona system.\n- Implement alerts and notifications for no-shows and reminders.\n\n## Non-Functional Requirements\n- Ensure system is GDPR-compliant, including data export and erasure features.\n- Achieve WCAG AA accessibility standards for the platform.\n- Maintain near-real-time data update capabilities for operational visibility.\n- Provide robust session handling and authentication mechanisms (OAuth, passwordless).\n- Support a scalable architecture capable of handling burst traffic during peak hours.\n\n## Integrations\n- Integrate with existing loyalty backend (Java, Spring Boot, REST).\n- Connect to BCN-Touch POS system for updating reservation-related entries.\n- Bidirectional sync with HubSpot for customer segmentation and marketing opt-in flags.\n- Integrate payment processing through Stripe for managing deposits and fees.\n\n## Constraints\n- Launch in phase one by early September with a budget around €30,000-€35,000.\n- Prioritize a simple user interface with limited use of AI features in the initial release.\n- Maintain a single shared schema for multi-tenancy to support current and future restaurant divisions.\n\n## Explicit Deadlines\n- Phase one launch by early September.\n- Completion of customer migration and BCN-Touch integration within phase one.\n- Phase two rollout (HubSpot integration, additional features) by Christmas.\n- Phase three (advanced recommendation systems) targeted for early next year."
+}

@@ -1,0 +1,6 @@
+{
+  "http": 200,
+  "model": "gpt-4o-mini-2024-07-18",
+  "finish_reason": "stop",
+  "score": 0.75
+}

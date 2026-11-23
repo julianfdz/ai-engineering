@@ -1,0 +1,2 @@
+17_prompt_basic.json has_risks_section= False score= 0.556
+18_prompt_structured.json has_risks_section= True score= 0.778

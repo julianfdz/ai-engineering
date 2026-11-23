@@ -1,0 +1,8 @@
+{
+  "http": 200,
+  "score": 0.75,
+  "issues": [
+    "Total hours mismatch: declared 320 vs sum of rows 292",
+    "Total cost mismatch: declared 20000 EUR vs sum of rows 18250 EUR"
+  ]
+}

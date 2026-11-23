@@ -1,0 +1,17 @@
+HTTP 422
+{
+  "detail": [
+    {
+      "type": "literal_error",
+      "loc": [
+        "body",
+        "preprocessing"
+      ],
+      "msg": "Input should be 'none', 'inline_cleaning' or 'two_phase'",
+      "input": "magic",
+      "ctx": {
+        "expected": "'none', 'inline_cleaning' or 'two_phase'"
+      }
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "http": 200,
+  "input_tokens": 8493,
+  "output_tokens": 898,
+  "latency_ms": 18059,
+  "score": 0.625
+}

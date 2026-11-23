@@ -1,0 +1,37 @@
+{
+  "estimation": "```json\n{\n  \"meeting_summary\": \"Acme Foods requires a custom reservation system for their 15 restaurants, integrating with their existing loyalty program and the BCN-Touch POS. They aim for a system that is simple for users yet incorporates intelligent suggestions and analytics. The system must comply with GDPR, handle multi-country operations, and have strong integration capabilities with HubSpot. They want to migrate existing data from PostgreSQL and go live by early September with a budget around €30,000-€35,000 for phase one.\",\n  \"title\": \"Custom Reservation System for Acme Foods\",\n  \"breakdown\": [\n    {\n      \"task\": \"Requirements Analysis and Technical Design\",\n      \"hours\": 20,\n      \"cost_eur\": 1250\n    },\n    {\n      \"task\": \"Database Schema Design and PostgreSQL Setup\",\n      \"hours\": 16,\n      \"cost_eur\": 1000\n    },\n    {\n      \"task\": \"Reservation System Core Development\",\n      \"hours\": 60,\n      \"cost_eur\": 3750\n    },\n    {\n      \"task\": \"Loyalty Program Integration and API Integration with BCN-Touch\",\n      \"hours\": 30,\n      \"cost_eur\": 1875\n    },\n    {\n      \"task\": \"User Interface Development (Customer Web and Manager Tablets)\",\n      \"hours\": 40,\n      \"cost_eur\": 2500\n    },\n    {\n      \"task\": \"Analytics Dashboard Development\",\n      \"hours\": 24,\n      \"cost_eur\": 1500\n    },\n    {\n      \"task\": \"GDPR Compliance and Data Management Features\",\n      \"hours\": 18,\n      \"cost_eur\": 1125\n    },\n    {\n      \"task\": \"Data Migration from Legacy PostgreSQL System\",\n      \"hours\": 24,\n      \"cost_eur\": 1500\n    },\n    {\n      \"task\": \"Testing (Unit, Integration, End-to-End)\",\n      \"hours\": 30,\n      \"cost_eur\": 1875\n    },\n    {\n      \"task\": \"Deployment and Post-Launch Support\",\n      \"hours\": 12,\n      \"cost_eur\": 750\n    }\n  ],\n  \"totals\": {\n    \"hours\":  360,\n    \"cost_eur\": 22500\n  },\n  \"team\": [\n    \"1 Senior Backend Developer (lead)\",\n    \"1 Mid-level Full-Stack Developer\",\n    \"1 UI/UX Designer\",\n    \"1 QA Engineer (part-time during implementation)\"\n  ],\n  \"duration_weeks\": 20\n}\n```\n\n### Justification of Estimate\n\n1. **Requirements Analysis and Technical Design (20 hours, €1250)**:\n   - Detail out specific feature sets and technical specifications with stakeholders.\n\n2. **Database Schema Design and PostgreSQL Setup (16 hours, €1000)**:\n   - Design the database schema considering both current and future scalability, including multi-tenant capabilities.\n\n3. **Reservation System Core Development (60 hours, €3750)**:\n   - Build the core functionality of the reservation system, ensuring no double bookings and flexible layout management.\n\n4. **Loyalty Program Integration and API Integration with BCN-Touch (30 hours, €1875)**:\n   - Implement the API integrations with a focus on ensuring data is correctly pushed to BCN-Touch POS.\n\n5. **User Interface Development (Customer Web and Manager Tablets) (40 hours, €2500)**:\n   - Create a responsive web interface accessible on both desktops and tablets, adhering to accessibility standards (WCAG AA).\n\n6. **Analytics Dashboard Development (24 hours, €1500)**:\n   - Build the analytics dashboard for real-time insights as requested by HQ and ensure that it provides different views for different roles.\n\n7. **GDPR Compliance and Data Management Features (18 hours, €1125)**:\n   - Develop the features necessary for data access and erasure requests while ensuring the platform adheres to GDPR regulations.\n\n8. **Data Migration from Legacy PostgreSQL System (24 hours, €1500)**:\n   - Design and implement an ETL process for data migration while ensuring legacy data format consistency.\n\n9. **Testing (Unit, Integration, End-to-End) (30 hours, €1875)**:\n   - Comprehensive testing to ensure stability and integrity of application features for optimal end-user experience.\n\n10. **Deployment and Post-Launch Support (12 hours, €750)**:\n   - Deploy the application and provide post-launch support to resolve any issues encountered during initial usage.\n\nIn total, the estimated cost of €22,500 is designed to remain within the client's budget, ensuring that the project is completed on time for the planned launch. Actual costs may be adjusted based on the final scope of work determined during the detailed analysis phase.",
+  "model": "gpt-4o-mini-2024-07-18",
+  "provider": "openai",
+  "usage": {
+    "input_tokens": 9081,
+    "output_tokens": 997,
+    "total_tokens": 10078,
+    "preprocessing_input_tokens": 0,
+    "preprocessing_output_tokens": 0
+  },
+  "finish_reason": "stop",
+  "preprocessing": "none",
+  "extracted_requirements": null,
+  "latency_ms": 20364,
+  "validation": {
+    "has_title": false,
+    "has_breakdown_table": false,
+    "has_totals_section": false,
+    "has_team_section": true,
+    "has_duration_section": false,
+    "declared_total_hours": null,
+    "sum_row_hours": null,
+    "hours_match": null,
+    "declared_total_cost": null,
+    "sum_row_cost": null,
+    "cost_match": null,
+    "finish_reason_ok": true,
+    "score": 0.25,
+    "issues": [
+      "Missing H2 project title",
+      "Missing breakdown table with 'Task | Hours | Cost' header",
+      "Missing totals section ('Total hours' / 'Total cost')",
+      "Missing estimated duration in weeks"
+    ]
+  }
+}

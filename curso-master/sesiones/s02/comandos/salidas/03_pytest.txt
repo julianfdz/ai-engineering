@@ -1,0 +1,33 @@
+﻿============================= test session starts =============================
+platform win32 -- Python 3.11.14, pytest-9.2.0, pluggy-1.7.0 -- …\estimator\.venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: …\estimator
+configfile: pyproject.toml
+testpaths: tests
+plugins: anyio-4.16.0, asyncio-1.5.0
+asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+collecting ... collected 21 items
+
+tests/test_estimate_endpoint.py::test_default_request_returns_validation PASSED [  4%]
+tests/test_estimate_endpoint.py::test_two_phase_invokes_llm_twice_and_fills_extracted PASSED [  9%]
+tests/test_estimate_endpoint.py::test_max_tokens_low_propagates_finish_reason_length PASSED [ 14%]
+tests/test_estimate_endpoint.py::test_example_format_json_returns_200 PASSED [ 19%]
+tests/test_estimate_endpoint.py::test_model_override_is_passed_to_provider PASSED [ 23%]
+tests/test_estimate_endpoint.py::test_use_examples_false_omits_examples_block PASSED [ 28%]
+tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks PASSED [ 33%]
+tests/test_evaluation.py::test_well_formed_estimation_anthropic_end_turn_passes PASSED [ 38%]
+tests/test_evaluation.py::test_mismatched_total_hours_is_flagged PASSED  [ 42%]
+tests/test_evaluation.py::test_missing_table_is_detected PASSED          [ 47%]
+tests/test_evaluation.py::test_finish_reason_length_fails_check PASSED   [ 52%]
+tests/test_evaluation.py::test_empty_text_scores_zero_and_lists_all_issues PASSED [ 57%]
+tests/test_examples_format.py::test_format_markdown_contains_table_header PASSED [ 61%]
+tests/test_examples_format.py::test_format_json_is_valid_json PASSED     [ 66%]
+tests/test_examples_format.py::test_format_narrative_mentions_hours_and_weeks PASSED [ 71%]
+tests/test_examples_format.py::test_select_examples_zero_returns_empty PASSED [ 76%]
+tests/test_examples_format.py::test_select_examples_caps_at_available PASSED [ 80%]
+tests/test_examples_format.py::test_select_examples_negative_returns_empty PASSED [ 85%]
+tests/test_examples_format.py::test_canonical_examples_have_calibrated_totals PASSED [ 90%]
+tests/test_examples_format.py::test_format_unknown_raises PASSED         [ 95%]
+tests/test_health.py::test_health_returns_200 PASSED                     [100%]
+
+============================= 21 passed in 0.08s ==============================

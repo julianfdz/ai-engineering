@@ -1,0 +1,443 @@
+<!doctype html><html lang='es'><head><meta charset='utf-8'><title>S02 · comandos y salidas</title><style>
+@page { size: A4; margin: 14mm 13mm; }
+body { font-family: 'Segoe UI', Arial, sans-serif; color: #1d2330; font-size: 10pt; margin: 0; }
+h1 { font-size: 19pt; margin: 0 0 2mm; color: #2f2a8a; }
+.sub { color: #4a5568; margin-bottom: 4mm; font-size: 9.5pt; line-height: 1.45; }
+h2 { font-size: 13pt; color: #fff; background: #3f3fb0; padding: 2mm 3mm; margin: 6mm 0 3mm; border-radius: 1.5mm;
+     break-after: avoid; }
+.intro { font-size: 9.3pt; line-height: 1.45; margin: 0 0 3mm; background: #eef0ff; border-radius: 1.5mm;
+         padding: 2.2mm 3mm; }
+.paso { border: 0.3mm solid #cfd3ea; border-radius: 1.5mm; margin: 0 0 3.5mm; padding: 2.5mm 3mm; }
+.cab { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; break-after: avoid; }
+.tit { font-weight: 700; font-size: 10.8pt; color: #2f2a8a; }
+.diapo { font-size: 8pt; color: #6b7280; white-space: nowrap; }
+.para { font-size: 9.3pt; line-height: 1.42; margin: 1.2mm 0 0; }
+.lab { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin: 1.8mm 0 0.6mm;
+       break-after: avoid; }
+pre { font-family: Consolas, 'Cascadia Mono', monospace; font-size: 7.4pt; line-height: 1.3; margin: 0;
+      padding: 1.8mm 2.2mm; border-radius: 1mm; white-space: pre-wrap; word-break: break-word; }
+pre.cmd { background: #1c1f2e; color: #f3f6fb; break-inside: avoid; }
+pre.alt { background: #2b2f45; color: #dfe3f5; break-inside: avoid; }
+pre.out { background: #f4f5f9; color: #1d2330; border: 0.25mm solid #e1e3ee; }
+.leer { margin-top: 1.6mm; font-size: 9.1pt; line-height: 1.42; background: #f1fbf5; border-left: 1mm solid #2f9e6a;
+        padding: 1.5mm 2.5mm; break-inside: avoid; }
+.leer b.l { color: #1f7a50; }
+.leer ul { margin: 0.5mm 0 0 4mm; padding: 0; }
+.test { margin-top: 1.4mm; font-size: 8.6pt; background: #ecfdf5; border: 0.25mm solid #a7e3c4; border-radius: 1mm;
+        padding: 1.2mm 2.5mm; break-inside: avoid; }
+.test b { color: #13704a; }
+code { font-family: Consolas, monospace; font-size: 0.92em; background: #eef0f7; padding: 0 0.6mm; border-radius: 0.6mm; }
+</style></head><body><h1>Sesión 2 · Los comandos de la sesión y su salida</h1><div class='sub'>Primeros pasos de arquitectura CAG · Máster en AI Engineering (LIDR). Cada comando que se usa en el directo, en orden: <b>para qué sirve</b>, <b>cómo se lanza</b>, la <b>salida real</b> (ejecutada en local el 23/11/2026 sobre la rama <code>session_2_live</code>, con <code>gpt-4o-mini</code>), <b>cómo leerla</b> y el <b>test</b> que comprueba ese comportamiento sin llamar al modelo. Las respuestas de un LLM varían de una ejecución a otra: los números exactos cambiarán, la tendencia no. La referencia «diapo N» indica dónde aparece en las diapositivas.</div><h2>0 · Preparar el entorno</h2><div class='intro'>Todos los comandos se lanzan desde la carpeta <code>estimator/</code> del repositorio, en la rama <code>session_2_live</code>. El servicio corre en Docker con <code>uvicorn --reload</code> y la carpeta <code>app/</code> montada: un cambio en el código se aplica al guardar. Los comandos van en <code>bash</code> con <code>curl</code> y <code>jq</code> (macOS, Linux o Git Bash); debajo de cada uno está el equivalente en <b>PowerShell</b>, que no necesita <code>jq</code>. <b>Cada petición a <code>/api/v1/estimate</code> llama al modelo y consume tokens</b>; los tests, en cambio, no llaman a ningún modelo y se pueden repetir sin coste.</div><div class='paso'><div class='cab'><div class='tit'>Levantar el servicio</div><span class='diapo'>diapo 4</span></div><div class='para'><b>Para qué sirve.</b> Construye la imagen y arranca el contenedor <code>estimator</code>. Antes hay que crear <code>.env</code> a partir de <code>.env.example</code> con la clave del proveedor (<code>OPENAI_API_KEY</code> si <code>LLM_PROVIDER=openai</code>).</div><div class='lab'>Comando</div><pre class='cmd'>cp .env.example .env        # y rellenar OPENAI_API_KEY
+docker compose up -d --build
+docker compose ps</pre><div class='lab'>En PowerShell</div><pre class='alt'>Copy-Item .env.example .env
+docker compose up -d --build
+docker compose ps</pre><div class='lab'>Salida</div><pre class='out'>NAME            IMAGE                     COMMAND                  SERVICE     CREATED          STATUS                    PORTS
+s02-estimator   aieng-s02live-estimator   &quot;uvicorn app.main:ap…&quot;   estimator   12 seconds ago   Up 11 seconds (healthy)   0.0.0.0:8000-&gt;8000/tcp, [::]:8000-&gt;8000/tcp</pre><div class='leer'><b class='l'>Cómo leerla.</b> <b>healthy</b> significa que el healthcheck de Docker ya ha llamado a <code>/health</code> con éxito. El nombre del contenedor puede variar en cada equipo.</div></div><div class='paso'><div class='cab'><div class='tit'>GET /health</div><span class='diapo'>diapo 4</span></div><div class='para'><b>Para qué sirve.</b> Comprueba que la API responde. Es lo mismo que consulta el healthcheck cada 30 segundos.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s localhost:8000/health | jq</pre><div class='lab'>En PowerShell</div><pre class='alt'>Invoke-RestMethod http://localhost:8000/health</pre><div class='lab'>Salida</div><pre class='out'>{&quot;status&quot;:&quot;healthy&quot;,&quot;version&quot;:&quot;0.1.0&quot;,&quot;environment&quot;:&quot;development&quot;}</pre><div class='leer'><b class='l'>Cómo leerla.</b> Si no responde justo después de editar código, es la recarga de <code>uvicorn</code>: repite a los pocos segundos.</div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_health.py -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>Variables para el resto de la sesión</div></div><div class='para'><b>Para qué sirve.</b> Guarda la URL base y las dos transcripciones de ejemplo como texto JSON. <code>long_transcription.txt</code> es una reunión real de unas 5.000 palabras; <code>short_transcription.txt</code>, un brief limpio.</div><div class='lab'>Comando</div><pre class='cmd'>export BASE=http://localhost:8000
+export TRANS=$(jq -Rs . &lt; app/fixtures/long_transcription.txt)
+export SHORT=$(jq -Rs . &lt; app/fixtures/short_transcription.txt)</pre><div class='lab'>En PowerShell</div><pre class='alt'>$BASE  = &quot;http://localhost:8000&quot;
+$TRANS = [IO.File]::ReadAllText(&quot;$PWD\app\fixtures\long_transcription.txt&quot;)
+$SHORT = [IO.File]::ReadAllText(&quot;$PWD\app\fixtures\short_transcription.txt&quot;)</pre><div class='leer'><b class='l'>Cómo leerla.</b> En PowerShell se lee con <code>[IO.File]::ReadAllText</code> y no con <code>Get-Content -Raw</code>: en Windows PowerShell 5.1, <code>Get-Content</code> añade propiedades ocultas al texto y <code>ConvertTo-Json</code> las enviaría dentro del body (la API respondería 422, «Input should be a valid string»).</div></div><div class='paso'><div class='cab'><div class='tit'>Sanity check: una estimación corta</div><span class='diapo'>diapo 4</span></div><div class='para'><b>Para qué sirve.</b> Primera llamada real al modelo con la transcripción corta. Si responde 200 con <code>score ≥ 0.5</code>, el sistema está listo.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$SHORT}&quot; | jq &#x27;{model, score: .validation.score, latency_ms}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$SHORT} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r | Select-Object model, latency_ms, @{n=&#x27;score&#x27;;e={$_.validation.score}}</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;model&quot;: &quot;gpt-4o-mini-2024-07-18&quot;,
+  &quot;score&quot;: 0.75,
+  &quot;latency_ms&quot;: 12623
+}</pre><div class='leer'><b class='l'>Cómo leerla.</b> <code>model</code> trae la versión exacta que respondió (<code>gpt-4o-mini-2024-07-18</code>). La latencia va en milisegundos e incluye todo el trabajo del servidor.</div></div><h2>1 · Los tests: comprobar el sistema sin gastar tokens</h2><div class='intro'>El proyecto trae <b>21 tests</b> en <code>estimator/tests/</code>. Ninguno llama a OpenAI: en <code>test_estimate_endpoint.py</code> la función <code>_call_openai</code> se sustituye por un falso (<code>monkeypatch</code>) que devuelve una estimación fija y apunta cada llamada. Así se comprueba el camino completo de la petición —validación, preprocesado, prompt, evaluación— en milisegundos y gratis. Se ejecutan en el ordenador con <code>uv</code> (la imagen de Docker no incluye las dependencias de desarrollo). En cada paso de esta guía, el recuadro <b>Lo comprueba</b> indica el test relacionado.</div><div class='paso'><div class='cab'><div class='tit'>uv run pytest -v</div><span class='diapo'>diapo 19</span></div><div class='para'><b>Para qué sirve.</b> Instala las dependencias de desarrollo la primera vez (<code>uv sync</code>) y ejecuta todos los tests con el nombre de cada uno.</div><div class='lab'>Comando</div><pre class='cmd'>uv sync
+uv run pytest -v</pre><div class='lab'>En PowerShell</div><pre class='alt'>uv sync
+uv run pytest -v</pre><div class='lab'>Salida</div><pre class='out'>collected 21 items
+
+tests/test_estimate_endpoint.py::test_default_request_returns_validation PASSED [  4%]
+tests/test_estimate_endpoint.py::test_two_phase_invokes_llm_twice_and_fills_extracted PASSED [  9%]
+tests/test_estimate_endpoint.py::test_max_tokens_low_propagates_finish_reason_length PASSED [ 14%]
+tests/test_estimate_endpoint.py::test_example_format_json_returns_200 PASSED [ 19%]
+tests/test_estimate_endpoint.py::test_model_override_is_passed_to_provider PASSED [ 23%]
+tests/test_estimate_endpoint.py::test_use_examples_false_omits_examples_block PASSED [ 28%]
+tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks PASSED [ 33%]
+tests/test_evaluation.py::test_well_formed_estimation_anthropic_end_turn_passes PASSED [ 38%]
+tests/test_evaluation.py::test_mismatched_total_hours_is_flagged PASSED  [ 42%]
+tests/test_evaluation.py::test_missing_table_is_detected PASSED          [ 47%]
+tests/test_evaluation.py::test_finish_reason_length_fails_check PASSED   [ 52%]
+tests/test_evaluation.py::test_empty_text_scores_zero_and_lists_all_issues PASSED [ 57%]
+tests/test_examples_format.py::test_format_markdown_contains_table_header PASSED [ 61%]
+tests/test_examples_format.py::test_format_json_is_valid_json PASSED     [ 66%]
+tests/test_examples_format.py::test_format_narrative_mentions_hours_and_weeks PASSED [ 71%]
+tests/test_examples_format.py::test_select_examples_zero_returns_empty PASSED [ 76%]
+tests/test_examples_format.py::test_select_examples_caps_at_available PASSED [ 80%]
+tests/test_examples_format.py::test_select_examples_negative_returns_empty PASSED [ 85%]
+tests/test_examples_format.py::test_canonical_examples_have_calibrated_totals PASSED [ 90%]
+tests/test_examples_format.py::test_format_unknown_raises PASSED         [ 95%]
+tests/test_health.py::test_health_returns_200 PASSED                     [100%]
+
+============================= 21 passed in 0.08s ==============================</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><code>test_estimate_endpoint.py</code> (6): el endpoint de punta a punta con el falso de OpenAI.</li><li><code>test_evaluation.py</code> (6): el evaluador estructural con presupuestos conocidos.</li><li><code>test_examples_format.py</code> (8): los tres formatos de ejemplos y la selección de cuántos.</li><li><code>test_health.py</code> (1): la app importa y arranca.</li></ul>Para lanzar uno solo: <code>uv run pytest tests/fichero.py::nombre_del_test -v</code>.</div></div><h2>2 · La transcripción real: limpiar el input</h2><div class='paso'><div class='cab'><div class='tit'>Estimación sin preprocesado (preprocessing = none)</div><span class='diapo'>diapo 7</span></div><div class='para'><b>Para qué sirve.</b> La transcripción larga tal cual, con tres ejemplos en el prompt. Es la referencia con la que se compara todo lo demás.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;preprocessing\&quot;:\&quot;none\&quot;}&quot; \
+  | jq &#x27;{model, finish_reason, latency_ms, score: .validation.score, issues: .validation.issues, usage, estimation}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$TRANS;preprocessing=&quot;none&quot;} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r | Select-Object model, finish_reason, latency_ms, @{n=&#x27;score&#x27;;e={$_.validation.score}}
+$r.validation.issues; $r.usage</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;model&quot;: &quot;gpt-4o-mini-2024-07-18&quot;,
+  &quot;finish_reason&quot;: &quot;stop&quot;,
+  &quot;latency_ms&quot;: 20210,
+  &quot;score&quot;: 0.625,
+  &quot;issues&quot;: [
+    &quot;Missing breakdown table with &#x27;Task | Hours | Cost&#x27; header&quot;
+  ],
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 8493,
+    &quot;output_tokens&quot;: 957,
+    &quot;total_tokens&quot;: 9450,
+    &quot;preprocessing_input_tokens&quot;: 0,
+    &quot;preprocessing_output_tokens&quot;: 0
+  },
+  &quot;estimation&quot;: (4815 caracteres; primeras líneas abajo)
+}
+
+── estimation ──
+## Custom Reservation Platform for Acme Foods
+
+### Project Overview
+Acme Foods seeks to develop a custom reservation platform to be utilized across fifteen restaurants, with plans for future expansions into Portugal. The solution must integrate seamlessly with their existing loyalty program, the BCN-Touch POS system, and ensure GDPR compliance. The platform should provide a user-friendly web experience for customers and tablet support for restaurant managers, complete with required analytics and tailored features. The first phase is projected for September 2025, with a budget of approximately €30,000 to €35,000.
+
+### Task Breakdown
+
+| Task | Description | Hours | Cost (EUR) |
+|------|-------------|------:|------------|
+| Requirements Analysis &amp; Technical Specification | Finalization and documentation of all system requirements. | 24 | 1,500 |
+| Architecture Design &amp; Technical Design | System architecture design focusing on a scalable, efficient implementation. | 16 | 1,000 |
+| Database Design &amp; Setup | Schema design in PostgreSQL considering multi-tenancy and RLS (Row-Level Security). | 20 | 1,250 |
+| User Registration and Authentication | Implement OAuth2 for staff and passwordless email links for customers. | 12 | 750 |
+| Reservation Engine Development | Core functionality for reservations, including table mapping, conflict resolution, and availability checks.** | 40 | 2,500 |
+| Loyalty Integration | API integration with existing loyalty program to fetch customer data and handle point accrual. | 16 | 1,000 |
+| BCN-Touch POS Integration | Design and development of the relay agent to synchronize with the local BCN-Touch API. | 20 | 1,250 |
+…</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>score 0.625</b>: 5 de 8 comprobaciones.</li><li>El issue dice que falta la tabla, pero la tabla está: el modelo añadió una columna <code>Description</code> y el evaluador busca exactamente <code>| Task | Hours | Cost</code>. Sin esa cabecera tampoco puede sumar filas.</li><li><code>input_tokens</code> 8.493: la transcripción más el system prompt con tres ejemplos.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_evaluation.py::test_missing_table_is_detected -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>Estrategia A: inline_cleaning</div><span class='diapo'>diapo 8</span></div><div class='para'><b>Para qué sirve.</b> Una sola llamada. Añade al system prompt el bloque <code>INLINE_CLEANING_BLOCK</code> (<code>app/services/llm_service.py</code>): ignorar la charla, sacar los requisitos implícitos y quedarse con lo último que se dijo cuando hay contradicciones.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;preprocessing\&quot;:\&quot;inline_cleaning\&quot;}&quot; \
+  | jq &#x27;{score: .validation.score, issues: .validation.issues, latency_ms, usage}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$TRANS;preprocessing=&quot;inline_cleaning&quot;} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r | Select-Object latency_ms, @{n=&#x27;score&#x27;;e={$_.validation.score}}
+$r.validation.issues; $r.usage</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;score&quot;: 0.75,
+  &quot;issues&quot;: [
+    &quot;Total hours mismatch: declared 324 vs sum of rows 274&quot;,
+    &quot;Total cost mismatch: declared 20250 EUR vs sum of rows 17125 EUR&quot;
+  ],
+  &quot;latency_ms&quot;: 13049,
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 8558,
+    &quot;output_tokens&quot;: 753,
+    &quot;total_tokens&quot;: 9311,
+    &quot;preprocessing_input_tokens&quot;: 0,
+    &quot;preprocessing_output_tokens&quot;: 0
+  }
+}</pre><div class='leer'><b class='l'>Cómo leerla.</b> Con <b>65 tokens</b> más de entrada (8.558 frente a 8.493) el score sube a <b>0.75</b>: ahora la tabla tiene la cabecera esperada. Lo que falla es la suma: las filas dan 274 h y el total declarado es 324 h.</div></div><div class='paso'><div class='cab'><div class='tit'>Estrategia B: two_phase</div><span class='diapo'>diapo 8-9</span></div><div class='para'><b>Para qué sirve.</b> Dos llamadas. La primera (<code>extract_requirements</code>) convierte la transcripción en una lista limpia de requisitos; la segunda estima a partir de esa lista.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;preprocessing\&quot;:\&quot;two_phase\&quot;}&quot; \
+  | jq &#x27;{extracted_requirements, score: .validation.score, latency_ms, tokens: .usage.total_tokens,
+         prep_tokens: (.usage.preprocessing_input_tokens + .usage.preprocessing_output_tokens)}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$TRANS;preprocessing=&quot;two_phase&quot;} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r.extracted_requirements
+$r | Select-Object latency_ms, @{n=&#x27;score&#x27;;e={$_.validation.score}}; $r.usage</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;extracted_requirements&quot;: (2170 caracteres; extracto abajo),
+  &quot;score&quot;: 0.75,
+  &quot;latency_ms&quot;: 21889,
+  &quot;tokens&quot;: 2382,
+  &quot;prep_tokens&quot;: 7585
+}
+
+── extracted_requirements ──
+## Functional Requirements
+- Develop a custom reservation system for fifteen restaurants.
+- Support multi-country operations with multi-language capabilities (Spanish, Catalan, Portuguese, English).
+- Allow customers to book tables through a mobile-friendly web interface.
+- Enable retrospective entry of walk-in customers into the system for loyalty point accrual.
+- Manage reservations efficiently, allowing for reassignment of tables as necessary.
+- Integrate with existing loyalty program to read customer tiers and accrue points based on reservations.
+- Provide analytics and reporting features for various user roles.
+- Enable configurable deposit rules and no-show fee management per restaurant.
+- Facilitate data migration from the current Barcelona system.
+- Implement alerts and notifications for no-shows and reminders.
+
+## Non-Functional Requirements
+- Ensure system is GDPR-compliant, including data export and erasure features.
+…</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>La estimación recibe solo <b>1.758 tokens</b> (los requisitos), pero la fase 1 leyó la transcripción entera: <b>7.585 tokens</b> de preprocesado.</li><li>La lista ya es útil por sí sola: resuelve la contradicción SAP → BCN-Touch y saca requisitos enterrados (depósitos configurables, GDPR, WCAG AA).</li><li>Latencia: 21,9 s, la más alta de las tres, porque son dos llamadas seguidas.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_estimate_endpoint.py::test_two_phase_invokes_llm_twice_and_fills_extracted -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>Prueba tú: el contrato rechaza lo que no cumple</div><span class='diapo'>diapo 6</span></div><div class='para'><b>Para qué sirve.</b> <code>EstimationRequest</code> (<code>app/schemas/estimation.py</code>) valida el body antes de llamar al modelo. Estas tres peticiones no cuestan nada: FastAPI responde <b>422</b> sin ejecutar el endpoint.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &#x27;{&quot;transcription&quot;:&quot;Quiero una web.&quot;}&#x27; | jq
+curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &#x27;{&quot;transcription&quot;:&quot;We need a small CRM with auth, contacts and roles. MVP six weeks.&quot;,&quot;num_examples&quot;:9}&#x27; | jq
+curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &#x27;{&quot;transcription&quot;:&quot;We need a small CRM with auth, contacts and roles. MVP six weeks.&quot;,&quot;preprocessing&quot;:&quot;magic&quot;}&#x27; | jq</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;detail&quot;: [
+    {
+      &quot;type&quot;: &quot;string_too_short&quot;,
+      &quot;loc&quot;: [
+        &quot;body&quot;,
+        &quot;transcription&quot;
+      ],
+      &quot;msg&quot;: &quot;String should have at least 50 characters&quot;,
+      &quot;input&quot;: &quot;Quiero una web.&quot;,
+      &quot;ctx&quot;: {
+        &quot;min_length&quot;: 50
+      }
+    }
+  ]
+}
+
+{
+  &quot;detail&quot;: [
+    {
+      &quot;type&quot;: &quot;less_than_equal&quot;,
+      &quot;loc&quot;: [
+        &quot;body&quot;,
+        &quot;num_examples&quot;
+      ],
+      &quot;msg&quot;: &quot;Input should be less than or equal to 5&quot;,
+      &quot;input&quot;: 9,
+      &quot;ctx&quot;: {
+        &quot;le&quot;: 5
+      }
+    }
+  ]
+}
+
+{
+  &quot;detail&quot;: [
+    {
+      &quot;type&quot;: &quot;literal_error&quot;,
+      &quot;loc&quot;: [
+        &quot;body&quot;,
+        &quot;preprocessing&quot;
+      ],
+      &quot;msg&quot;: &quot;Input should be &#x27;none&#x27;, &#x27;inline_cleaning&#x27; or &#x27;two_phase&#x27;&quot;,
+      &quot;input&quot;: &quot;magic&quot;,
+      &quot;ctx&quot;: {
+        &quot;expected&quot;: &quot;&#x27;none&#x27;, &#x27;inline_cleaning&#x27; or &#x27;two_phase&#x27;&quot;
+      }
+    }
+  ]
+}</pre><div class='leer'><b class='l'>Cómo leerla.</b> Cada error dice <b>qué campo</b> (<code>loc</code>), <b>qué regla</b> (<code>type</code>) y <b>qué se recibió</b> (<code>input</code>): menos de 50 caracteres, <code>num_examples</code> por encima de 5 y un modo de preprocesado que no existe. Ninguna línea del endpoint se ha escrito para esto: lo hace Pydantic.</div></div><h2>3 · Iterar el contexto de referencia</h2><div class='paso'><div class='cab'><div class='tit'>3.1 · Sin contexto y con contexto</div><span class='diapo'>diapo 10</span></div><div class='para'><b>Para qué sirve.</b> La misma transcripción y el mismo modelo, quitando y poniendo el bloque de ejemplos (<code>use_examples</code>).</div><div class='lab'>Comando</div><pre class='cmd'># Sin CAG
+curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;use_examples\&quot;: false}&quot; | jq &#x27;{score: .validation.score, issues: .validation.issues, usage}&#x27;
+# Con CAG
+curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;use_examples\&quot;: true}&quot; | jq &#x27;{score: .validation.score, issues: .validation.issues, usage}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$TRANS;use_examples=$false} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r.validation | Select-Object score, issues; $r.usage</pre><div class='lab'>Salida</div><pre class='out'>── use_examples = false ──
+{
+  &quot;score&quot;: 0.375,
+  &quot;issues&quot;: [
+    &quot;Missing H2 project title&quot;,
+    &quot;Missing breakdown table with &#x27;Task | Hours | Cost&#x27; header&quot;,
+    &quot;Missing totals section (&#x27;Total hours&#x27; / &#x27;Total cost&#x27;)&quot;
+  ],
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 7228,
+    &quot;output_tokens&quot;: 1034,
+    &quot;total_tokens&quot;: 8262,
+    &quot;preprocessing_input_tokens&quot;: 0,
+    &quot;preprocessing_output_tokens&quot;: 0
+  }
+}
+
+── use_examples = true ──
+{
+  &quot;score&quot;: 0.75,
+  &quot;issues&quot;: [
+    &quot;Total hours mismatch: declared 400 vs sum of rows 308&quot;,
+    &quot;Total cost mismatch: declared 25000 EUR vs sum of rows 18950 EUR&quot;
+  ],
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 8493,
+    &quot;output_tokens&quot;: 784,
+    &quot;total_tokens&quot;: 9277,
+    &quot;preprocessing_input_tokens&quot;: 0,
+    &quot;preprocessing_output_tokens&quot;: 0
+  }
+}</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Sin ejemplos, <b>0.375</b>: ni título, ni tabla, ni totales. El modelo describe cada tarea en un bloque de viñetas a su manera.</li><li>Con ejemplos, <b>0.75</b>: aparece la estructura de la casa. Los ejemplos ocupan <b>1.265 tokens</b> (8.493 − 7.228).</li><li>Lo único que cambia es el contexto inyectado: eso es CAG.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_estimate_endpoint.py::test_use_examples_false_omits_examples_block -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>3.2 · El formato de los ejemplos</div><span class='diapo'>diapo 11</span></div><div class='para'><b>Para qué sirve.</b> Los mismos tres ejemplos escritos en Markdown, en JSON o en prosa (<code>example_format</code>). Los tres formatos salen de la misma fuente, <code>CANONICAL_EXAMPLES</code> en <code>app/context/examples.py</code>.</div><div class='lab'>Comando</div><pre class='cmd'>for FMT in markdown json narrative; do
+  curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+    -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;example_format\&quot;:\&quot;$FMT\&quot;}&quot; \
+    | jq &quot;{format:\&quot;$FMT\&quot;, input_tokens: .usage.input_tokens, latency_ms, score: .validation.score}&quot;
+done</pre><div class='lab'>En PowerShell</div><pre class='alt'>foreach ($FMT in &quot;markdown&quot;,&quot;json&quot;,&quot;narrative&quot;) {
+  $body = @{transcription=$TRANS; example_format=$FMT} | ConvertTo-Json
+  $r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+    -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+  [pscustomobject]@{format=$FMT; input_tokens=$r.usage.input_tokens; latency_ms=$r.latency_ms; score=$r.validation.score}
+}</pre><div class='lab'>Salida</div><pre class='out'>{&quot;format&quot;: &quot;markdown&quot;, &quot;input_tokens&quot;: 8493, &quot;latency_ms&quot;: 14067, &quot;score&quot;: 0.75}
+{&quot;format&quot;: &quot;json&quot;, &quot;input_tokens&quot;: 9081, &quot;latency_ms&quot;: 20364, &quot;score&quot;: 0.25}
+{&quot;format&quot;: &quot;narrative&quot;, &quot;input_tokens&quot;: 8176, &quot;latency_ms&quot;: 19400, &quot;score&quot;: 0.5}
+
+── estimation con example_format=json (primeras líneas) ──
+```json
+{
+  &quot;meeting_summary&quot;: &quot;Acme Foods requires a custom reservation system for their 15 restaurants, integrating with their existing loyalty program and the BCN-Touch POS. They aim for a system that is simple for users yet incorporates intelligent suggestions and analytics. The system must comply with GDPR, handle multi-country operations, and have strong integration capabilities with HubSpot. They want to migrate existing data from PostgreSQL and go live by early September with a budget around €30,000-€35,000 for phase one.&quot;,
+  &quot;title&quot;: &quot;Custom Reservation System for Acme Foods&quot;,
+  &quot;breakdown&quot;: [
+    {
+      &quot;task&quot;: &quot;Requirements Analysis and Technical Design&quot;,
+      &quot;hours&quot;: 20,
+…</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>El modelo imita el formato del contexto</b>: con ejemplos en JSON, responde con un bloque <code>```json</code>. El evaluador busca Markdown y el score cae a <b>0.25</b>.</li><li>Con prosa (<code>narrative</code>) escribe títulos pero ni tabla ni totales: <b>0.5</b>.</li><li>JSON es el formato más caro en tokens (9.081) por las comillas y las claves repetidas.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_examples_format.py -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>3.3 · Cuántos ejemplos</div><span class='diapo'>diapo 12</span></div><div class='para'><b>Para qué sirve.</b> De 0 a 5 ejemplos en el prompt (<code>num_examples</code>, validado entre 0 y 5).</div><div class='lab'>Comando</div><pre class='cmd'>for N in 0 1 3 5; do
+  curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+    -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;num_examples\&quot;:$N}&quot; \
+    | jq &quot;{n:$N, input_tokens: .usage.input_tokens, output_tokens: .usage.output_tokens, latency_ms, score: .validation.score}&quot;
+done</pre><div class='lab'>En PowerShell</div><pre class='alt'>foreach ($N in 0,1,3,5) {
+  $body = @{transcription=$TRANS; num_examples=$N} | ConvertTo-Json
+  $r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+    -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+  [pscustomobject]@{n=$N; input=$r.usage.input_tokens; output=$r.usage.output_tokens; latency_ms=$r.latency_ms; score=$r.validation.score}
+}</pre><div class='lab'>Salida</div><pre class='out'>{&quot;n&quot;: 0, &quot;input_tokens&quot;: 7228, &quot;output_tokens&quot;: 982, &quot;latency_ms&quot;: 12713, &quot;score&quot;: 0.5}
+{&quot;n&quot;: 1, &quot;input_tokens&quot;: 7676, &quot;output_tokens&quot;: 775, &quot;latency_ms&quot;: 14841, &quot;score&quot;: 0.625}
+{&quot;n&quot;: 3, &quot;input_tokens&quot;: 8493, &quot;output_tokens&quot;: 898, &quot;latency_ms&quot;: 18059, &quot;score&quot;: 0.625}
+{&quot;n&quot;: 5, &quot;input_tokens&quot;: 9388, &quot;output_tokens&quot;: 753, &quot;latency_ms&quot;: 13552, &quot;score&quot;: 0.625}</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Los tokens de entrada suben en línea recta: unos <b>430 por ejemplo</b>, en cada llamada.</li><li>El score salta de 0.5 a 0.625 con el primer ejemplo y luego no se mueve.</li><li>Es una sola ejecución por valor: la latencia varía de una llamada a otra y no permite conclusiones. Para comparar en serio habría que repetir cada fila varias veces.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_examples_format.py::test_canonical_examples_have_calibrated_totals -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>3.4 · El prompt de salida: de BASIC a STRUCTURED</div><span class='diapo'>diapo 13-14</span></div><div class='para'><b>Para qué sirve.</b> En <code>app/services/llm_service.py</code> conviven dos prompts de salida y una línea elige cuál se usa. Se lanza la petición, se cambia esa línea, se guarda y se repite la misma petición.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS}&quot; | jq &#x27;{score: .validation.score, issues: .validation.issues}&#x27;
+
+# En app/services/llm_service.py:
+#   ACTIVE_OUTPUT_PROMPT = PROMPT_OUTPUT_STRUCTURED   # antes: PROMPT_OUTPUT_BASIC
+
+curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS}&quot; | jq &#x27;{score: .validation.score, issues: .validation.issues}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$TRANS} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r.validation | Select-Object score, issues</pre><div class='lab'>Salida</div><pre class='out'>── PROMPT_OUTPUT_BASIC ──
+{
+  &quot;score&quot;: 0.625,
+  &quot;issues&quot;: [
+    &quot;Missing totals section (&#x27;Total hours&#x27; / &#x27;Total cost&#x27;)&quot;,
+    &quot;Total hours mismatch: declared 265 vs sum of rows 280&quot;
+  ]
+}
+
+── PROMPT_OUTPUT_STRUCTURED ──
+{
+  &quot;score&quot;: 0.75,
+  &quot;issues&quot;: [
+    &quot;Total hours mismatch: declared 320 vs sum of rows 292&quot;,
+    &quot;Total cost mismatch: declared 20000 EUR vs sum of rows 18250 EUR&quot;
+  ]
+}
+
+── docker compose logs estimator (al guardar el cambio) ──
+WARNING:  WatchFiles detected changes in &#x27;app/services/llm_service.py&#x27;. Reloading...
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+2026-11-23T15:01:01.971254Z [info     ] application_shutdown
+INFO:     Application shutdown complete.
+INFO:     Finished server process [8]
+INFO:     Started server process [204]
+INFO:     Waiting for application startup.
+2026-11-23T15:01:03.017229Z [info     ] application_started            environment=development</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Con BASIC falta la sección de totales: el modelo no sabe qué forma se espera.</li><li>Con STRUCTURED aparecen todas las secciones, incluida la de riesgos, y la respuesta es más corta (568 tokens frente a 795). Sube a <b>0.75</b>.</li><li>Lo que queda en rojo son las <b>sumas</b>: 292 h en las filas frente a 320 h declaradas. El modelo escribe el total, no lo calcula. Ocurrió en todas las ejecuciones de la sesión, también con <code>gpt-4o</code>.</li><li>Los logs muestran la recarga: <code>WatchFiles detected changes … Reloading</code>. No hace falta reconstruir la imagen.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_evaluation.py::test_mismatched_total_hours_is_flagged -v</code></div></div><h2>4 · Parámetros del modelo</h2><div class='paso'><div class='cab'><div class='tit'>4.1 · Modelo económico y modelo premium</div><span class='diapo'>diapo 15</span></div><div class='para'><b>Para qué sirve.</b> El campo <code>model</code> del body sustituye al <code>LLM_MODEL</code> de <code>.env</code> solo para esa petición, sin reiniciar nada.</div><div class='lab'>Comando</div><pre class='cmd'>for M in gpt-4o-mini gpt-4o; do
+  curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+    -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;model\&quot;:\&quot;$M\&quot;}&quot; | jq &#x27;{model, score: .validation.score, latency_ms, usage}&#x27;
+done</pre><div class='lab'>En PowerShell</div><pre class='alt'>foreach ($M in &quot;gpt-4o-mini&quot;,&quot;gpt-4o&quot;) {
+  $body = @{transcription=$TRANS; model=$M} | ConvertTo-Json
+  $r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+    -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+  $r | Select-Object model, latency_ms, @{n=&#x27;score&#x27;;e={$_.validation.score}}; $r.usage
+}</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;model&quot;: &quot;gpt-4o-mini-2024-07-18&quot;,
+  &quot;score&quot;: 0.75,
+  &quot;latency_ms&quot;: 14583,
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 8493,
+    &quot;output_tokens&quot;: 733,
+    &quot;total_tokens&quot;: 9226,
+    &quot;preprocessing_input_tokens&quot;: 0,
+    &quot;preprocessing_output_tokens&quot;: 0
+  }
+}
+{
+  &quot;model&quot;: &quot;gpt-4o-2024-08-06&quot;,
+  &quot;score&quot;: 0.75,
+  &quot;latency_ms&quot;: 7993,
+  &quot;usage&quot;: {
+    &quot;input_tokens&quot;: 8493,
+    &quot;output_tokens&quot;: 807,
+    &quot;total_tokens&quot;: 9300,
+    &quot;preprocessing_input_tokens&quot;: 0,
+    &quot;preprocessing_output_tokens&quot;: 0
+  }
+}</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Mismo score (0.75) con los dos.</li><li>Coste con los precios de referencia de la sesión (por millón de tokens: <code>gpt-4o-mini</code> 0,15 $ entrada y 0,60 $ salida; <code>gpt-4o</code> 2,50 $ y 10 $): unos <b>0,0017 $</b> frente a <b>0,0293 $</b> por estimación, <b>unas 17 veces más</b>.</li><li>Cambiar de <b>proveedor</b> (<code>LLM_PROVIDER=anthropic</code>) sí requiere editar <code>.env</code> y recrear el contenedor: <code>docker compose up -d --force-recreate estimator</code>. <code>get_settings()</code> está en caché (<code>@lru_cache</code>) y <code>--reload</code> no lo relee.</li><li>Las variantes con <code>claude-haiku-4-5</code> y <code>claude-sonnet-4-6</code> necesitan <code>ANTHROPIC_API_KEY</code>; no se ejecutaron para esta guía.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_estimate_endpoint.py::test_model_override_is_passed_to_provider -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>4.2 · max_tokens y finish_reason</div><span class='diapo'>diapo 16</span></div><div class='para'><b>Para qué sirve.</b> Limita la salida a 200 tokens para ver qué ocurre cuando la respuesta no cabe.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;max_tokens\&quot;: 200}&quot; \
+  | jq &#x27;{finish_reason, score: .validation.score, issues: .validation.issues}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$TRANS;max_tokens=200} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r | Select-Object finish_reason, @{n=&#x27;score&#x27;;e={$_.validation.score}}
+$r.validation.issues</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;finish_reason&quot;: &quot;length&quot;,
+  &quot;score&quot;: 0.25,
+  &quot;issues&quot;: [
+    &quot;Missing totals section (&#x27;Total hours&#x27; / &#x27;Total cost&#x27;)&quot;,
+    &quot;Missing recommended team section&quot;,
+    &quot;Missing estimated duration in weeks&quot;,
+    &quot;Response truncated or unexpected finish_reason=&#x27;length&#x27;&quot;
+  ]
+}</pre><div class='leer'><b class='l'>Cómo leerla.</b> <code>finish_reason: "length"</code> significa que el modelo se quedó sin presupuesto de salida: la tabla se cortó tras la primera fila. El evaluador lo marca de forma explícita. <b>Hay que fijar siempre <code>max_tokens</code> y comprobar <code>finish_reason</code></b> antes de dar una respuesta por buena.</div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_estimate_endpoint.py::test_max_tokens_low_propagates_finish_reason_length -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>4.2 · thinking_budget con OpenAI</div><span class='diapo'>diapo 16</span></div><div class='para'><b>Para qué sirve.</b> <code>thinking_budget</code> activa el razonamiento extendido, que solo existe en el camino de Anthropic. Con <code>LLM_PROVIDER=openai</code> el servicio lo ignora y lo deja anotado en los logs.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$SHORT,\&quot;thinking_budget\&quot;: 2000,\&quot;max_tokens\&quot;: 6000}&quot; \
+  | jq &#x27;{model, finish_reason, score: .validation.score}&#x27;
+docker compose logs estimator | grep thinking_budget</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$SHORT;thinking_budget=2000;max_tokens=6000} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r | Select-Object model, finish_reason
+docker compose logs estimator | Select-String thinking_budget</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;model&quot;: &quot;gpt-4o-mini-2024-07-18&quot;,
+  &quot;finish_reason&quot;: &quot;stop&quot;,
+  &quot;score&quot;: 0.75
+}
+
+2026-11-23T15:02:16.206165Z [warning  ] thinking_budget_ignored_for_provider provider=openai</pre><div class='leer'><b class='l'>Cómo leerla.</b> La petición funciona igual y el aviso <code>thinking_budget_ignored_for_provider</code> deja constancia. Con Anthropic, los tokens de razonamiento se facturan como salida: compensa en estimaciones complejas, donde importa que las cifras cuadren, no en las simples.</div></div><h2>5 · Evaluar la calidad</h2><div class='paso'><div class='cab'><div class='tit'>5.1 · El objeto validation completo</div><span class='diapo'>diapo 17</span></div><div class='para'><b>Para qué sirve.</b> <code>evaluate_estimation_structure</code> (<code>app/services/evaluation.py</code>) pasa ocho comprobaciones con expresiones regulares, sin llamar a ningún modelo. Este es el resultado completo de la estimación two-phase.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s $BASE/api/v1/estimate -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;transcription\&quot;:$TRANS,\&quot;preprocessing\&quot;:\&quot;two_phase\&quot;}&quot; | jq &#x27;.validation&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = @{transcription=$TRANS;preprocessing=&quot;two_phase&quot;} | ConvertTo-Json
+$r = Invoke-RestMethod -Method Post -Uri $BASE/api/v1/estimate `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r.validation</pre><div class='lab'>Salida</div><pre class='out'>{
+  &quot;has_title&quot;: true,
+  &quot;has_breakdown_table&quot;: true,
+  &quot;has_totals_section&quot;: true,
+  &quot;has_team_section&quot;: true,
+  &quot;has_duration_section&quot;: true,
+  &quot;declared_total_hours&quot;: 348,
+  &quot;sum_row_hours&quot;: 336,
+  &quot;hours_match&quot;: false,
+  &quot;declared_total_cost&quot;: 21750.0,
+  &quot;sum_row_cost&quot;: 21000.0,
+  &quot;cost_match&quot;: false,
+  &quot;finish_reason_ok&quot;: true,
+  &quot;score&quot;: 0.75,
+  &quot;issues&quot;: [
+    &quot;Total hours mismatch: declared 348 vs sum of rows 336&quot;,
+    &quot;Total cost mismatch: declared 21750 EUR vs sum of rows 21000 EUR&quot;
+  ]
+}</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Cinco booleanos de estructura: título, tabla, totales, equipo y duración.</li><li><code>declared_total_*</code> frente a <code>sum_row_*</code>: lo declarado y lo que suman las filas. Tolerancia de ±1 h y ±2 % del coste.</li><li><code>score = superadas / 8</code>. Aquí, 6 de 8 = 0.75.</li><li><code>issues</code> explica en texto cada comprobación que falla.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>uv run pytest tests/test_evaluation.py -v</code></div></div><div class='paso'><div class='cab'><div class='tit'>5.2 · Prueba tú: añadir la comprobación de riesgos</div><span class='diapo'>diapo 18</span></div><div class='para'><b>Para qué sirve.</b> Añadir un noveno check, <code>has_risks_section</code>. En <code>app/services/evaluation.py</code>, dentro de <code>evaluate_estimation_structure</code>: calcular el booleano, añadirlo a <code>checks</code> y añadir su <code>issues.append(...)</code>. En <code>app/schemas/estimation.py</code>, añadir el campo a <code>StructureCheck</code>. El router no se toca.</div><div class='lab'>Comando</div><pre class='cmd'>has_risks_section = bool(
+    re.search(r&quot;##\s+(Risks?|Risks?\s+and\s+assumptions)&quot;, text, re.IGNORECASE)
+)
+# … en checks:  has_risks_section,
+# … en issues:  if not has_risks_section: issues.append(&quot;Missing risks and assumptions section&quot;)
+# … en StructureCheck(...):  has_risks_section=has_risks_section
+
+# tests/test_risks_section.py: dos tests nuevos
+#   - un ejemplo canónico + &quot;## Risks and assumptions&quot;  → has_risks_section=True y score 1.0
+#   - el ejemplo canónico tal cual                       → False y el issue &quot;Missing risks and assumptions section&quot;
+
+uv run pytest tests/test_evaluation.py tests/test_risks_section.py -v</pre><div class='lab'>Salida</div><pre class='out'>── salida de pytest tras el cambio ──
+tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks FAILED [ 12%]
+tests/test_evaluation.py::test_well_formed_estimation_anthropic_end_turn_passes FAILED [ 25%]
+tests/test_evaluation.py::test_mismatched_total_hours_is_flagged PASSED  [ 37%]
+tests/test_evaluation.py::test_missing_table_is_detected PASSED          [ 50%]
+tests/test_evaluation.py::test_finish_reason_length_fails_check PASSED   [ 62%]
+tests/test_evaluation.py::test_empty_text_scores_zero_and_lists_all_issues PASSED [ 75%]
+tests/test_risks_section.py::test_risks_section_detected PASSED          [ 87%]
+tests/test_risks_section.py::test_missing_risks_section_is_flagged PASSED [100%]
+FAILED tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks
+FAILED tests/test_evaluation.py::test_well_formed_estimation_anthropic_end_turn_passes
+========================= 2 failed, 6 passed in 0.20s =========================
+
+── detalle del fallo ──
+&gt;       assert result.score == 1.0
+E       AssertionError: assert 0.889 == 1.0
+E        +  where 0.889 = StructureCheck(has_title=True, has_breakdown_table=True, has_totals_section=True, has_team_section=True, has_duration_...ow_cost=12500.0, cost_match=True, finish_reason_ok=True, score=0.889, issues=[&#x27;Missing risks and assumptions section&#x27;]).score
+FAILED tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks
+
+── las salidas de 3.4, reevaluadas con el check nuevo ──
+17_prompt_basic.json has_risks_section= False score= 0.556
+18_prompt_structured.json has_risks_section= True score= 0.778</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>Los dos tests nuevos pasan, pero <b>fallan dos que ya existían</b>: un presupuesto canónico ya no saca 1.0 sino <b>0.889</b> (8 de 9).</li><li>El motivo: <b>ninguno de los cinco ejemplos canónicos tiene sección de riesgos</b>. Y como el modelo imita los ejemplos (3.2), con el prompt BASIC tampoco la escribe: 0.556. Con STRUCTURED, que la pide, 0.778.</li><li>Para cerrar el cambio hay que decidir: añadir riesgos a los ejemplos o pedirlos siempre en el prompt, y actualizar los tests. Un check nuevo cambia lo que significa «bien formado».</li></ul></div></div><h2>6 · Comandos de Docker útiles durante la sesión</h2><div class='paso'><div class='cab'><div class='tit'>Logs, recrear y apagar</div><span class='diapo'>diapo 4</span></div><div class='para'><b>Para qué sirve.</b> Los tres comandos que se usan alrededor de las demos.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose logs -f estimator                      # ver cada petición y cada aviso en directo
+docker compose up -d --force-recreate estimator       # tras cambiar .env
+docker compose down                                   # apagar al terminar</pre><div class='leer'><b class='l'>Cómo leerla.</b> <code>restart</code> no basta tras editar <code>.env</code>: Compose lee el fichero al <b>crear</b> el contenedor, no al reiniciarlo.</div></div></body></html>

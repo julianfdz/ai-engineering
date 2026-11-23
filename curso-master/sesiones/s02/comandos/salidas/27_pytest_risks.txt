@@ -1,0 +1,11 @@
+tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks FAILED [ 12%]
+tests/test_evaluation.py::test_well_formed_estimation_anthropic_end_turn_passes FAILED [ 25%]
+tests/test_evaluation.py::test_mismatched_total_hours_is_flagged PASSED  [ 37%]
+tests/test_evaluation.py::test_missing_table_is_detected PASSED          [ 50%]
+tests/test_evaluation.py::test_finish_reason_length_fails_check PASSED   [ 62%]
+tests/test_evaluation.py::test_empty_text_scores_zero_and_lists_all_issues PASSED [ 75%]
+tests/test_risks_section.py::test_risks_section_detected PASSED          [ 87%]
+tests/test_risks_section.py::test_missing_risks_section_is_flagged PASSED [100%]
+FAILED tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks
+FAILED tests/test_evaluation.py::test_well_formed_estimation_anthropic_end_turn_passes
+========================= 2 failed, 6 passed in 0.20s =========================

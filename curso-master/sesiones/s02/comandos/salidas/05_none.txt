@@ -1,0 +1,17 @@
+{
+  "http": 200,
+  "model": "gpt-4o-mini-2024-07-18",
+  "finish_reason": "stop",
+  "latency_ms": 20210,
+  "score": 0.625,
+  "issues": [
+    "Missing breakdown table with 'Task | Hours | Cost' header"
+  ],
+  "usage": {
+    "input_tokens": 8493,
+    "output_tokens": 957,
+    "total_tokens": 9450,
+    "preprocessing_input_tokens": 0,
+    "preprocessing_output_tokens": 0
+  }
+}

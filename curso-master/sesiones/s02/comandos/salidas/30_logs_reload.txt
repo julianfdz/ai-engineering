@@ -1,0 +1,14 @@
+﻿s02-estimator  | WARNING:  WatchFiles detected changes in 'app/services/llm_service.py'. Reloading...
+s02-estimator  | INFO:     Shutting down
+s02-estimator  | INFO:     Waiting for application shutdown.
+s02-estimator  | 2026-11-23T15:01:01.971254Z [info     ] application_shutdown          
+s02-estimator  | INFO:     Application shutdown complete.
+s02-estimator  | INFO:     Finished server process [8]
+s02-estimator  | INFO:     Started server process [204]
+s02-estimator  | INFO:     Waiting for application startup.
+s02-estimator  | 2026-11-23T15:01:03.017229Z [info     ] application_started            environment=development
+s02-estimator  | INFO:     Application startup complete.
+s02-estimator  | INFO:     127.0.0.1:40838 - "GET /health HTTP/1.1" 200 OK
+s02-estimator  | 2026-11-23T15:01:18.357287Z [info     ] generating_estimation          example_format=markdown max_tokens=4000 model=gpt-4o-mini num_examples=3 preprocessing=none provider=openai thinking_budget=None use_examples=True
+s02-estimator  | 2026-11-23T15:01:30.785912Z [info     ] llm_response_received          finish_reason=stop input_tokens=8598 model=gpt-4o-mini-2024-07-18 output_tokens=568 provider=openai
+s02-estimator  | INFO:     172.20.0.1:37522 - "POST /api/v1/estimate HTTP/1.1" 200 OK

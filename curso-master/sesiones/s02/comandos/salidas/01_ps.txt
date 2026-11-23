@@ -1,0 +1,2 @@
+﻿NAME            IMAGE                     COMMAND                  SERVICE     CREATED          STATUS                    PORTS
+s02-estimator   aieng-s02live-estimator   "uvicorn app.main:ap…"   estimator   12 seconds ago   Up 11 seconds (healthy)   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp

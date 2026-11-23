@@ -1,0 +1,18 @@
+﻿        assert result.has_title
+        assert result.has_breakdown_table
+        assert result.has_totals_section
+        assert result.has_team_section
+        assert result.has_duration_section
+        assert result.declared_total_hours == CANONICAL_EXAMPLES[0].total_hours
+        assert result.sum_row_hours == CANONICAL_EXAMPLES[0].total_hours
+        assert result.hours_match is True
+        assert result.declared_total_cost == CANONICAL_EXAMPLES[0].total_cost
+        assert result.sum_row_cost == CANONICAL_EXAMPLES[0].total_cost
+        assert result.cost_match is True
+        assert result.finish_reason_ok is True
+>       assert result.score == 1.0
+E       AssertionError: assert 0.889 == 1.0
+E        +  where 0.889 = StructureCheck(has_title=True, has_breakdown_table=True, has_totals_section=True, has_team_section=True, has_duration_...ow_cost=12500.0, cost_match=True, finish_reason_ok=True, score=0.889, issues=['Missing risks and assumptions section']).score
+tests\test_evaluation.py:28: AssertionError
+FAILED tests/test_evaluation.py::test_well_formed_estimation_passes_all_checks
+1 failed in 0.16s

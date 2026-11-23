@@ -1,0 +1,37 @@
+{
+  "estimation": "## Reservation System for Acme Foods\n\n### Meeting Summary\nAcme Foods, operating fifteen restaurants, requires a custom-built reservation system that integrates with an existing loyalty program. The system will facilitate reservations, manage customer data, and provide analytics dashboards. Current challenges include disparate reservation processes across restaurants, inefficient integration between reservations and the POS (BCN-Touch), and a need for multi-country scalability with GDPR compliance.\n\n**Phase One Objectives**:\n- Develop a unified reservation platform\n- Integrate loyalty program and BCN-Touch POS\n- Migrate legacy data from the existing Barcelona system\n- Implement basic analytics and user role dashboards\n- Timeline: Completion by early September with a budget of €30,000 (flexible to €35,000)\n\n### Task Breakdown\n\n| Task | Hours | Cost (EUR) |\n|----------------------|------:|------------|\n| Requirements analysis and architecture design | 16 | 1,000 |\n| Data migration planning and ETL development | 30 |",
+  "model": "gpt-4o-mini-2024-07-18",
+  "provider": "openai",
+  "usage": {
+    "input_tokens": 8493,
+    "output_tokens": 200,
+    "total_tokens": 8693,
+    "preprocessing_input_tokens": 0,
+    "preprocessing_output_tokens": 0
+  },
+  "finish_reason": "length",
+  "preprocessing": "none",
+  "extracted_requirements": null,
+  "latency_ms": 4780,
+  "validation": {
+    "has_title": true,
+    "has_breakdown_table": true,
+    "has_totals_section": false,
+    "has_team_section": false,
+    "has_duration_section": false,
+    "declared_total_hours": null,
+    "sum_row_hours": 16,
+    "hours_match": null,
+    "declared_total_cost": null,
+    "sum_row_cost": 1000.0,
+    "cost_match": null,
+    "finish_reason_ok": false,
+    "score": 0.25,
+    "issues": [
+      "Missing totals section ('Total hours' / 'Total cost')",
+      "Missing recommended team section",
+      "Missing estimated duration in weeks",
+      "Response truncated or unexpected finish_reason='length'"
+    ]
+  }
+}

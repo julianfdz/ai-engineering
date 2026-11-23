@@ -1,0 +1,16 @@
+{
+  "http": 200,
+  "score": 0.75,
+  "issues": [
+    "Total hours mismatch: declared 324 vs sum of rows 274",
+    "Total cost mismatch: declared 20250 EUR vs sum of rows 17125 EUR"
+  ],
+  "latency_ms": 13049,
+  "usage": {
+    "input_tokens": 8558,
+    "output_tokens": 753,
+    "total_tokens": 9311,
+    "preprocessing_input_tokens": 0,
+    "preprocessing_output_tokens": 0
+  }
+}

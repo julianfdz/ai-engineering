@@ -1,0 +1,13 @@
+{
+  "http": 200,
+  "model": "gpt-4o-mini-2024-07-18",
+  "score": 0.75,
+  "latency_ms": 14583,
+  "usage": {
+    "input_tokens": 8493,
+    "output_tokens": 733,
+    "total_tokens": 9226,
+    "preprocessing_input_tokens": 0,
+    "preprocessing_output_tokens": 0
+  }
+}

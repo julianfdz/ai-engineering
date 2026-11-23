@@ -1,0 +1,11 @@
+{
+  "http": 200,
+  "finish_reason": "length",
+  "score": 0.25,
+  "issues": [
+    "Missing totals section ('Total hours' / 'Total cost')",
+    "Missing recommended team section",
+    "Missing estimated duration in weeks",
+    "Response truncated or unexpected finish_reason='length'"
+  ]
+}

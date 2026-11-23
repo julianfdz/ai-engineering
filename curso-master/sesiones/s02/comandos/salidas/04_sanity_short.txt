@@ -1,0 +1,6 @@
+{
+  "http": 200,
+  "model": "gpt-4o-mini-2024-07-18",
+  "score": 0.75,
+  "latency_ms": 12623
+}

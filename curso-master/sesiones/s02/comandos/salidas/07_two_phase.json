@@ -1,0 +1,35 @@
+{
+  "estimation": "## Custom Reservation System for Restaurants\n\n### Project Overview\nThe client seeks to develop a comprehensive reservation system for fifteen restaurants with multi-country and multi-language support. This system should facilitate table bookings, manage walk-in customer data for loyalty accrual, and integrate with existing programs and systems. The first phase of the project is expected to launch by early September 2023 within a budget of €30,000-€35,000.\n\n### Task Breakdown\n\n| Task | Hours | Cost (EUR) |\n|------|------:|------------|\n| Requirements analysis and technical design | 20 | 1,250 |\n| Architectural design for multi-tenant support | 16 | 1,000 |\n| Database schema design (including multi-language support) | 18 | 1,125 |\n| User registration and authentication (OAuth, passwordless) | 16 | 1,000 |\n| Mobile-friendly front-end development (reservation UI) | 36 | 2,250 |\n| Retrospective entry feature for walk-in customers | 16 | 1,000 |\n| Reservation management (table assignment and reassignment) | 24 | 1,500 |\n| Integration with loyalty program (REST API) | 20 | 1,250 |\n| Analytics and reporting features (for various user roles) | 20 | 1,250 |\n| Configurable deposit rules and no-show fee management | 22 | 1,375 |\n| Data migration strategy from the existing Barcelona system | 14 | 875 |\n| BCN-Touch POS system integration for reservations | 24 | 1,500 |\n| Alerts and notifications for no-shows and reminders | 16 | 1,000 |\n| GDPR compliance implementation (data export and erasure) | 16 | 1,000 |\n| WCAG AA compliance check and adjustments | 16 | 1,000 |\n| Testing (unit, integration, user acceptance) | 30 | 1,875 |\n| Deployment, CI/CD pipeline setup, and documentation | 12 | 750 |\n\n### Totals\n\n- **Total hours:** 348\n- **Total cost:** 21,750 EUR\n\n### Recommended Team\n\n- 1 Senior Backend Developer (lead)\n- 1 Mid-level Backend Developer\n- 1 Frontend Developer\n- 1 DB Administrator (part-time for data migration)\n- 1 QA Engineer (part-time from testing phase)\n\n### Estimated Duration\n\n**10 weeks** for Phase One to meet the September deadline, assuming resource availability aligns with project needs.\n\n### Phase Two and Three Considerations\nThe budget for additional features such as HubSpot integration and advanced recommendation systems for December and early next year should be accounted for separately in future estimations, as they introduce complexity to the existing framework and may require additional resources.\n\n### Conclusion\nThe outlined estimation presents a foundational approach to the project scope while adhering to the specified budget constraints and deadlines. It is designed to balance immediate functionality with an eye toward future scalability and integration capabilities, thus aligning with the client's objectives for a robust reservation system.",
+  "model": "gpt-4o-mini-2024-07-18",
+  "provider": "openai",
+  "usage": {
+    "input_tokens": 1758,
+    "output_tokens": 624,
+    "total_tokens": 2382,
+    "preprocessing_input_tokens": 7190,
+    "preprocessing_output_tokens": 395
+  },
+  "finish_reason": "stop",
+  "preprocessing": "two_phase",
+  "extracted_requirements": "## Functional Requirements\n- Develop a custom reservation system for fifteen restaurants.\n- Support multi-country operations with multi-language capabilities (Spanish, Catalan, Portuguese, English).\n- Allow customers to book tables through a mobile-friendly web interface.\n- Enable retrospective entry of walk-in customers into the system for loyalty point accrual.\n- Manage reservations efficiently, allowing for reassignment of tables as necessary.\n- Integrate with existing loyalty program to read customer tiers and accrue points based on reservations.\n- Provide analytics and reporting features for various user roles.\n- Enable configurable deposit rules and no-show fee management per restaurant.\n- Facilitate data migration from the current Barcelona system.\n- Implement alerts and notifications for no-shows and reminders.\n\n## Non-Functional Requirements\n- Ensure system is GDPR-compliant, including data export and erasure features.\n- Achieve WCAG AA accessibility standards for the platform.\n- Maintain near-real-time data update capabilities for operational visibility.\n- Provide robust session handling and authentication mechanisms (OAuth, passwordless).\n- Support a scalable architecture capable of handling burst traffic during peak hours.\n\n## Integrations\n- Integrate with existing loyalty backend (Java, Spring Boot, REST).\n- Connect to BCN-Touch POS system for updating reservation-related entries.\n- Bidirectional sync with HubSpot for customer segmentation and marketing opt-in flags.\n- Integrate payment processing through Stripe for managing deposits and fees.\n\n## Constraints\n- Launch in phase one by early September with a budget around €30,000-€35,000.\n- Prioritize a simple user interface with limited use of AI features in the initial release.\n- Maintain a single shared schema for multi-tenancy to support current and future restaurant divisions.\n\n## Explicit Deadlines\n- Phase one launch by early September.\n- Completion of customer migration and BCN-Touch integration within phase one.\n- Phase two rollout (HubSpot integration, additional features) by Christmas.\n- Phase three (advanced recommendation systems) targeted for early next year.",
+  "latency_ms": 21889,
+  "validation": {
+    "has_title": true,
+    "has_breakdown_table": true,
+    "has_totals_section": true,
+    "has_team_section": true,
+    "has_duration_section": true,
+    "declared_total_hours": 348,
+    "sum_row_hours": 336,
+    "hours_match": false,
+    "declared_total_cost": 21750.0,
+    "sum_row_cost": 21000.0,
+    "cost_match": false,
+    "finish_reason_ok": true,
+    "score": 0.75,
+    "issues": [
+      "Total hours mismatch: declared 348 vs sum of rows 336",
+      "Total cost mismatch: declared 21750 EUR vs sum of rows 21000 EUR"
+    ]
+  }
+}
