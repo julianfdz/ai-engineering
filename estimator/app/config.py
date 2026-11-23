@@ -1,3 +1,12 @@
+# ── Julián · Sesión 2 · Bloque 4.1 · la configuración ─────────────────────────────
+#
+#   Settings lee las variables de .env (pydantic-settings).
+#
+#   · validate_api_key_for_provider: exige la clave del proveedor de LLM_PROVIDER.
+#   · get_settings con @lru_cache: el .env se lee una sola vez por proceso.
+#     Por eso cambiar .env exige recrear el contenedor; --reload no basta.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 from functools import lru_cache
 from typing import Literal
 

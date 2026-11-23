@@ -1,0 +1,11 @@
+# Override local (Windows) de la Sesión 2.
+# Nombre de contenedor propio de la sesión (s02-*) para no chocar con los stacks de otras sesiones,
+# y los tests montados para poder leerlos dentro del contenedor.
+# Se levanta con:  docker compose -p aieng-s02live up -d --build
+
+services:
+  estimator:
+    container_name: s02-estimator
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests

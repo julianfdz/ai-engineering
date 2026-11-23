@@ -1,3 +1,13 @@
+# ── Julián · Sesión 2 · Bloque 2.1 · paso 1 · la puerta de entrada ────────────────
+#
+#   Aquí arranca FastAPI. No hay lógica de negocio: solo arranque, logs y rutas.
+#
+#   · configure_logging: structlog legible en desarrollo y JSON en producción.
+#   · lifespan: se ejecuta al arrancar y al parar el servicio.
+#   · app.include_router(estimations.router): monta POST /api/v1/estimate.
+#   · /health: lo que comprueba el healthcheck de Docker.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 import structlog
 from contextlib import asynccontextmanager
 

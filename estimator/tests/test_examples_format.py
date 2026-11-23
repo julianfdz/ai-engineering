@@ -1,3 +1,12 @@
+# ── Julián · Sesión 2 · Tests · el contexto CAG (Bloques 3.2 y 3.3) ───────────────
+#
+#   Los tres formatos y la selección de ejemplos.
+#
+#   · markdown lleva la tabla; json es JSON válido; narrative cita horas y semanas.
+#   · select_examples: 0 → vacío, 99 → los 5 disponibles, negativo → vacío.
+#   · test_canonical_examples_have_calibrated_totals: las filas suman los totales.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 import json
 
 import pytest

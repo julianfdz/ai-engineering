@@ -1,3 +1,8 @@
+# ── Julián · Sesión 2 · Tests · el servicio responde ──────────────────────────────
+#
+#   GET /health devuelve 200 y status=healthy.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 from fastapi.testclient import TestClient
 
 

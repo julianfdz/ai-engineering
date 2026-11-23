@@ -1,3 +1,13 @@
+# ── Julián · Sesión 2 · Bloque 2.1 · paso 6 · el contexto que inyecta el CAG ──────
+#
+#   Cinco presupuestos de proyectos anteriores: el conocimiento «de la casa».
+#
+#   · CANONICAL_EXAMPLES: en cada ejemplo las filas suman los totales (lo comprueba un test).
+#   · select_examples(n): cuántos ejemplos entran en el prompt (3.3).
+#   · format_examples_for_prompt: markdown, json o narrative (3.2).
+#     Una sola fuente de datos y tres formas de escribirla.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 import json
 from dataclasses import dataclass
 

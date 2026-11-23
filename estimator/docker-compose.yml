@@ -1,3 +1,14 @@
+# ── Julián · Sesión 2 · Setup · el servicio en Docker ─────────────────────────────
+#
+#   Un único servicio, estimator, en el puerto 8000.
+#
+#   · volumes ./app:/app/app + uvicorn --reload: un cambio en app/ se aplica al guardar,
+#     sin reconstruir la imagen (Bloques 2.3 y 3.4).
+#   · env_file .env: se lee SOLO al crear el contenedor. Tras editar .env:
+#     docker compose up -d --force-recreate estimator (Bloque 4.1).
+#   · healthcheck: llama a GET /health cada 30 s.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 # Docker Compose configuration for local development.
 # For production, remove the bind mount and the --reload flag.
 

@@ -1,3 +1,14 @@
+# ── Julián · Sesión 2 · Bloque 2.1 · paso 3 · el contrato ─────────────────────────
+#
+#   Pydantic valida la entrada y da forma a la salida.
+#
+#   · EstimationRequest: transcription (≥ 50 caracteres) y los mandos de la sesión:
+#     preprocessing (2.3–2.4), use_examples (3.1), example_format (3.2),
+#     num_examples 0–5 (3.3), model (4.1), max_tokens y thinking_budget (4.2), evaluate.
+#   · EstimationResponse: estimation, usage, finish_reason, latency_ms, validation.
+#   · StructureCheck: el resultado de la evaluación. En 5.2 se añade has_risks_section.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 from typing import Literal
 
 from pydantic import BaseModel, Field

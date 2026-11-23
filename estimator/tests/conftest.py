@@ -1,3 +1,8 @@
+# ── Julián · Sesión 2 · Tests · el cliente de pruebas ─────────────────────────────
+#
+#   TestClient llama a la app en memoria: sin Docker, sin puerto y sin red.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 import pytest
 from fastapi.testclient import TestClient
 

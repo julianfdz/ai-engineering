@@ -1,3 +1,13 @@
+# ── Julián · Sesión 2 · Tests · el endpoint, sin gastar tokens ────────────────────
+#
+#   _call_openai se sustituye por un falso (monkeypatch): ninguna prueba llama a OpenAI.
+#
+#   · two_phase hace dos llamadas y la segunda recibe los requisitos extraídos (2.4).
+#   · max_tokens=200 → finish_reason=length y la evaluación lo marca (4.2).
+#   · example_format=json inyecta el bloque JSON (3.2); use_examples=false lo quita (3.1).
+#   · model sobrescribe el modelo por petición (4.1).
+# ──────────────────────────────────────────────────────────────────────────────────
+
 from collections.abc import Iterator
 
 import pytest

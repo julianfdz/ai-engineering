@@ -1,3 +1,13 @@
+# ── Julián · Sesión 2 · Bloque 2.1 · paso 8 y Bloque 5 · el termómetro ────────────
+#
+#   Evaluación de nivel 1: estructural, con regex y sin llamar al LLM.
+#
+#   · Ocho comprobaciones: título, tabla Task | Hours | Cost, totales, equipo, duración,
+#     suma de horas (±1 h), suma de coste (±2 %) y finish_reason.
+#   · score = comprobaciones superadas / 8; issues = lo que falla, en texto.
+#   · Hands-on 5.2: añadir has_risks_section a checks, a issues y a StructureCheck.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 import re
 
 from app.schemas.estimation import StructureCheck

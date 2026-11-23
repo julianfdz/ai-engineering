@@ -1,3 +1,13 @@
+# ── Julián · Sesión 2 · Bloque 2.1 · pasos 2 y 9 · el endpoint ────────────────────
+#
+#   Por aquí entra la petición y por aquí sale la respuesta.
+#
+#   · El body se valida como EstimationRequest: si falta transcription o es corta → 422.
+#   · Los mandos del request se copian en GenerationOptions.
+#   · generate_estimation genera; evaluate_estimation_structure puntúa (Bloque 5).
+#   · Un fallo del proveedor (LLMServiceError) se devuelve como 500.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 import structlog
 from fastapi import APIRouter, HTTPException
 

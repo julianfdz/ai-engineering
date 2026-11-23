@@ -1,3 +1,14 @@
+# ── Julián · Sesión 2 · Bloque 2.1 · pasos 4, 5 y 7 · el corazón del servicio ─────
+#
+#   Todo lo que decide qué recibe el modelo vive en este fichero.
+#
+#   · PROMPT_OUTPUT_BASIC / PROMPT_OUTPUT_STRUCTURED y el interruptor ACTIVE_OUTPUT_PROMPT (3.4).
+#   · INLINE_CLEANING_BLOCK (2.3) y extract_requirements, la fase 1 de two_phase (2.4).
+#   · build_system_prompt: rol + limpieza + tarifas + formato + ejemplos = el CAG.
+#   · generate_estimation: orquesta y mide latency_ms.
+#   · _call_openai / _call_anthropic: la única llamada que se paga (4.1 y 4.2).
+# ──────────────────────────────────────────────────────────────────────────────────
+
 import time
 from dataclasses import dataclass
 

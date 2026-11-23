@@ -1,3 +1,11 @@
+# ── Julián · Sesión 2 · Tests · el termómetro (Bloque 5) ──────────────────────────
+#
+#   evaluate_estimation_structure con presupuestos conocidos.
+#
+#   · Un ejemplo canónico saca score 1.0 con stop y con end_turn (Anthropic).
+#   · Un total de horas falseado, una tabla ausente o finish_reason=length bajan el score.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 from app.context.examples import CANONICAL_EXAMPLES
 from app.services.evaluation import evaluate_estimation_structure
 
