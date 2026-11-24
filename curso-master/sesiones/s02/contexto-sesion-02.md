@@ -29,6 +29,20 @@ Un endpoint que devuelve estimaciones genéricas se convierte en una arquitectur
 Todo pasa por un único endpoint, `POST /api/v1/estimate`, y se compara con cuatro números de la respuesta:
 `usage`, `latency_ms`, `finish_reason` y `validation.score`.
 
+## 1 bis. Ejercicio previo («Scaffolding del proyecto FastAPI», plataforma de LIDR, entrega 22/11)
+
+Montar desde cero un servicio FastAPI con `uv` (Python 3.11+): `app/` con `main.py`, `config.py` (Pydantic
+Settings desde `.env`), `routers/estimations.py`, `services/llm_service.py`, `schemas` y `context/examples.py`
+con **al menos dos** estimaciones de ejemplo. `POST /api/v1/estimate` recibe `{"transcription": …}` y devuelve
+`{"estimation", "model", "provider"}`; mensajes `[system]` = instrucciones + ejemplos, `[user]` = transcripción.
+Al menos un proveedor. `GET /health`, Swagger en `/docs`, `.env` en `.gitignore`. La calidad no importa todavía:
+basta con que el flujo funcione. Se les da el proyecto resuelto por si se atascan.
+
+Diferencias con lo que se usa en clase: el enunciado pide arrancar con `uv run uvicorn` (sin Docker); la clase usa
+Docker Compose. Su carpeta se llama `estimador-cag/` y sus ejemplos son de 2 en adelante, con otro formato; la
+rama de la clase trae 5 ejemplos canónicos, las fixtures y los mandos nuevos. Un comentario en la plataforma
+señala que la redacción del paso 5 confunde («llame al servicio LLM mediante Postman/curl»).
+
 ## 2. Encaje en el curso
 
 | # | Sesión | Relación con la S2 |
