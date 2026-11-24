@@ -104,6 +104,8 @@ con su `cd`.
 - **Rails muere con `ruby\r`:** los `bin/*` están en CRLF; pasarlos a LF.
 - **`UnicodeEncodeError` (cp1252) en Python:** usar `PYTHONUTF8=1`.
 - **PowerShell 5.1 rompe tildes y comillas al llamar a `curl`:** usar `curl.exe --form-string` y textos sin tildes.
+- **Edge pinta una cuadrícula blanca sobre los PDF según el zoom** (costuras entre baldosas de 200 px): es Edge, sale
+  hasta con páginas que son una sola imagen. Los decks y el PDF de comandos se abren y se proyectan en **Chrome**.
 - **`Get-Content -Raw` + `ConvertTo-Json` en PowerShell 5.1** mete propiedades ocultas (`PSPath`…) en el JSON:
   leer con `[IO.File]::ReadAllText(...)` y enviar el body como bytes UTF-8.
 - **El `/health` falla justo después de tocar código:** es la recarga de uvicorn; repetir a los 10 s.

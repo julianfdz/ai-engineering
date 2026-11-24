@@ -39,10 +39,28 @@ TESTS_RECT = fitz.Rect(10, 353, W - 10, 386)
 
 class Deck(s05.Deck):
     def new(self, title: str, sub: str = "", section: str = "", tests: bool = False) -> fitz.Page:
+        """Como base.Deck.new, pero con fondo blanco opaco: sin él la página es transparente y algunos visores
+        la pintan con la cuadrícula de transparencia."""
         base.Y1_REAL = 312 if tests else 340
-        page = super().new(title, sub, section)
+        self.flush()
+        page = self.doc.new_page(width=W, height=H)
+        page.draw_rect(page.rect, color=None, fill=(1, 1, 1), overlay=False)
+        page.show_pdf_page(base.BADGE, self.tpl, 1, clip=base.BADGE)
+        head = f"<h1>{title}</h1>" + (f'<div class="sub">{sub}</div>' if sub else "")
+        page.insert_htmlbox(fitz.Rect(80, 16, W - 80, 62), head, css=base.CSS)
+        if section:
+            self.footer(page, section)
         page._con_tests = tests  # type: ignore[attr-defined]
         return page
+
+    def save(self) -> None:
+        """Cada página declara su grupo de transparencia, como la plantilla de LIDR. insert_pdf y new_page no lo
+        copian, y sin él el visor de Edge (motor de Adobe) mezcla las transparencias baldosa a baldosa y deja una
+        cuadrícula de costuras blancas cada 200 px."""
+        self.flush()
+        for page in self.doc:
+            self.doc.xref_set_key(page.xref, "Group", "<</S/Transparency/CS/DeviceRGB>>")
+        super().save()
 
     def footer(self, page: fitz.Page, section: str) -> None:
         band = fitz.Rect(0, H - 17, W, H)
