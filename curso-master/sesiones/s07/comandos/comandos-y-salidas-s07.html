@@ -1,0 +1,159 @@
+<!doctype html><html lang='es'><head><meta charset='utf-8'><title>S07 · comandos y salidas</title><style>
+@page { size: A4; margin: 14mm 13mm; }
+body { font-family: 'Segoe UI', Arial, sans-serif; color: #1d2330; font-size: 10pt; margin: 0; }
+h1 { font-size: 19pt; margin: 0 0 2mm; color: #2f2a8a; }
+.sub { color: #4a5568; margin-bottom: 4mm; font-size: 9.5pt; line-height: 1.45; }
+h2 { font-size: 13pt; color: #fff; background: #3f3fb0; padding: 2mm 3mm; margin: 6mm 0 3mm; border-radius: 1.5mm;
+     break-after: avoid; }
+.intro { font-size: 9.3pt; line-height: 1.45; margin: 0 0 3mm; background: #eef0ff; border-radius: 1.5mm;
+         padding: 2.2mm 3mm; }
+.paso { border: 0.3mm solid #cfd3ea; border-radius: 1.5mm; margin: 0 0 3.5mm; padding: 2.5mm 3mm; }
+.cab { display: flex; justify-content: space-between; align-items: baseline; gap: 3mm; break-after: avoid; }
+.tit { font-weight: 700; font-size: 10.8pt; color: #2f2a8a; }
+.diapo { font-size: 8pt; color: #6b7280; white-space: nowrap; }
+.para { font-size: 9.3pt; line-height: 1.42; margin: 1.2mm 0 0; }
+.lab { font-size: 7.5pt; text-transform: uppercase; letter-spacing: 0.06em; color: #6b7280; margin: 1.8mm 0 0.6mm;
+       break-after: avoid; }
+pre { font-family: Consolas, 'Cascadia Mono', monospace; font-size: 7.4pt; line-height: 1.3; margin: 0;
+      padding: 1.8mm 2.2mm; border-radius: 1mm; white-space: pre-wrap; word-break: break-word; }
+pre.cmd { background: #1c1f2e; color: #f3f6fb; break-inside: avoid; }
+pre.alt { background: #2b2f45; color: #dfe3f5; break-inside: avoid; }
+pre.out { background: #f4f5f9; color: #1d2330; border: 0.25mm solid #e1e3ee; }
+.leer { margin-top: 1.6mm; font-size: 9.1pt; line-height: 1.42; background: #f1fbf5; border-left: 1mm solid #2f9e6a;
+        padding: 1.5mm 2.5mm; break-inside: avoid; }
+.leer b.l { color: #1f7a50; }
+.leer ul { margin: 0.5mm 0 0 4mm; padding: 0; }
+.test { margin-top: 1.4mm; font-size: 8.6pt; background: #ecfdf5; border: 0.25mm solid #a7e3c4; border-radius: 1mm;
+        padding: 1.2mm 2.5mm; break-inside: avoid; }
+.test b { color: #13704a; }
+code { font-family: Consolas, monospace; font-size: 0.92em; background: #eef0f7; padding: 0 0.6mm; border-radius: 0.6mm; }
+</style></head><body><h1>Sesión 7 · Los comandos de la sesión y su salida</h1><div class='sub'>Embeddings y representación vectorial · Máster en AI Engineering (LIDR). Cada comando que se usa en el directo, en orden: <b>para qué sirve</b>, <b>cómo se lanza</b>, la <b>salida real</b> (ejecutada en local el 24/11/2026 sobre la rama <code>session_07_live</code>), <b>cómo leerla</b> y, cuando lo hay, el <b>test</b> que lo comprueba. La referencia «diapo N» indica dónde aparece en las diapositivas.</div><h2>0 · Preparar el entorno</h2><div class='intro'>Todos los comandos se lanzan desde la <b>raíz del repositorio</b>, en la rama <code>session_07_live</code>. El código Python corre dentro del contenedor <code>estimator</code> con <code>docker compose exec</code>. Los comandos sirven igual en bash y en PowerShell. Si en PowerShell salen avisos de librerías por la salida de errores, se pueden ocultar añadiendo <code>2&gt;$null</code> al final. <b>Coste:</b> casi todo lo de esta guía pide embeddings a <code>text-embedding-3-small</code>, a 0,02 $ por millón de tokens: el corpus entero cuesta unos 0,0001 $. Las estrategias que llaman a un LLM se señalan aparte.</div><div class='paso'><div class='cab'><div class='tit'>Levantar los servicios</div><span class='diapo'>diapo 2</span></div><div class='para'><b>Para qué sirve.</b> Arranca los cinco contenedores: el servicio de IA (<code>estimator</code>) con su Postgres y Redis, y la web de Rails con el suyo. Hace falta <code>OPENAI_API_KEY</code> en <code>estimator/.env</code>.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose up -d --build
+docker compose ps</pre><div class='lab'>Salida</div><pre class='out'>NAME                     STATUS
+s07-estimator            Up About an hour (healthy)
+s07-estimator-postgres   Up About an hour (healthy)
+s07-estimator-web        Up About an hour (healthy)
+s07-redis                Up About an hour (healthy)
+s07-web-postgres         Up About an hour (healthy)</pre><div class='leer'><b class='l'>Cómo leerla.</b> Los cinco en <b>healthy</b>. Los nombres de los contenedores pueden variar en cada equipo.</div></div><div class='paso'><div class='cab'><div class='tit'>GET /health</div></div><div class='para'><b>Para qué sirve.</b> Comprueba que la API responde.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s localhost:8000/health</pre><div class='lab'>En PowerShell</div><pre class='alt'>Invoke-RestMethod http://localhost:8000/health</pre><div class='lab'>Salida</div><pre class='out'>{&quot;status&quot;:&quot;healthy&quot;,&quot;version&quot;:&quot;0.1.0&quot;,&quot;environment&quot;:&quot;development&quot;}</pre></div><h2>1 · Los tests del Chunking Lab</h2><div class='intro'>El Chunking Lab de la web tiene <b>23 tests</b> en <code>estimator-web/test/</code>. Ninguno llama al servicio de embeddings: el cliente HTTP se sustituye por un falso. Las estrategias de chunking en Python no tienen tests todavía; se validan con los números de los pasos siguientes.</div><div class='paso'><div class='cab'><div class='tit'>bin/rails test</div><span class='diapo'>diapo 28</span></div><div class='para'><b>Para qué sirve.</b> Ejecuta los tests del catálogo de estrategias, del controlador, de la respuesta tipada, de la ejecución guardada y del cliente HTTP.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator-web bin/rails test -v test/models/rag test/controllers/rag \
+  test/services/estimator_ai/embeddings_client_test.rb</pre><div class='lab'>En PowerShell</div><pre class='alt'>docker compose exec estimator-web bin/rails test -v test/models/rag test/controllers/rag test/services/estimator_ai/embeddings_client_test.rb</pre><div class='lab'>Salida</div><pre class='out'>Running 23 tests in a single process (parallelization threshold is 50)
+RagStrategyTest#test_catalog_covers_the_eight_strategies  ✓
+RagStrategyTest#test_defaults_are_the_free_fast_trio  ✓
+RagStrategyTest#test_label_for_falls_back_to_the_raw_name  ✓
+RagStrategyTest#test_expensive_selected?_flags_the_paid_LLM_strategies  ✓
+RagChunkingComparisonsControllerTest#test_new_renders_the_lab_form_with_the_catalog  ✓
+RagChunkingComparisonsControllerTest#test_create_with_no_strategies_re-renders_with_a_flash  ✓
+RagChunkingComparisonsControllerTest#test_create_surfaces_a_400_unknown_strategy_from_the_service_as_a_flash  ✓
+RagChunkingComparisonsControllerTest#test_index_lists_persisted_runs  ✓
+RagChunkingComparisonsControllerTest#test_create_maps_a_missing-API-key_500_to_an_actionable_flash  ✓
+RagChunkingComparisonsControllerTest#test_create_rejects_unknown_strategy_names_before_calling_the_service  ✓
+RagChunkingComparisonsControllerTest#test_show_renders_stats,_cost_bars_and_the_playground_with_parent/child_badges  ✓
+RagChunkingComparisonsControllerTest#test_create_runs_the_comparison,_persists_it_and_redirects_to_show  ✓
+RagComparisonResponseTest#test_TopChunk_derives_level_and_parent_label_from_the_chunk_id  ✓
+RagComparisonResponseTest#test_cost_aggregates  ✓
+RagComparisonResponseTest#test_queries_and_results_by_strategy_for_group_the_playground_data  ✓
+RagComparisonResponseTest#test_strategy_names_follows_the_canonical_catalog_order  ✓
+RagComparisonResponseTest#test_from_hash_builds_the_nested_typed_tree  ✓
+EstimatorAi::EmbeddingsClientTest#test_compare_chunking_POSTs_the_full_request_body_and_returns_the_Hash_on_200  ✓
+EstimatorAi::EmbeddingsClientTest#test_raises_ArgumentError_on_empty_budgets_without_touching_the_network  ✓
+EstimatorAi::EmbeddingsClientTest#test_raises_ServerError_on_500_missing_API_key  ✓
+EstimatorAi::EmbeddingsClientTest#test_raises_InvalidRequest_on_400_unknown_strategy  ✓
+RagChunkingComparisonTest#test_requires_at_least_one_strategy_and_a_sane_top_k  ✓
+RagChunkingComparisonTest#test_persists_and_types_the_payload_back  ✓
+Finished in 3.056090s, 7.5260 runs/s, 26.8317 assertions/s.
+23 runs, 82 assertions, 0 failures, 0 errors, 0 skips</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><code>RagStrategyTest</code>: las 8 estrategias y cuáles se marcan como de pago.</li><li><code>RagChunkingComparisonsControllerTest</code>: el Lab de punta a punta, incluidos un 400 (estrategia desconocida) y un 500 (falta la clave) convertidos en avisos.</li><li><code>EstimatorAi::EmbeddingsClientTest</code>: el POST a <code>/embeddings/compare</code> y sus errores.</li></ul></div></div><h2>2 · Embeddings: el sanity check</h2><div class='paso'><div class='cab'><div class='tit'>scripts/compare.py</div><span class='diapo'>diapo 4</span></div><div class='para'><b>Para qué sirve.</b> Embebe dos textos y calcula su similitud coseno a mano, sin numpy. Tres parejas: cercanas, sin relación y genéricas.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/compare.py \
+  --text-a &quot;OAuth 2.0 authentication backend with JWT tokens for fintech mobile app&quot; \
+  --text-b &quot;Authorization service using JSON Web Tokens for a banking application&quot;
+docker compose exec estimator python scripts/compare.py --text-a &quot;OAuth 2.0 authentication backend with JWT tokens for fintech mobile app&quot; \
+  --text-b &quot;Database migration from MySQL to PostgreSQL with zero downtime&quot;
+docker compose exec estimator python scripts/compare.py --text-a &quot;Backend services&quot; --text-b &quot;API development&quot;</pre><div class='lab'>Salida</div><pre class='out'>Text A: OAuth 2.0 authentication backend with JWT tokens for fintech mobile app
+Text B: Authorization service using JSON Web Tokens for a banking application
+Cosine similarity: 0.5957
+
+Text A: OAuth 2.0 authentication backend with JWT tokens for fintech mobile app
+Text B: Database migration from MySQL to PostgreSQL with zero downtime
+Cosine similarity: 0.1920
+
+Text A: Backend services
+Text B: API development
+Cosine similarity: 0.5407</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>0,5957</b>: el mismo concepto con casi ninguna palabra en común. Se queda justo por debajo de 0,6: los umbrales dependen del modelo y de la redacción.</li><li><b>0,1920</b>: temas sin relación, bien separados.</li><li><b>0,5407</b>: dos frases cortas y vagas salen casi tan «cercanas» como la primera pareja. Por eso cada chunk del proyecto lleva una cabecera con proyecto, sector y tecnología.</li></ul></div></div><h2>3 · La ingesta: de presupuestos a vectores</h2><div class='paso'><div class='cab'><div class='tit'>POST /embeddings/ingest</div><span class='diapo'>diapo 11</span></div><div class='para'><b>Para qué sirve.</b> Trocea los presupuestos con la estrategia estructural (un componente = un chunk) y embebe cada chunk. Devuelve los chunks con su vector y las estadísticas. No se guarda nada: los vectores viven en memoria hasta la Sesión 8.</div><div class='lab'>Comando</div><pre class='cmd'>curl -s -X POST localhost:8000/embeddings/ingest -H &#x27;Content-Type: application/json&#x27; \
+  -d &quot;{\&quot;budgets\&quot;: $(cat estimator/data/budgets_sample.json)}&quot; \
+  | jq &#x27;{stats, primero: .chunks[0] | {chunk_id, token_count, text, metadata, dims: (.embedding | length)}}&#x27;</pre><div class='lab'>En PowerShell</div><pre class='alt'>$body = &#x27;{&quot;budgets&quot;: &#x27; + [IO.File]::ReadAllText(&quot;$PWD\estimator\data\budgets_sample.json&quot;) + &#x27;}&#x27;
+$r = Invoke-RestMethod -Method Post -Uri http://localhost:8000/embeddings/ingest `
+  -ContentType &#x27;application/json; charset=utf-8&#x27; -Body ([Text.Encoding]::UTF8.GetBytes($body))
+$r.stats
+$r.chunks | Select-Object -First 5 chunk_id, token_count, @{n=&#x27;dims&#x27;;e={$_.embedding.Count}}</pre><div class='lab'>Salida</div><pre class='out'>stats:
+{
+    &quot;total_budgets&quot;:  17,
+    &quot;total_chunks&quot;:  60,
+    &quot;total_tokens&quot;:  5970,
+    &quot;estimated_cost_usd&quot;:  0.00011939999999999999
+}
+
+primeros chunks:
+chunk_id                token_count dims
+--------                ----------- ----
+BUD-2024-001::AUTH-001          106 1536
+BUD-2024-001::PSD2-002           96 1536
+BUD-2024-001::TXN-003            93 1536
+BUD-2024-001::NOTIF-004          88 1536
+BUD-2024-002::SCORE-001          94 1536
+
+primer chunk (texto):
+[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]
+[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]
+
+Component: OAuth 2.0 authentication backend
+Description: Implementation of OAuth 2.0 flows (authorization code, refresh token) with JWT-based session management, multi-tenant token isolation, and rate limiting per client.
+Tech stack: ruby_on_rails, postgresql, redis
+Complexity: high
+Estimated hours: 120
+
+metadata:
+{&quot;budget_id&quot;:&quot;BUD-2024-001&quot;,&quot;component_id&quot;:&quot;AUTH-001&quot;,&quot;client_sector&quot;:&quot;finance&quot;,&quot;main_technology&quot;:&quot;ruby_on_rails&quot;,&quot;year&quot;:2024,&quot;complexity&quot;:&quot;high&quot;,&quot;estimated_hours&quot;:120}
+
+embedding[0:5]: -0.025726318359375, 0.015350341796875, 0.051971435546875, -0.027313232421875, -0.0113525390625</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>17 presupuestos → <b>60 chunks</b>, 5.970 tokens, unos <b>0,0001 $</b>.</li><li>Cada vector tiene <b>1536</b> números.</li><li>El texto empieza con la <b>cabecera de contexto</b> del presupuesto padre; lo que va en <code>metadata</code> no se embebe, sirve para filtrar (Sesión 8).</li></ul></div></div><h2>4 · Dimensiones: 1536 frente a 768</h2><div class='paso'><div class='cab'><div class='tit'>compare_chunkers.py --models</div><span class='diapo'>diapo 9-10</span></div><div class='para'><b>Para qué sirve.</b> El mismo modelo (<code>text-embedding-3-small</code>) pedido a 1536 y a 768 dimensiones (Matryoshka). Compara la latencia media y el coseno entre los dos primeros componentes.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/compare_chunkers.py --models small-1536,small-768</pre><div class='lab'>Salida</div><pre class='out'>Model comparison (latency per embedding + cosine of first two components):
+
+model       dims  avg_latency_ms  cosine(c0,c1)
+----------  ----  --------------  -------------
+small-1536  1536  406.1           0.9119       
+small-768   768   218.5           0.9116</pre><div class='leer'><b class='l'>Cómo leerla.</b> El coseno apenas cambia (0,9119 frente a 0,9116) y el vector ocupa la mitad. La latencia de una sola ejecución varía mucho entre llamadas: no la tomes como dato fijo. Lo que <b>no</b> se puede hacer es comparar un vector de 1536 con uno de 768.</div></div><h2>5 · Estrategias de chunking gratuitas</h2><div class='intro'><code>compare_chunkers.py</code> pasa el mismo corpus por varias estrategias. <b>Columnas:</b> número de chunks; mínimo, p50, p95 y máximo de tokens por chunk; <b>huérfanos</b> (&lt; 20 tokens, sin contexto) y <b>obesos</b> (&gt; 800 tokens, mezclan temas). Los nombres de estrategia se escriben con guion: <code>fixed-size</code>, <code>sentence-window</code>.</div><div class='paso'><div class='cab'><div class='tit'>structural frente a fixed-size</div><span class='diapo'>diapo 14, 18</span></div><div class='para'><b>Para qué sirve.</b> La estrategia de referencia (un componente = un chunk) contra ventanas fijas de 512 tokens.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/compare_chunkers.py --strategies structural,fixed-size --show-stats</pre><div class='lab'>Salida</div><pre class='out'>strategy    n_chunks  min  p50   p95    max   orphans  obese
+----------  --------  ---  ----  -----  ----  -------  -----
+structural  60        57   78.0  96.5   1391  0        1    
+fixed_size  63        57   79.0  108.7  512   0        0</pre><div class='leer'><b class='l'>Cómo leerla.</b> Casi iguales: el corpus ya está estructurado y casi todos los componentes caben en 512 tokens. El obeso de structural es MONO-001, una descripción de 1.391 tokens que fixed-size parte en tres.</div></div><div class='paso'><div class='cab'><div class='tit'>recursive</div><span class='diapo'>diapo 15</span></div><div class='para'><b>Para qué sirve.</b> Separadores jerárquicos (párrafo → línea → frase → palabra) con un máximo de 512 tokens.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/compare_chunkers.py --strategies recursive --show-stats</pre><div class='lab'>Salida</div><pre class='out'>strategy   n_chunks  min  p50    p95    max  orphans  obese
+---------  --------  ---  -----  -----  ---  -------  -----
+recursive  23        10   187.0  488.5  494  1        0</pre><div class='leer'><b class='l'>Cómo leerla.</b> 23 chunks: casi cada presupuesto entero cabe en uno, así que mezcla componentes distintos en el mismo vector. El huérfano es un trozo de 10 tokens con solo el nombre.</div></div><div class='paso'><div class='cab'><div class='tit'>sentence-window frente a structural, con una consulta</div><span class='diapo'>diapo 17, 19</span></div><div class='para'><b>Para qué sirve.</b> Una frase por chunk frente a un componente por chunk, y los 3 chunks más cercanos a una consulta.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/compare_chunkers.py --strategies sentence-window,structural --show-stats \
+  --queries &quot;OAuth authentication for fintech mobile app&quot; --show-top-k 3</pre><div class='lab'>Salida</div><pre class='out'>strategy         n_chunks  min  p50   p95   max   orphans  obese
+---------------  --------  ---  ----  ----  ----  -------  -----
+sentence_window  78        3    21.0  82.0  101   34       0    
+structural       60        57   78.0  96.5  1391  0        1    
+
+=== sentence_window ===
+
+Query: OAuth authentication for fintech mobile app
+  1. [0.4531] BUD-2024-001::PSD2-002::s0
+     Account information and payment initiation endpoints compliant with PSD2/Berlin Group, including strong customer authentication (SCA) and consent management.
+  2. [0.4407] BUD-2024-017::MVP-001::s0
+     Email and password login.
+  3. [0.4111] BUD-2024-006::VENDOR-001::s0
+     Vendor self-service onboarding with identity verification, payout account setup and a manual review queue.
+
+=== structural ===
+
+Query: OAuth authentication for fintech mobile app
+  1. [0.5684] BUD-2024-001::AUTH-001
+     [Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance] [Client sector: finance | Year: 2024 | Main tech: ruby_on_rails] Component: OAu…
+  2. [0.5311] BUD-2024-001::NOTIF-004
+     [Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance] [Client sector: finance | Year: 2024 | Main tech: ruby_on_rails] Component: Pus…
+  3. [0.5219] BUD-2024-001::PSD2-002
+     [Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance] [Client sector: finance | Year: 2024 | Main tech: ruby_on_rails] Component: PSD…</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li>sentence-window: 78 chunks y <b>34 huérfanos</b>.</li><li>En su top-3 se cuela <b>«Email and password login.»</b> (0,4407), una frase suelta de otro proyecto que no tiene nada de OAuth ni de fintech.</li><li>structural devuelve los tres componentes del proyecto de banca, con scores más altos gracias a la cabecera de contexto.</li></ul></div></div><div class='paso'><div class='cab'><div class='tit'>Tabla resumen con las seis consultas de prueba</div><span class='diapo'>diapo 27</span></div><div class='para'><b>Para qué sirve.</b> Las cinco estrategias gratuitas con las consultas de <code>data/test_queries.json</code>: el coseno medio del primer resultado.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/compare_chunkers.py --strategies structural,fixed-size,recursive,sentence-window,hierarchical \
+  --queries all --output-table</pre><div class='lab'>Salida</div><pre class='out'>strategy         n_chunks  p50_tokens  top1_cosine_avg
+---------------  --------  ----------  ---------------
+structural       60        78.0        0.4734         
+fixed_size       63        79.0        0.4760         
+recursive        23        187.0       0.3991         
+sentence_window  78        21.0        0.5365         
+hierarchical     77        81.0        0.4734</pre><div class='leer'><b class='l'>Cómo leerla.</b> sentence-window saca el coseno medio más alto (0,5365) porque una frase corta se parece mucho a una consulta corta, aunque le falte el contexto. Un score alto no garantiza un buen chunk. recursive es la más baja: sus chunks mezclan demasiado.</div></div><h2>6 · Estrategias de pago y el Chunking Lab</h2><div class='paso'><div class='cab'><div class='tit'>Las tres estrategias que llaman a un modelo</div><span class='diapo'>diapo 20-22</span></div><div class='para'><b>Para qué sirve.</b> <code>semantic</code> embebe durante la ingesta, <code>propositional</code> usa <code>gpt-4o-mini</code> y <code>contextual_retrieval</code> usa Claude (necesita <code>ANTHROPIC_API_KEY</code>). Con <code>--strategies all</code>, si falta la clave de Anthropic la ejecución entera falla: conviene listar las estrategias a mano.</div><div class='lab'>Comando</div><pre class='cmd'>docker compose exec estimator python scripts/compare_chunkers.py --strategies semantic,propositional --show-stats --show-cost</pre><div class='lab'>Salida</div><pre class='out'>strategy              n_chunks  p50     orphans  obese  cost_usd  seconds
+semantic              34        112,5   0        1      0,0001    5
+propositional         778       11      765      0      0,0076    173
+contextual_retrieval  60        132,5   0        1      0,14      203
+(datos del informe estimator/app/generation/rag/COMPARISON_REPORT.md)</pre><div class='leer'><b class='l'>Cómo leerla.</b> <ul><li><b>propositional</b>: 13 veces más chunks, casi todos huérfanos, y 3 minutos de ingesta; a cambio, scores muy altos en consultas concretas.</li><li><b>contextual_retrieval</b>: la más cara (0,14 $ con este corpus pequeño) y la más lenta; mejora la similitud del chunk correcto sin cambiar el número de chunks.</li><li><b>semantic</b>: barata, pero ya no es gratis ni instantánea.</li></ul></div><div class='test'><b>Lo comprueba:</b> <code>docker compose exec estimator-web bin/rails test test/models/rag/strategy_test.rb</code></div></div><div class='paso'><div class='cab'><div class='tit'>El Chunking Lab en la web</div><span class='diapo'>diapo 13</span></div><div class='para'><b>Para qué sirve.</b> La misma comparativa con formulario: se eligen estrategias (las de pago van marcadas), consultas y top-k. Cada ejecución <b>se guarda</b>, así que las estrategias caras se pagan una sola vez.</div><div class='lab'>Comando</div><pre class='cmd'>http://localhost:3000/rag/chunking_comparisons/new      # nueva comparativa
+http://localhost:3000/rag/chunking_comparisons          # histórico</pre><div class='leer'><b class='l'>Cómo leerla.</b> En cada ejecución: la tabla de estadísticas, las barras de coste y el playground con los chunks recuperados por consulta. Las llamadas largas tienen un timeout de 600 s.</div><div class='test'><b>Lo comprueba:</b> <code>docker compose exec estimator-web bin/rails test test/controllers/rag/chunking_comparisons_controller_test.rb</code></div></div></body></html>

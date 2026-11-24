@@ -1,0 +1,31 @@
+﻿stats:
+{
+    "total_budgets":  17,
+    "total_chunks":  60,
+    "total_tokens":  5970,
+    "estimated_cost_usd":  0.00011939999999999999
+}
+
+primeros chunks:
+chunk_id                token_count dims
+--------                ----------- ----
+BUD-2024-001::AUTH-001          106 1536
+BUD-2024-001::PSD2-002           96 1536
+BUD-2024-001::TXN-003            93 1536
+BUD-2024-001::NOTIF-004          88 1536
+BUD-2024-002::SCORE-001          94 1536
+
+primer chunk (texto):
+[Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance]
+[Client sector: finance | Year: 2024 | Main tech: ruby_on_rails]
+
+Component: OAuth 2.0 authentication backend
+Description: Implementation of OAuth 2.0 flows (authorization code, refresh token) with JWT-based session management, multi-tenant token isolation, and rate limiting per client.
+Tech stack: ruby_on_rails, postgresql, redis
+Complexity: high
+Estimated hours: 120
+
+metadata:
+{"budget_id":"BUD-2024-001","component_id":"AUTH-001","client_sector":"finance","main_technology":"ruby_on_rails","year":2024,"complexity":"high","estimated_hours":120}
+
+embedding[0:5]: -0,025726318359375, 0,015350341796875, 0,051971435546875, -0,027313232421875, -0,0113525390625

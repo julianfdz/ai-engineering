@@ -10,6 +10,24 @@
 - **Local:** worktree `ai-engineering-fork-julian\ai-engineering-s07`, proyecto docker
   `aieng-s07live` (ver apartado 5).
 
+## 0. Edición 2026-10 (jueves 26/11/2026, TA Sisley Jiménez)
+
+Con este grupo Julián dio la S5 (12/11) y la S6 (19/11), así que la S7 enlaza directamente con su corpus limpio.
+Preparado el 24/11:
+
+- **Deck nuevo** `Sesion07-Julian-Fernandez.pdf` (31 diapos), generado con `deck/build_deck_2610.py`: las 12 originales
+  de LIDR sin tocar y las 18 nuestras de octubre, ahora con franja «En el código» (rutas y líneas verificadas con las
+  cabeceras puestas), franja «En los tests» en el Lab y en las estrategias de pago, el TA correcto y una diapo nueva
+  con los 23 tests de Rails. El de la 2609 está en `anterior-2609/` (su generador sigue siendo `deck/build_deck.py`,
+  que también es el motor común de los decks).
+- **Cabeceras «Julián · Sesión 7»** en 23 ficheros (Python, Rails y tests), commit `51661ad` en
+  `session_07_live_local`.
+- **PDF para alumnos** `S07-comandos-y-salidas.pdf` (`comandos/build_comandos.py`), con salidas reales del 24/11 en
+  `comandos/salidas/` (≈ 0,0003 $ en embeddings). Mismos números que el 21/10, salvo la latencia de dimensiones
+  (406 ms frente a 218 ms).
+- **Tests:** las estrategias de chunking en Python no tienen tests; el Chunking Lab de Rails sí (23, en verde).
+- **Histórico:** las 6 comparativas guardadas el 21/10 siguen en el volumen del stack (`aieng-s07live`).
+
 ---
 
 ## 1. De qué va

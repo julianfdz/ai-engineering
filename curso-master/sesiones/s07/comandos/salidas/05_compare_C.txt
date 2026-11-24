@@ -1,0 +1,3 @@
+﻿Text A: Backend services
+Text B: API development
+Cosine similarity: 0.5407

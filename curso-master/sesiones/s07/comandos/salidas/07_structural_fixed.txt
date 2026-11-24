@@ -1,0 +1,6 @@
+﻿2026-11-24 19:52:40 [info     ] chunking_done                  extra_api_calls=0 extra_cost_usd=0.0 latency_ms=5.3 n_chunks=60 n_input_documents=17 strategy=structural
+2026-11-24 19:52:40 [info     ] chunking_done                  extra_api_calls=0 extra_cost_usd=0.0 latency_ms=2.5 n_chunks=63 n_input_documents=17 strategy=fixed_size
+strategy    n_chunks  min  p50   p95    max   orphans  obese
+----------  --------  ---  ----  -----  ----  -------  -----
+structural  60        57   78.0  96.5   1391  0        1    
+fixed_size  63        57   79.0  108.7  512   0        0    

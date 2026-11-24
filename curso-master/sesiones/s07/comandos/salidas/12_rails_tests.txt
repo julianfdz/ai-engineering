@@ -1,0 +1,31 @@
+﻿Running 23 tests in a single process (parallelization threshold is 50)
+Run options: -v --seed 24134
+
+# Running:
+
+RagStrategyTest#test_catalog_covers_the_eight_strategies = 0.03 s = .
+RagStrategyTest#test_defaults_are_the_free_fast_trio = 0.00 s = .
+RagStrategyTest#test_label_for_falls_back_to_the_raw_name = 0.00 s = .
+RagStrategyTest#test_expensive_selected?_flags_the_paid_LLM_strategies = 0.00 s = .
+RagChunkingComparisonsControllerTest#test_new_renders_the_lab_form_with_the_catalog = 2.21 s = .
+RagChunkingComparisonsControllerTest#test_create_with_no_strategies_re-renders_with_a_flash = 0.10 s = .
+RagChunkingComparisonsControllerTest#test_create_surfaces_a_400_unknown_strategy_from_the_service_as_a_flash = 0.04 s = .
+RagChunkingComparisonsControllerTest#test_index_lists_persisted_runs = 0.35 s = .
+RagChunkingComparisonsControllerTest#test_create_maps_a_missing-API-key_500_to_an_actionable_flash = 0.01 s = .
+RagChunkingComparisonsControllerTest#test_create_rejects_unknown_strategy_names_before_calling_the_service = 0.01 s = .
+RagChunkingComparisonsControllerTest#test_show_renders_stats,_cost_bars_and_the_playground_with_parent/child_badges = 0.19 s = .
+RagChunkingComparisonsControllerTest#test_create_runs_the_comparison,_persists_it_and_redirects_to_show = 0.02 s = .
+RagComparisonResponseTest#test_TopChunk_derives_level_and_parent_label_from_the_chunk_id = 0.00 s = .
+RagComparisonResponseTest#test_cost_aggregates = 0.00 s = .
+RagComparisonResponseTest#test_queries_and_results_by_strategy_for_group_the_playground_data = 0.00 s = .
+RagComparisonResponseTest#test_strategy_names_follows_the_canonical_catalog_order = 0.00 s = .
+RagComparisonResponseTest#test_from_hash_builds_the_nested_typed_tree = 0.00 s = .
+EstimatorAi::EmbeddingsClientTest#test_compare_chunking_POSTs_the_full_request_body_and_returns_the_Hash_on_200 = 0.01 s = .
+EstimatorAi::EmbeddingsClientTest#test_raises_ArgumentError_on_empty_budgets_without_touching_the_network = 0.00 s = .
+EstimatorAi::EmbeddingsClientTest#test_raises_ServerError_on_500_missing_API_key = 0.01 s = .
+EstimatorAi::EmbeddingsClientTest#test_raises_InvalidRequest_on_400_unknown_strategy = 0.00 s = .
+RagChunkingComparisonTest#test_requires_at_least_one_strategy_and_a_sane_top_k = 0.00 s = .
+RagChunkingComparisonTest#test_persists_and_types_the_payload_back = 0.01 s = .
+
+Finished in 3.056090s, 7.5260 runs/s, 26.8317 assertions/s.
+23 runs, 82 assertions, 0 failures, 0 errors, 0 skips

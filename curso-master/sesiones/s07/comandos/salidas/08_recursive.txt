@@ -1,0 +1,4 @@
+﻿2026-11-24 19:52:52 [info     ] chunking_done                  extra_api_calls=0 extra_cost_usd=0.0 latency_ms=6.2 n_chunks=23 n_input_documents=17 strategy=recursive
+strategy   n_chunks  min  p50    p95    max  orphans  obese
+---------  --------  ---  -----  -----  ---  -------  -----
+recursive  23        10   187.0  488.5  494  1        0    

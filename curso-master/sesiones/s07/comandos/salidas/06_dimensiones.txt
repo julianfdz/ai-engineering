@@ -1,0 +1,6 @@
+﻿Model comparison (latency per embedding + cosine of first two components):
+
+model       dims  avg_latency_ms  cosine(c0,c1)
+----------  ----  --------------  -------------
+small-1536  1536  406.1           0.9119       
+small-768   768   218.5           0.9116       

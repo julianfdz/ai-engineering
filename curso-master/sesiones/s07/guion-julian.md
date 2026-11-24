@@ -1,145 +1,163 @@
-# Guion Julián · Sesión 7 LIDR
+# Sesión 7 · Guion de Julián — Embeddings y representación vectorial
 
-**Antes de empezar** (PowerShell, desde el worktree de la sesión):
+Jueves 26/11/2026, 17:30–19:30 · edición **2026-10** · TA **Sisley Jiménez**. Con este grupo diste la S5 (12/11) y
+la S6 (19/11): vienen de dejar el corpus limpio, catalogado y pseudonimizado. Deck: `Sesion07-Julian-Fernandez.pdf`
+(31 diapos: las 12 originales de LIDR sin tocar + 19 nuestras). Alumnos: `S07-comandos-y-salidas.pdf`. El de la
+edición 2609 está en `anterior-2609/`.
+
+Salidas reales del 24/11 en `comandos/salidas/` (coinciden con las del 21/10). **Abre los PDF en Chrome**, no en Edge.
+
+## Antes de empezar (17:15)
 
 ```powershell
 cd "C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering-s07"
+$env:Path += ";C:\Program Files\Docker\Docker\resources\bin"
+docker compose -p aieng-s07live up -d
+docker compose -p aieng-s07live ps
+curl.exe -s http://localhost:8000/health
 ```
 
----
-
-**1 · Estructura del repo**
-
-Enseñar la estructura del repo y el tema de las ramas. Recorrer las carpetas: `foundation/`, `domain/`, `generation/` (con `cag/`, `rag/`, `agentic/` y `conversation/`), `ingestion/` y `api/`. Lo de hoy vive entero en `app/generation/rag/`.
+Abrir en Chrome: el deck, el PDF de comandos, `http://localhost:3000/rag/chunking_comparisons` (histórico) y
+`http://localhost:3000/rag/chunking_comparisons/new`. VS Code con los ficheros en orden (al final).
 
 ---
 
-**2 · El chunking del ejercicio previo y los esquemas**
+## Diapo 1 · Portada (original) — Diapo 2 · Hoy (3')
 
-En el ejercicio previo se hace un chunking estructural y da buenos resultados porque el corpus es un JSON bien organizado. Con un texto más libre, el resultado sería más pobre.
+Puente con la S6, que diste tú: «el jueves pasado dejamos el corpus limpio, validado y sin PII; hoy lo convertimos en
+vectores». pgvector y la búsqueda de verdad son la S8. Los dos presupuestos trampa: MONO-001 (1.391 tokens) y el MVP
+de una línea.
 
-Enseñar `app/generation/rag/schemas.py`:
+## Diapo 3 · Tres arquitecturas (original) (4')
 
-- Los metadatos son muy importantes para mejorar el retrieval.
-- La clase `Chunk` y `EmbeddedChunk`, que la extiende: básicamente es el chunk + el vector + los metadatos.
+Estructura del repo por capas: `foundation/`, `domain/`, `generation/` (`cag/`, `rag/`, `agentic/`,
+`conversation/`), `ingestion/`, `api/`. Lo de hoy vive entero en `app/generation/rag/`.
 
-Es muy importante la calidad de los vectores y que haya poco ruido. Si los vectores están muy juntos, tienes un problema: si muchos salen con un score > 0,90, ¿con cuál te quedas?
-
-Todo es heurístico.
-
-Con los metadatos se pueden hacer filtros duros sobre los vectores o técnicas híbridas de recuperación.
-
----
-
-**3 · Ingesta del corpus**
-
-Con esto ya podemos hacer la ingesta de nuestro corpus. Lanzarla desde la terminal:
+## Diapo 4 · El sanity check (5')
 
 ```powershell
-$body = '{"budgets": ' + (Get-Content estimator\data\budgets_sample.json -Raw -Encoding UTF8) + '}'
+docker compose -p aieng-s07live exec estimator python scripts/compare.py --text-a "Backend services" --text-b "API development"
 ```
 
+Sale 0,5407. Las tres parejas: 0,5957 / 0,1920 / 0,5407. La C es la que justifica la cabecera de contexto.
+VS Code: `estimator/scripts/compare.py:43`.
+
+## Diapo 5 · Cinco patrones de error (original) (3')
+
+Pregunta gancho: «vuestro chunker no truncó esa descripción de 1.391 tokens… ¿está bien o está mal?».
+
+## Diapos 6-8 · Chunk, token y vector · Similitud · Modelos (10')
+
+VS Code: `app/generation/rag/schemas.py:65` (`Chunk`) y `:78` (`EmbeddedChunk`: chunk + vector + metadatos);
+`analysis/similarity.py:14`; `embedding/embedder.py:36` (0,02 $/M). Los metadatos son los que permitirán filtros
+duros (S8) y búsqueda híbrida (S10). Si muchos chunks salen por encima de 0,90, ¿con cuál te quedas? Todo es
+heurístico.
+
+Ingesta en directo (≈ 0,0001 $):
+
 ```powershell
+$body = '{"budgets": ' + [IO.File]::ReadAllText("$PWD\estimator\data\budgets_sample.json") + '}'
 $r = Invoke-RestMethod -Method Post -Uri http://localhost:8000/embeddings/ingest -ContentType "application/json; charset=utf-8" -Body ([Text.Encoding]::UTF8.GetBytes($body))
-```
-
-```powershell
 $r.stats
-```
-
-```powershell
 $r.chunks | Select-Object -First 5 chunk_id, token_count, @{n='dims';e={$_.embedding.Count}}
 ```
 
-Sale: 17 presupuestos, 60 chunks, 5970 tokens y unos 0,0001 $. Cada chunk con 1536 dimensiones.
+17 presupuestos → 60 chunks → 5.970 tokens → 0,00012 $ · 1536 dimensiones. No indexamos transcripciones: indexamos
+presupuestos ya preparados. Presupuestos malos → estimaciones malas.
 
-Hay que pensar en la lógica de tu corpus para elegir la mejor estrategia, los metadatos, etc.
-
-No indexamos las transcripciones: indexamos el output en JSON de un preprocesado de esas transcripciones. Así mejora mucho.
-
-También es clave entender el uso que se le va a dar a esta pool de conocimiento para valorarlo.
-
----
-
-**4 · La lógica del RAG y del proyecto**
-
-Nuestro objetivo es tener una app agéntica que estime presupuestos. Por eso necesito ingestar un corpus de presupuestos verificados y preparados.
-
-Si tenemos presupuestos malos, nos va a dar presupuestos malos.
-
----
-
-**5 · Dimensiones: no obsesionarse**
-
-No hay que obsesionarse con las dimensiones, porque tampoco aportan mucho.
-
-Correr en la terminal la diferencia de latencia con dos tamaños de vector:
+## Diapo 9 · Matryoshka (original) — Diapo 10 · Dimensiones (5')
 
 ```powershell
 docker compose -p aieng-s07live exec estimator python scripts/compare_chunkers.py --models small-1536,small-768 2>$null
 ```
 
-Explicar qué hace la prueba: el mismo modelo (`text-embedding-3-small`) a 1536 y a 768 dimensiones, sobre los mismos chunks, comparando latencia y coseno.
+24/11: 406 ms frente a 218 ms, coseno 0,9119 frente a 0,9116. No obsesionarse con las dimensiones. VS Code:
+`scripts/compare_chunkers.py:166` (`run_models`). Lo que nunca: comparar 1536 con 768 (diapo 10, el 0,689).
 
-Los dos dan buen resultado (coseno 0,9118 frente a 0,9117), pero la latencia del de 768 es mejor, así que para este caso es más interesante. Más dimensiones aquí no me están ayudando a afinar nada.
+## Diapo 11 · El chunk de nuestro proyecto (5')
 
-Es un ejemplo: hay que ver cada caso.
+VS Code: `chunking/structural.py:33` (`render_component_text`, la cabecera) y `:72` (`component_metadata`). El texto
+se embebe; los metadatos van al lado para filtrar.
 
----
+## Diapo 12 · Cuatro familias (original) — Diapo 13 · Cómo leer el Chunking Lab (5')
 
-**6 · Las familias de chunking**
+Abrir el Lab (`/rag/chunking_comparisons/new`): structural frente a fixed-size, comparar, explicar p50/p95,
+huérfanos y obesos. VS Code: `chunking/base.py:56` (`Chunker`, la interfaz común) y `analysis/comparison.py:37-38`
+(umbrales 20 y 800).
 
-Explicar las familias de chunking. La típica es la mecánica: defines un tamaño y cortas.
-
-Enseñar en la web el Chunking Lab: structural frente a fixed-size, darle a comparar y ver los resultados. Explicar qué son p50 y p95.
-
-<http://localhost:3000/rag/chunking_comparisons/new>
-
-Todo esto está en `app/generation/rag/chunking/strategies/`: ahí se pueden explicar las distintas técnicas implementadas, un `.py` por estrategia.
-
-El fixed-size es un ojete.
+## Diapos 14-19 · Las mecánicas (15')
 
 ```powershell
 docker compose -p aieng-s07live exec estimator python scripts/compare_chunkers.py --strategies structural,fixed-size --show-stats 2>$null
-```
-
-Enseñar el recursive: cómo se hace y por qué da buenos resultados. Usa separadores naturales (doble salto, párrafo, punto). También tiene un máximo de tokens, pero se puede mejorar. Nos basamos en la agrupación mental que ya tenía el humano que escribió el documento.
-
-```powershell
 docker compose -p aieng-s07live exec estimator python scripts/compare_chunkers.py --strategies recursive --show-stats 2>$null
-```
-
-Explicar qué son los obesos y los huérfanos.
-
-Comparar structural frente a sentence-window: sentence-window mete muchos huérfanos. Mirar el min y el max en esta vista, con el número de tokens de los chunks.
-
-```powershell
 docker compose -p aieng-s07live exec estimator python scripts/compare_chunkers.py --strategies sentence-window,structural --show-stats --queries "OAuth authentication for fintech mobile app" --show-top-k 3 2>$null
 ```
 
-Todo depende de tu corpus: hay que ensayarlo y hacer pruebas.
+- fixed-size (`strategies/fixed_size.py:26`): línea base; solo parte MONO-001.
+- recursive (`recursive.py:30`, los separadores): 23 chunks, mezcla componentes. Se apoya en cómo agrupó el texto
+  quien lo escribió.
+- sentence-window (`sentence_window.py:27`): 34 huérfanos; «Email and password login.» se cuela en el top-3 de
+  OAuth.
+- structural: el top-3 son los tres componentes del proyecto de banca.
+
+Histórico guardado (sin esperar): **#2** las cuatro mecánicas (lo del «Email and password login.»).
+
+## Diapos 20-23 · Semantic, propositional, contextual (12')
+
+No se relanzan: histórico **#4** (semantic) y **#5** (propositional: la proposición clavada a 0,84 y 752 chunks).
+Contextual Retrieval necesita clave de Anthropic, que no hay: números del informe (0,14 $, 203 s).
+VS Code: `strategies/contextual_retrieval.py:55`. Anthropic: hasta −67 % de fallos de retrieval con BM25 y reranking.
+
+## Diapos 24-25 · Hierarchical (5')
+
+Histórico **#3**: un padre entero entra en el top-3 de GDPR. VS Code: `strategies/hierarchical.py:28`.
+
+## Diapo 26 · Late chunking (2') — Diapo 27 · Cuadro de mando (5')
+
+Tabla completa:
+
+```powershell
+docker compose -p aieng-s07live exec estimator python scripts/compare_chunkers.py --strategies structural,fixed-size,recursive,sentence-window,hierarchical --queries all --output-table 2>$null
+```
+
+Pregunta del día: ¿con qué estrategia salís hoy a producción y qué mediríais antes de cambiarla?
+
+## Diapo 28 · Los tests del Chunking Lab (3')
+
+```powershell
+docker compose -p aieng-s07live exec estimator-web bin/rails test -v test/models/rag test/controllers/rag test/services/estimator_ai/embeddings_client_test.rb
+```
+
+23 tests en 1,5 s, sin llamar a OpenAI. Las estrategias Python no tienen tests: se miden con números.
+
+## Diapo 29 · Cierre y S8 (original) — 30 ROTI — 31 Gracias
 
 ---
 
-**7 · Lanzar comparativas en el Chunking Lab**
+## Ficheros en VS Code (orden de clase)
 
-Lanzar comparativas en la web del Chunking Lab. El histórico está en:
+```powershell
+cd "C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering-s07"
+code . -g estimator/scripts/compare.py:43 -g estimator/app/generation/rag/schemas.py:65 -g estimator/app/api/embeddings.py:34 -g estimator/app/generation/rag/embedding/embedder.py:36 -g estimator/app/generation/rag/analysis/similarity.py:14 -g estimator/scripts/compare_chunkers.py:166 -g estimator/app/generation/rag/chunking/structural.py:33 -g estimator/app/generation/rag/chunking/base.py:56 -g estimator/app/generation/rag/analysis/comparison.py:37 -g estimator/app/generation/rag/chunking/strategies/fixed_size.py:26 -g estimator/app/generation/rag/chunking/strategies/recursive.py:30 -g estimator/app/generation/rag/chunking/strategies/sentence_window.py:27 -g estimator/app/generation/rag/chunking/strategies/semantic.py:32 -g estimator/app/generation/rag/chunking/strategies/propositional.py:51 -g estimator/app/generation/rag/chunking/strategies/contextual_retrieval.py:55 -g estimator/app/generation/rag/chunking/strategies/hierarchical.py:28 -g estimator-web/app/controllers/rag/chunking_comparisons_controller.rb:31
+```
 
-<http://localhost:3000/rag/chunking_comparisons>
+Si `code` no abre ventana: lanzar antes `& "$env:LOCALAPPDATA\Programs\Microsoft VS Code\Code.exe" .` y repetir con
+`code -r`.
 
-Ya guardadas, para abrir sin esperar:
+## Si algo falla
 
-- **#2** · las cuatro mecánicas: "Email and password login." cuela en el top-3 de OAuth.
-- **#3** · structural + hierarchical: un padre entero entra en el top-3 de GDPR.
-- **#4** · structural + semantic: el coste de ingesta de semantic.
-- **#5** · structural + propositional: la proposición clavada (0,84) y 752 chunks.
+| Síntoma | Qué hacer |
+|---|---|
+| Docker no arranca («…sock.stale: El sistema no tiene acceso al archivo») | Matar los procesos de Docker y renombrar a la vez `%LOCALAPPDATA%\Docker\run` y `%LOCALAPPDATA%\docker-secrets-engine`. Nunca «Reset to factory defaults». |
+| Avisos de botocore/LiteLLM en la terminal | Añadir `2>$null` al comando. |
+| `--strategies all` aborta | Falta la clave de Anthropic (contextual_retrieval): listar las estrategias a mano. |
+| sentence-window falla por NLTK | Los datos `punkt` vienen en la imagen local; si se reconstruye, revisar el Dockerfile de la rama local. |
+| El Lab tarda | Propositional tarda unos 3 minutos: enseñar el histórico (#2 a #5). |
+| La cuadrícula blanca en el PDF | Es Edge: abrir en Chrome. |
 
----
+## Después de clase
 
-**8 · Contextual Retrieval**
-
-Decir que Contextual Retrieval es de las técnicas que mejor funcionan según Anthropic: hasta un −67 % de fallos de retrieval combinado con BM25 y reranking.
-
-Enseñar `app/generation/rag/chunking/strategies/contextual_retrieval.py`.
-
-Para cada chunk, un LLM genera un contexto que se le pega delante: es un "superchunk" que lleva información de lo que lo rodea en el documento.
+```powershell
+cd "C:\Users\jferc\Documents\Bussines\BUHO\repo auxiliar\LIDR\ai-engineering-fork-julian\ai-engineering-s07"
+docker compose -p aieng-s07live down
+```

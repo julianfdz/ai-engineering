@@ -1,0 +1,28 @@
+﻿2026-11-24 19:53:04 [info     ] chunking_done                  extra_api_calls=0 extra_cost_usd=0.0 latency_ms=37.0 n_chunks=78 n_input_documents=17 strategy=sentence_window
+2026-11-24 19:53:04 [info     ] chunking_done                  extra_api_calls=0 extra_cost_usd=0.0 latency_ms=2.3 n_chunks=60 n_input_documents=17 strategy=structural
+2026-11-24 19:53:05 [info     ] embedding_batch_done           chunks=78 latency_ms=372.3 model=text-embedding-3-small tokens=2407
+2026-11-24 19:53:06 [info     ] embedding_batch_done           chunks=60 latency_ms=371.3 model=text-embedding-3-small tokens=5970
+strategy         n_chunks  min  p50   p95   max   orphans  obese
+---------------  --------  ---  ----  ----  ----  -------  -----
+sentence_window  78        3    21.0  82.0  101   34       0    
+structural       60        57   78.0  96.5  1391  0        1    
+
+=== sentence_window ===
+
+Query: OAuth authentication for fintech mobile app
+  1. [0.4531] BUD-2024-001::PSD2-002::s0
+     Account information and payment initiation endpoints compliant with PSD2/Berlin Group, including strong customer authentication (SCA) and consent management.
+  2. [0.4407] BUD-2024-017::MVP-001::s0
+     Email and password login.
+  3. [0.4111] BUD-2024-006::VENDOR-001::s0
+     Vendor self-service onboarding with identity verification, payout account setup and a manual review queue.
+
+=== structural ===
+
+Query: OAuth authentication for fintech mobile app
+  1. [0.5684] BUD-2024-001::AUTH-001
+     [Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance] [Client sector: finance | Year: 2024 | Main tech: ruby_on_rails] Component: OAu…
+  2. [0.5311] BUD-2024-001::NOTIF-004
+     [Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance] [Client sector: finance | Year: 2024 | Main tech: ruby_on_rails] Component: Pus…
+  3. [0.5219] BUD-2024-001::PSD2-002
+     [Project: Mobile banking API with OAuth 2.0 authentication and PSD2 compliance] [Client sector: finance | Year: 2024 | Main tech: ruby_on_rails] Component: PSD…
