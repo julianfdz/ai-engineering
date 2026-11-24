@@ -1,3 +1,11 @@
+# ── Julián · Sesión 7 · El contrato del pipeline de embeddings ────────────────────
+#
+#   Budget y BudgetComponent: el corpus limpio que dejó la Sesión 6.
+#   Chunk: texto + metadatos. EmbeddedChunk lo extiende con el vector.
+#   Los metadatos (sector, tecnología, año, complejidad) son los que luego permiten filtrar.
+#   IngestRequest / IngestResponse: el contrato de POST /embeddings/ingest.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Pydantic models for the embedding pipeline.
 
 Input side mirrors the normalized historical-budget JSON (a budget with a list

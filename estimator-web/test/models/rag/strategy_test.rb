@@ -1,3 +1,8 @@
+# ── Julián · Sesión 7 · Tests · el catálogo de estrategias ────────────────────────
+#
+#   Las 8 estrategias, las tres gratuitas por defecto y cuáles se marcan como de pago.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 require "test_helper"
 
 class RagStrategyTest < ActiveSupport::TestCase

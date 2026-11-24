@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Estrategia estructural · hierarchical ─────────────────────
+#
+#   Chunks padre (el presupuesto) e hijo (cada componente).
+#   Se busca por el hijo y se devuelve el padre: más contexto para generar.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Hierarchical (parent-child) chunker.
 
 Indexes two levels at once. Children = components (small, specific → good

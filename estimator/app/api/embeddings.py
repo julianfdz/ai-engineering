@@ -1,3 +1,10 @@
+# ── Julián · Sesión 7 · Los dos endpoints de hoy ──────────────────────────────────
+#
+#   POST /embeddings/ingest: presupuestos → chunks estructurales → vectores + estadísticas.
+#   POST /embeddings/compare: el mismo corpus con varias estrategias y consultas (lo usa el Chunking Lab).
+#   Nada se persiste todavía: los vectores viven en memoria hasta la Sesión 8 (pgvector).
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """HTTP layer for the embedding pipeline.
 
 Thin router: it orchestrates chunker -> embedder -> response assembly and maps

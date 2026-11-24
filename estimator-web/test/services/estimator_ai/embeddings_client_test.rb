@@ -1,3 +1,8 @@
+# ── Julián · Sesión 7 · Tests · el cliente HTTP ───────────────────────────────────
+#
+#   POST con el body completo; 400 y 500 se traducen a errores; sin presupuestos no toca la red.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 require "test_helper"
 require "webmock/minitest"
 

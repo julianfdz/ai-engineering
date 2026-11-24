@@ -1,3 +1,10 @@
+# ── Julián · Sesión 7 · El Chunking Lab en la web ─────────────────────────────────
+#
+#   new: formulario con las 8 estrategias (marca las de pago), consultas y top-k.
+#   create: llama a POST /embeddings/compare con 600 s de timeout y guarda la ejecución.
+#   index / show: el histórico, para no volver a pagar las estrategias caras.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 # Chunking Lab (Session 7): compares chunking strategies over the bundled
 # historical-budget corpus via POST /embeddings/compare and persists each run
 # so expensive ones can be revisited without re-paying.

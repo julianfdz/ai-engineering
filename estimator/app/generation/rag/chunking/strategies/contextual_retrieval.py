@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Estrategia contextual · Contextual Retrieval (de pago) ────
+#
+#   Técnica de Anthropic: un LLM escribe el contexto de cada chunk dentro del documento y se lo antepone.
+#   La más cara (0,14 $ con el corpus de ejemplo). Necesita ANTHROPIC_API_KEY.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Contextual Retrieval chunker (Anthropic's technique).
 
 Each structural chunk is enriched with a short LLM-generated paragraph that

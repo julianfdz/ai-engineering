@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Estrategia mecánica · recursive ───────────────────────────
+#
+#   Separadores jerárquicos (párrafo → línea → frase → palabra) con un máximo de tokens.
+#   Respeta la agrupación que ya hizo quien escribió el documento.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Recursive character chunker — the reasonable default.
 
 Splits each serialized budget on a hierarchy of natural separators

@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Estrategia semántica · propositional (de pago) ────────────
+#
+#   Un LLM (gpt-4o-mini) reescribe el texto en proposiciones atómicas.
+#   778 chunks minúsculos y unos 3 minutos; a cambio, similitudes muy altas en consultas concretas.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Propositional chunker.
 
 An LLM decomposes each component into self-contained atomic propositions; each

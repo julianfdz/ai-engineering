@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Coseno y percentiles ──────────────────────────────────────
+#
+#   cosine_similarity: producto escalar / producto de normas.
+#   percentile: el p50 y el p95 de tokens por chunk que muestran el CLI y el Chunking Lab.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Vector similarity helpers — stdlib only (no numpy / scikit-learn)."""
 
 from __future__ import annotations

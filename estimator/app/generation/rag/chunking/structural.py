@@ -1,3 +1,11 @@
+# ── Julián · Sesión 7 · El chunk de nuestro proyecto ──────────────────────────────
+#
+#   Estrategia de referencia: un componente del presupuesto = un chunk.
+#   render_component_text antepone la cabecera de contexto (proyecto, sector, tecnología):
+#   sin ella, textos cortos como «Backend services» caen en la misma zona difusa.
+#   component_metadata: los metadatos que viajan con cada chunk.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Structural chunker for budget JSON.
 
 Strategy: trust the document structure. One :class:`BudgetComponent` becomes

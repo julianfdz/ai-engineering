@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · El comparador que hay detrás del Chunking Lab ─────────────
+#
+#   ChunkingComparator: ejecuta cada estrategia, calcula estadísticas y lanza las consultas.
+#   ChunkingStats: lo que se ve en la tabla del Lab (p50, p95, huérfanos, obesos, coste).
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Chunking comparison framework.
 
 Two informal signals (formal recall@k / NDCG are Session 11):

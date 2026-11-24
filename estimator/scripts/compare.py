@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · El sanity check del ejercicio ─────────────────────────────
+#
+#   Coseno entre dos textos, calculado a mano (sin numpy).
+#   Cercanas 0,596 · sin relación 0,192 · genéricas 0,541: los textos vagos se parecen demasiado.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 #!/usr/bin/env python3
 """Embedding sanity check — cosine similarity between two texts.
 

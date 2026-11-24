@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Tests · el Chunking Lab de punta a punta ──────────────────
+#
+#   El servicio se sustituye por un falso: ningún test llama a OpenAI.
+#   Formulario, validaciones, errores 400/500 como avisos, guardado y la vista show.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 require "test_helper"
 require "webmock/minitest"
 

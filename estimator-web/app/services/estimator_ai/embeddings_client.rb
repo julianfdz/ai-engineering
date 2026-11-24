@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · El cliente HTTP del Chunking Lab ──────────────────────────
+#
+#   compare_chunking: el único sitio de Rails que habla con /embeddings/compare.
+#   Un 400 (estrategia desconocida) y un 500 (falta la clave) se convierten en errores tipados.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 # Context client for the RAG embeddings pipeline (Session 7): chunking
 # strategy comparison over the historical-budget corpus.
 #

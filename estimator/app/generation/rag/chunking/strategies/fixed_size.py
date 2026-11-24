@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Estrategia mecánica · fixed-size ──────────────────────────
+#
+#   Ventanas de N tokens sin mirar la estructura: corta por la mitad de una frase.
+#   Sirve como línea base para comparar.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Fixed-size chunker — the degenerate baseline.
 
 Serializes each component to text and slides a fixed token window over it with

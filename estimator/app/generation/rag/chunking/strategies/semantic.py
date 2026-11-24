@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Estrategia semántica · semantic (de pago) ─────────────────
+#
+#   Corta donde cambia el significado entre frases: necesita embeddings durante la ingesta.
+#   Barata (0,0001 $) pero ya no es gratis ni instantánea.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Semantic chunker.
 
 Embeds consecutive sentences and cuts where the embedding similarity drops

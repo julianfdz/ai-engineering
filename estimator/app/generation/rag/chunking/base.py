@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · La interfaz común de los chunkers ─────────────────────────
+#
+#   Chunker: cada estrategia implementa chunk(budgets) → list[Chunk].
+#   count_tokens (tiktoken) y emit_chunking_done: el log con chunks, latencia y coste extra.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Common interface for chunking strategies.
 
 Every strategy implements :class:`Chunker` so they are interchangeable in the

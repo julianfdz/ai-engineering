@@ -1,3 +1,10 @@
+# ── Julián · Sesión 7 · El comparador de estrategias en terminal ──────────────────
+#
+#   --show-stats: chunks, min, p50, p95, max, huérfanos (< 20 tokens) y obesos (> 800).
+#   --show-top-k N --queries …: los N chunks más cercanos a cada consulta.
+#   --models small-1536,small-768: mismo modelo a dos dimensiones (Matryoshka).
+# ──────────────────────────────────────────────────────────────────────────────────
+
 #!/usr/bin/env python3
 """Compare chunking strategies over the budget corpus.
 

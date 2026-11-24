@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · Estrategia mecánica · sentence-window ─────────────────────
+#
+#   Una frase por chunk + una ventana de frases vecinas en metadata.window_text.
+#   Se embebe la frase; al LLM se le pasaría la ventana. Muchos huérfanos (34 de 78).
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """Sentence-window chunker.
 
 Indexes individual sentences (small, precise units → high recall) but carries a

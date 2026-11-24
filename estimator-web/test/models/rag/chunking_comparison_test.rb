@@ -1,3 +1,8 @@
+# ── Julián · Sesión 7 · Tests · la ejecución guardada ─────────────────────────────
+#
+#   Exige al menos una estrategia y un top-k razonable; el payload se guarda y se recupera tipado.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 require "test_helper"
 
 class RagChunkingComparisonTest < ActiveSupport::TestCase

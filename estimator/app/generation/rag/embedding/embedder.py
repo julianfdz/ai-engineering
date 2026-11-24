@@ -1,3 +1,9 @@
+# ── Julián · Sesión 7 · El embedder ───────────────────────────────────────────────
+#
+#   text-embedding-3-small (1536 dimensiones) en lotes de 100, con reintento ante RateLimitError.
+#   estimated_cost_usd: tokens × precio. Con el corpus de ejemplo, unos 0,0001 $.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 """OpenAI embedder.
 
 Wraps the ``text-embedding-3-small`` model. ``embed_many`` batches chunks into

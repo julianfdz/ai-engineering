@@ -1,3 +1,8 @@
+# ── Julián · Sesión 7 · Tests · la respuesta tipada ───────────────────────────────
+#
+#   from_hash construye el árbol tipado; costes agregados y datos del playground por estrategia.
+# ──────────────────────────────────────────────────────────────────────────────────
+
 require "test_helper"
 
 class RagComparisonResponseTest < ActiveSupport::TestCase
