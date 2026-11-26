@@ -15,10 +15,10 @@
 Con este grupo Julián dio la S5 (12/11) y la S6 (19/11), así que la S7 enlaza directamente con su corpus limpio.
 Preparado el 24/11:
 
-- **Deck nuevo** `Sesion07-Julian-Fernandez.pdf` (32 diapos), generado con `deck/build_deck_2610.py`: las 12 originales
+- **Deck nuevo** `Sesion07-Julian-Fernandez.pdf` (33 diapos), generado con `deck/build_deck_2610.py`: las 12 originales
   de LIDR sin tocar y las 18 nuestras de octubre, ahora con franja «En el código» (rutas y líneas verificadas con las
   cabeceras puestas), franja «En los tests» en el Lab y en las estrategias de pago, el TA correcto una diapo nueva
-  con los 23 tests de Rails y otra con el propósito y el encaje (S5 → S9). El de la 2609 está en `anterior-2609/` (su generador sigue siendo `deck/build_deck.py`,
+  con los 23 tests de Rails otra con el propósito y el encaje (S5 → S9) y otra con el ejercicio previo. El de la 2609 está en `anterior-2609/` (su generador sigue siendo `deck/build_deck.py`,
   que también es el motor común de los decks).
 - **Cabeceras «Julián · Sesión 7»** en 23 ficheros (Python, Rails y tests), commit `51661ad` en
   `session_07_live_local`.

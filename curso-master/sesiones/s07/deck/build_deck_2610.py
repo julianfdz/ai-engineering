@@ -129,6 +129,41 @@ def slide_encaje(d: Deck) -> None:
           "<b>Si el chunk está mal cortado, ningún modelo ni índice lo arregla después.</b>", kind="lav")
 
 
+def slide_ejercicio(d: Deck) -> None:
+    p = d.new("El ejercicio previo: pipeline mínimo de embeddings",
+              "Lo que traéis hecho de casa · la clase parte de aquí", "Ejercicio previo")
+    d.box(p, (20, 64, 268, 340),
+          '<div class="t">El objetivo</div>'
+          "Montar en el servicio de IA un pipeline que recibe presupuestos JSON, los trocea por componente, los "
+          "embebe con OpenAI y devuelve los vectores. Y comprobar con un script que los embeddings discriminan.<br/><br/>"
+          '<div class="t">Las reglas</div><ul>'
+          "<li>Sin numpy: el coseno, a mano.</li>"
+          "<li>Los metadatos viajan con el chunk pero no se embeben.</li>"
+          "<li>Sin trocear por tamaño: el componente de 1.391 tokens es para hoy.</li>"
+          "<li>Tests no obligatorios.</li></ul>", kind="mint")
+    d.box(p, (280, 64, 700, 340),
+          "<table><tr><th>#</th><th>Qué había que implementar</th><th>Dónde está en la rama de clase</th></tr>"
+          "<tr><td>1</td><td>Modelos Pydantic: presupuesto, chunk, chunk con vector, petición y respuesta</td>"
+          "<td><code>rag/schemas.py</code> · <code>Budget</code> l. 53 · <code>Chunk</code> l. 65 · "
+          "<code>EmbeddedChunk</code> l. 78</td></tr>"
+          "<tr><td>2</td><td>Chunker estructural: un componente = un chunk, con la cabecera del presupuesto</td>"
+          "<td><code>chunking/structural.py</code> · <code>render_component_text</code> l. 33 · "
+          "<code>JSONStructuralChunker</code> l. 85</td></tr>"
+          "<tr><td>3</td><td>Embedder: lotes de 100, 3 reintentos, coste a 0,02 $/M</td>"
+          "<td><code>embedding/embedder.py</code> · <code>BATCH_SIZE</code> l. 32 · <code>OpenAIEmbedder</code> l. 47</td></tr>"
+          "<tr><td>4</td><td><code>POST /embeddings/ingest</code></td>"
+          "<td><code>api/embeddings.py</code> · l. 34</td></tr>"
+          "<tr><td>5</td><td>Coseno entre dos textos</td><td><code>scripts/compare.py</code> · "
+          "<code>cosine_similarity</code> l. 43</td></tr>"
+          "<tr><td>6</td><td>Tres parejas comentadas: cercanas, sin relación, genéricas</td>"
+          "<td><code>rag/SANITY_CHECK.md</code></td></tr></table>", kind="beige", role="table")
+
+
+ejercicio = con_franjas(slide_ejercicio,
+                        "En el enunciado el módulo era <code>estimator/app/embedding_pipeline/</code> (rama "
+                        "<code>session_07</code>); en la rama de clase vive en <code>estimator/app/generation/rag/</code> "
+                        "· entregable: rama <code>session-07/pre-exercise</code>")
+
 encaje = con_franjas(slide_encaje,
                      "Hoy: <code>estimator/app/generation/rag/</code> (<code>chunking/</code>, <code>embedding/</code>, "
                      "<code>analysis/</code>) · el hueco de la Sesión 8 ya existe: <code>rag/store/__init__.py</code>, "
@@ -227,6 +262,7 @@ def build() -> None:
     hoy(d)
     encaje(d)
     d.template(1)                   # tres arquitecturas (original)
+    ejercicio(d)
     sanity(d)
     d.template(2)                   # cinco patrones de error (original)
     ctv(d)

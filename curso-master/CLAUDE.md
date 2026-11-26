@@ -60,6 +60,10 @@ con su `cd`.
      nombre y línea. Más una diapo con todos los tests de la sesión y qué bloque cubre cada uno.
    - **Diapo «Para qué sirve hoy y dónde encaja»** justo después de «Hoy»: las dos sesiones anteriores y las dos
      siguientes en una línea de tiempo, el propósito de la sesión y por qué ahora (como en la S7 de la 2026-10).
+   - **Diapo «El ejercicio previo»** (antes de la reflexión sobre el ejercicio): el objetivo en dos líneas, las
+     reglas y, en lista, los pasos o ficheros que había que implementar, cada uno con su fichero y línea en la rama
+     de clase. Sale del enunciado de la plataforma o del Notion; si no se tiene, pedirle a Julián el enlace del post.
+     No se resuelve el ejercicio en clase: la diapo es para situar.
    - **Capturas:** reales, en `curso-master/assets/sNN-*.png`.
    - **Revisión:** renderizar las páginas y mirarlas antes de darlo por bueno.
 6. **PDF de comandos para alumnos** (`sNN/comandos/build_comandos.py`): genera un HTML y Edge headless lo pasa a
