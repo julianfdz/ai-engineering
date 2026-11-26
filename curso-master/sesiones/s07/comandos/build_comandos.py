@@ -62,7 +62,7 @@ paso("Levantar los servicios",
      "Arranca los cinco contenedores: el servicio de IA (<code>estimator</code>) con su Postgres y Redis, y la web de "
      "Rails con el suyo. Hace falta <code>OPENAI_API_KEY</code> en <code>estimator/.env</code>.",
      "docker compose up -d --build\ndocker compose ps", leer("01_ps.txt"),
-     "Los cinco en <b>healthy</b>. Los nombres de los contenedores pueden variar en cada equipo.", diapo="2")
+     "Los cinco en <b>healthy</b>. Los nombres de los contenedores pueden variar en cada equipo.", diapo="3")
 paso("GET /health", "Comprueba que la API responde.", "curl -s localhost:8000/health", leer("02_health.txt"),
      None, alt="Invoke-RestMethod http://localhost:8000/health")
 

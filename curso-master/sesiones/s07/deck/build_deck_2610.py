@@ -259,10 +259,10 @@ def slide_tests(d: Deck) -> None:
 def build() -> None:
     d = Deck()
     d.template(0)                   # portada (original)
+    ejercicio(d)
     hoy(d)
     encaje(d)
     d.template(1)                   # tres arquitecturas (original)
-    ejercicio(d)
     sanity(d)
     d.template(2)                   # cinco patrones de error (original)
     ctv(d)

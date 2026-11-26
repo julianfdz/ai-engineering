@@ -22,20 +22,22 @@ Abrir en Chrome: el deck, el PDF de comandos, `http://localhost:3000/rag/chunkin
 
 ---
 
-## Diapo 1 · Portada (original) — Diapo 2 · Hoy — Diapo 3 · Para qué sirve y dónde encaja (4')
+## Diapo 1 · Portada (original)
+
+## Diapo 2 · El ejercicio previo (3')
+
+Una diapo para situarles: el objetivo en dos líneas, las reglas y los 6 pasos con su fichero y línea en la rama de clase. El módulo del enunciado era `app/embedding_pipeline/`; en clase vive en `app/generation/rag/`. Reflexión, no corrección: ¿a quién le salió la pareja cercana por debajo de 0,6? ¿Alguien troceó el componente de 1.391 tokens?
+
+## Diapo 3 · Hoy — Diapo 4 · Para qué sirve y dónde encaja (4')
 
 Puente con la S6, que diste tú: «el jueves pasado dejamos el corpus limpio, validado y sin PII; hoy lo convertimos en
 vectores». pgvector y la búsqueda de verdad son la S8. Los dos presupuestos trampa: MONO-001 (1.391 tokens) y el MVP
 de una línea.
 
-## Diapo 4 · Tres arquitecturas (original) (4')
+## Diapo 5 · Tres arquitecturas (original) (4')
 
 Estructura del repo por capas: `foundation/`, `domain/`, `generation/` (`cag/`, `rag/`, `agentic/`,
 `conversation/`), `ingestion/`, `api/`. Lo de hoy vive entero en `app/generation/rag/`.
-
-## Diapo 5 · El ejercicio previo (3')
-
-Una diapo para situarles: el objetivo en dos líneas, las reglas y los 6 pasos con su fichero y línea en la rama de clase. El módulo del enunciado era `app/embedding_pipeline/`; en clase vive en `app/generation/rag/`. Reflexión, no corrección: ¿a quién le salió la pareja cercana por debajo de 0,6? ¿Alguien troceó el componente de 1.391 tokens?
 
 ## Diapo 6 · El sanity check (5')
 
