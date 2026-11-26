@@ -82,7 +82,7 @@ paso("bin/rails test",
      "<li><code>RagChunkingComparisonsControllerTest</code>: el Lab de punta a punta, incluidos un 400 (estrategia "
      "desconocida) y un 500 (falta la clave) convertidos en avisos.</li>"
      "<li><code>EstimatorAi::EmbeddingsClientTest</code>: el POST a <code>/embeddings/compare</code> y sus errores.</li></ul>",
-     diapo="28", alt="docker compose exec estimator-web bin/rails test -v test/models/rag test/controllers/rag "
+     diapo="29", alt="docker compose exec estimator-web bin/rails test -v test/models/rag test/controllers/rag "
                      "test/services/estimator_ai/embeddings_client_test.rb")
 
 # ── 2 ───────────────────────────────────────────────────────────────────────
@@ -102,7 +102,7 @@ paso("scripts/compare.py",
      "<li><b>0,1920</b>: temas sin relación, bien separados.</li>"
      "<li><b>0,5407</b>: dos frases cortas y vagas salen casi tan «cercanas» como la primera pareja. Por eso cada "
      "chunk del proyecto lleva una cabecera con proyecto, sector y tecnología.</li></ul>",
-     diapo="4")
+     diapo="5")
 
 # ── 3 ───────────────────────────────────────────────────────────────────────
 h2("3 · La ingesta: de presupuestos a vectores")
@@ -118,7 +118,7 @@ paso("POST /embeddings/ingest",
      "<li>Cada vector tiene <b>1536</b> números.</li>"
      "<li>El texto empieza con la <b>cabecera de contexto</b> del presupuesto padre; lo que va en "
      "<code>metadata</code> no se embebe, sirve para filtrar (Sesión 8).</li></ul>",
-     diapo="11",
+     diapo="12",
      alt="""$body = '{"budgets": ' + [IO.File]::ReadAllText("$PWD\\estimator\\data\\budgets_sample.json") + '}'
 $r = Invoke-RestMethod -Method Post -Uri http://localhost:8000/embeddings/ingest `
   -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($body))
@@ -134,7 +134,7 @@ paso("compare_chunkers.py --models",
      "El coseno apenas cambia (0,9119 frente a 0,9116) y el vector ocupa la mitad. La latencia de una sola ejecución "
      "varía mucho entre llamadas: no la tomes como dato fijo. Lo que <b>no</b> se puede hacer es comparar un vector "
      "de 1536 con uno de 768.",
-     diapo="9-10")
+     diapo="10-11")
 
 # ── 5 ───────────────────────────────────────────────────────────────────────
 h2("5 · Estrategias de chunking gratuitas")
@@ -148,13 +148,13 @@ paso("structural frente a fixed-size",
      sin_logs(leer("07_structural_fixed.txt")),
      "Casi iguales: el corpus ya está estructurado y casi todos los componentes caben en 512 tokens. El obeso de "
      "structural es MONO-001, una descripción de 1.391 tokens que fixed-size parte en tres.",
-     diapo="14, 18")
+     diapo="15, 19")
 paso("recursive",
      "Separadores jerárquicos (párrafo → línea → frase → palabra) con un máximo de 512 tokens.",
      f"{EXEC} scripts/compare_chunkers.py --strategies recursive --show-stats", sin_logs(leer("08_recursive.txt")),
      "23 chunks: casi cada presupuesto entero cabe en uno, así que mezcla componentes distintos en el mismo vector. "
      "El huérfano es un trozo de 10 tokens con solo el nombre.",
-     diapo="15")
+     diapo="16")
 paso("sentence-window frente a structural, con una consulta",
      "Una frase por chunk frente a un componente por chunk, y los 3 chunks más cercanos a una consulta.",
      f"""{EXEC} scripts/compare_chunkers.py --strategies sentence-window,structural --show-stats \\
@@ -165,7 +165,7 @@ paso("sentence-window frente a structural, con una consulta",
      "tiene nada de OAuth ni de fintech.</li>"
      "<li>structural devuelve los tres componentes del proyecto de banca, con scores más altos gracias a la cabecera "
      "de contexto.</li></ul>",
-     diapo="17, 19")
+     diapo="18, 20")
 paso("Tabla resumen con las seis consultas de prueba",
      "Las cinco estrategias gratuitas con las consultas de <code>data/test_queries.json</code>: el coseno medio del "
      "primer resultado.",
@@ -175,7 +175,7 @@ paso("Tabla resumen con las seis consultas de prueba",
      "sentence-window saca el coseno medio más alto (0,5365) porque una frase corta se parece mucho a una consulta "
      "corta, aunque le falte el contexto. Un score alto no garantiza un buen chunk. recursive es la más baja: sus "
      "chunks mezclan demasiado.",
-     diapo="27")
+     diapo="28")
 
 # ── 6 ───────────────────────────────────────────────────────────────────────
 h2("6 · Estrategias de pago y el Chunking Lab")
@@ -195,7 +195,7 @@ contextual_retrieval  60        132,5   0        1      0,14      203
      "<li><b>contextual_retrieval</b>: la más cara (0,14 $ con este corpus pequeño) y la más lenta; mejora la "
      "similitud del chunk correcto sin cambiar el número de chunks.</li>"
      "<li><b>semantic</b>: barata, pero ya no es gratis ni instantánea.</li></ul>",
-     diapo="20-22",
+     diapo="21-23",
      test=f"docker compose exec estimator-web bin/rails test test/models/rag/strategy_test.rb")
 paso("El Chunking Lab en la web",
      "La misma comparativa con formulario: se eligen estrategias (las de pago van marcadas), consultas y top-k. Cada "
@@ -204,7 +204,7 @@ paso("El Chunking Lab en la web",
      "http://localhost:3000/rag/chunking_comparisons          # histórico", None,
      "En cada ejecución: la tabla de estadísticas, las barras de coste y el playground con los chunks recuperados por "
      "consulta. Las llamadas largas tienen un timeout de 600 s.",
-     diapo="13", test=TEST_LAB)
+     diapo="14", test=TEST_LAB)
 
 
 def render() -> str:

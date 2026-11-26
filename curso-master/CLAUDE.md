@@ -58,6 +58,8 @@ con su `cd`.
      **verificadas con grep** contra la rama. Si la demo es en la web, empieza por «Interfaz: …».
    - **Franja «En los tests»** (debajo, en verde): el test que comprueba lo que cuenta la diapo, con fichero,
      nombre y línea. Más una diapo con todos los tests de la sesión y qué bloque cubre cada uno.
+   - **Diapo «Para qué sirve hoy y dónde encaja»** justo después de «Hoy»: las dos sesiones anteriores y las dos
+     siguientes en una línea de tiempo, el propósito de la sesión y por qué ahora (como en la S7 de la 2026-10).
    - **Capturas:** reales, en `curso-master/assets/sNN-*.png`.
    - **Revisión:** renderizar las páginas y mirarlas antes de darlo por bueno.
 6. **PDF de comandos para alumnos** (`sNN/comandos/build_comandos.py`): genera un HTML y Edge headless lo pasa a

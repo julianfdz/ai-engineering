@@ -102,6 +102,38 @@ def slide_hoy(d: Deck) -> None:
           kind="lav")
 
 
+def slide_encaje(d: Deck) -> None:
+    p = d.new("Para qué sirve hoy y dónde encaja", "De un corpus limpio a vectores que se puedan buscar", "Apertura")
+    tramos = [("S5", "Funcionalidades avanzadas", "El CAG completo: memoria, tier, evals y Actor-Critic-Boss", "beige"),
+              ("S6", "Data-driven AI", "Dónde rompe el CAG y un corpus limpio, catalogado y sin PII", "beige"),
+              ("S7 · HOY", "Embeddings y chunking", "Trocear y convertir en vectores, con números", "note"),
+              ("S8", "Bases de datos vectoriales", "pgvector, índices HNSW / IVFFlat y búsqueda con filtros", "lav"),
+              ("S9", "Fundamentos de RAG", "Reformular, recuperar con umbral y aumentar el prompt", "lav")]
+    for i, (n, t, s, k) in enumerate(tramos):
+        x = 20 + i * 138
+        d.box(p, (x, 64, x + 130, 168), f'<div class="t">{n}</div><b>{t}</b><br/><span class="s">{s}</span>',
+              kind=k, pad=5)
+        if i < 4:
+            d.arrow(p, x + 131, 116, x + 137, 116)
+    d.box(p, (20, 180, 360, 340),
+          '<div class="t">El propósito de hoy</div><ul>'
+          "<li>Qué es un embedding y cómo se mide la cercanía (coseno).</li>"
+          "<li>Elegir modelo y dimensiones con datos, no por moda.</li>"
+          "<li>Cómo trocear: 8 estrategias sobre el mismo corpus, medidas con chunks, p50, huérfanos, obesos y "
+          "coste.</li>"
+          "<li>Salir con una estrategia elegida y justificada.</li></ul>", kind="mint")
+    d.box(p, (372, 180, 700, 340),
+          '<div class="t">Por qué ahora</div>'
+          "El CAG ya no escala (S6): el conocimiento tiene que buscarse, no ir entero en el prompt.<br/><br/>"
+          "Hoy los vectores viven <b>en memoria</b>: se decide cómo cortar antes de pagar por guardarlo.<br/><br/>"
+          "<b>Si el chunk está mal cortado, ningún modelo ni índice lo arregla después.</b>", kind="lav")
+
+
+encaje = con_franjas(slide_encaje,
+                     "Hoy: <code>estimator/app/generation/rag/</code> (<code>chunking/</code>, <code>embedding/</code>, "
+                     "<code>analysis/</code>) · el hueco de la Sesión 8 ya existe: <code>rag/store/__init__.py</code>, "
+                     "vacío hasta pgvector")
+
 hoy = con_franjas(slide_hoy,
                   f"Todo vive en <code>{C}</code> (<code>schemas.py</code>, <code>chunking/</code>, <code>embedding/</code>) "
                   "y <code>estimator/app/api/embeddings.py</code> · <b>Interfaz:</b> Chunking Lab "
@@ -193,6 +225,7 @@ def build() -> None:
     d = Deck()
     d.template(0)                   # portada (original)
     hoy(d)
+    encaje(d)
     d.template(1)                   # tres arquitecturas (original)
     sanity(d)
     d.template(2)                   # cinco patrones de error (original)
